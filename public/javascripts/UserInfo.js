@@ -55,7 +55,7 @@ $(document).ready(function () {
                 console.log("Bar");
 
                 var cityOpt = ""
-                if(typeof json.city !== 'undefined'){cityOpt = "<br>City: " + json.citiy.names.en;}
+                if(typeof json.city !== 'undefined'){cityOpt = "<br>City: " + json.city.names.en;}
 
                 marker.bindPopup(
                     "<b style='color:black;'>Name:"
