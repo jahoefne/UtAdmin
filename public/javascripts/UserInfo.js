@@ -54,11 +54,14 @@ $(document).ready(function () {
                 ).addTo(map);
                 console.log("Bar");
 
+                var cityOpt = ""
+                if(typeof json.city !== 'undefined'){cityOpt = "<br>City: " + json.citiy.names.en;}
+
                 marker.bindPopup(
                     "<b style='color:black;'>Name:"
                     + userName + "<br>Country: "
-                    + json.country.names.en + "<br>City: "
-                    + json.city.names.en +
+                    + json.country.names.en
+                    + cityOpt +
                     "</b>").openPopup();
 
                 $("#userCountryFlag").addClass("flag-icon-" + json.country.iso_code.toLowerCase());
