@@ -1,0 +1,73 @@
+@(title: String, loggedInUser: UtAdminUser)(content: Html)
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>@title</title>
+        <link rel="icon" type="image/png" href="/assets/favicons.png">
+        <script src="@routes.Assets.at("javascripts/deps/jquery-2.1.3.min.js")"></script>
+        <script src="@routes.Assets.at("javascripts/deps/bootstrap.min.js")"></script>
+        <script src="@routes.Assets.at("javascripts/deps/bootbox.min.js")"></script>
+
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <link href="@routes.Assets.at("stylesheets/main.css")" rel="stylesheet">
+
+        <link href="@routes.Assets.at("stylesheets/status.css")" rel="stylesheet">
+        <link href="@routes.Assets.at("stylesheets/navbar.css")" rel="stylesheet">
+        <link href="@routes.Assets.at("javascripts/deps/flag-icon/css/flag-icon.min.css")" rel="stylesheet">
+
+        <script type="text/javascript" src="@routes.Application.javascriptRoutes"></script>
+
+    </head>
+
+    <body>
+
+        <div class="navbar">
+            <ul>
+                <li><a href="/">Status</a></li>
+                <li>
+                    Users
+                    <ul>
+                        <li><a
+                        href="@routes.Application.userlist(count = 45,
+                            offset = 0,
+                            title = "Users",
+                            minLevel = 0,
+                            displaySearchField = true)">All</a></li>
+                        <li><a href="/admin-list">Admins</a></li>
+                        <li><a href="/clan-list">Clan Members</a></li>
+                    </ul>
+                </li>
+                <li>
+                    Penalties
+                    <ul>
+                        <li><a href="/adminbans">Admin Bans</a></li>
+                        <li><a href="/notices">Notices</a></li>
+                        <li><a href ="/allbans">All Penalties</a></li>
+                    </ul>
+                </li>
+                <li class="right"> <i class="fa fa-lock"></i> @loggedInUser.main.userId
+                    <ul>
+                        <li><a href="/auth/logout"> <i class="fa fa-sign-out"></i> Logout</a></li>
+                        <li><a href="/password-change"><i class="fa fa-key"></i>Change Password</a></li>
+                        @if(loggedInUser.rank == 0) {
+                            <li><a href="/accounts">
+                                <i class="fa fa-user-plus"></i>
+                                User Administration
+                            </a></li>
+                        }
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        @content
+
+        <div class="footer">
+                @for( u <- MongoLogger.getLoggedInUsers) {
+                    <span class="online-admin">@u</span>
+                }
+        </div>
+    </body>
+</html>

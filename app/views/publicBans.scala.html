@@ -1,0 +1,43 @@
+@import views.Color
+
+@(penalties: Seq[Penalty])
+<div class="row banlist">
+    <div class="col-md-10 col-md-offset-1">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Public Bans:
+                </h3>
+            </div>
+            <table class="table">
+                <tr>
+                    <th>Type</th>
+                    <th>Player</th>
+                    <th>Id</th>
+                    <th>Reason</th>
+                    <th>Expires</th>
+                    <th>Admin</th>
+                </tr>
+                @for(penalty <- penalties) {
+                    <tr>
+                        <td>@penalty.penalty</td>
+                        <td>@Color.colorize(penalty.playerName)</td>
+                        <td>@@@penalty.playerId</td>
+                        <td>@Color.colorize(penalty.reason)</td>
+                        <td>
+                            @penalty.expires match{
+                                case None => { Permanent }
+                                case Some(x) =>{ @x.toString("dd. MMM. yyyy - HH:mm:ss") }
+                            }
+                        </td>
+                        @if(penalty.adminId==1){
+                            <td>Webadmin</td>
+                        }else{
+                            <td>@penalty.adminName</td>
+                        }
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>

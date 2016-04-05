@@ -1,0 +1,39 @@
+@(players: Seq[OnlineUser])
+
+@import views.Color
+
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                   We have @players.length players online
+                </h3>
+            </div>
+            <table class="table playerlist">
+                <tr>
+                    <th>Number</th>
+                    <th>Name</th>
+                    <th>Score</th>
+                    <th>Online since</th>
+                </tr>
+                @for((player, count) <- players.zipWithIndex) {
+                    <tr>
+                        <td>@{
+                            count + 1
+                        }
+                        </td>
+                        <td>
+                       <a class="xlrstats-link" href="http://144.76.158.173/index.php?func=player&playerdbid=@player.id&config=0">
+                        @Color.colorize(player.name)
+                       </a>
+                        </td>
+                        <td>@player.score</td>
+                        <td>
+                        @views.TimeFormatter.timePassedSince(player.joined)</td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,31 @@
+@(messages: Seq[ChatMessage],
+        count: Int,
+        offset: Int,
+        loggedInUser: UtAdminUser,
+        highlightMsg: Int = -1)(implicit lang: play.api.i18n.Lang)
+
+
+@baseTemplate("Chatlog", loggedInUser) {
+
+
+    <div class="table-heading-container"><span class="table-heading">
+        Chatlog History
+        <a class="btn-simple" href="@routes.Application.chatLog(count, offset - count)">
+            <i class="fa fa-arrow-left"></i>
+        </a>
+        <a class="btn-simple" href="@routes.Application.chatLog(count, offset + count)">
+            <i class="fa fa-arrow-right"></i>
+        </a>
+    </span>
+    </div>
+    <table class="online-table std-margin">
+        <tr>
+            <th></th>
+        </tr>
+        <tr>
+            <td>
+            @chatlog(messages = messages, count = count, offset = offset, relativeTime = false, highLightMsgId = highlightMsg)
+            </td>
+        </tr>
+    </table>
+}

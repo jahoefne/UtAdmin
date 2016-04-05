@@ -1,0 +1,86 @@
+@(players: Seq[OnlineUser], loggedInUser: UtAdminUser)
+@import views.RankFormatter
+@import views.Color
+@import org.joda.time.format.PeriodFormatterBuilder
+@import org.joda.time.DateTime
+@import org.joda.time.Period
+@import org.apache.commons.lang3.StringEscapeUtils.escapeEcmaScript
+
+<table class="online-table table-highlight">
+    <tr>
+        <th></th>
+        <th>Name</th>
+        <th>Rank</th>
+        <th>Score</th>
+        <th>Ip</th>
+        <th>Online</th>
+        <th>PM</th>
+        <th>Punish</th>
+    </tr>
+
+    @for( (player, count) <- players.zipWithIndex) {
+        <tr>
+            <td onclick="window.location='/user?id=@player.id';" class="pointer-cursor" >
+                <svg height="10" width="10">
+                    <circle cx="5" cy="5" r="3" stroke="black" stroke-width="0" fill="@player.team match {
+                        case Teams.blue => {blue}
+                        case Teams.red => {red}
+                        case Teams.spec | Teams.free => {gray}
+                        case _ => {green}
+                    }"></circle>
+                </svg>
+            </td>
+            <td onclick="window.location='/user?id=@player.id';" class="pointer-cursor" >
+                @Color.colorize(player.name)
+            </td>
+            <td onclick="window.location='/user?id=@player.id';" class="pointer-cursor" >
+            @RankFormatter.labelForRank(player.group)
+            </td>
+            <td onclick="window.location='/user?id=@player.id';" class="pointer-cursor" >@player.score</td>
+            <td onclick="window.location='/user?id=@player.id';" class="pointer-cursor" >@player.ip</td>
+            <td onclick="window.location='/user?id=@player.id';" class="pointer-cursor" >
+            @views.TimeFormatter.timePassedSince(player.joined)
+            </td>
+            <td>
+                <span class="btn-simple" onclick="privateMessage(@player.serverId, '@escapeEcmaScript(player.name)');"><i class="fa fa-envelope-o"></i></span>
+            </td>
+            <td width="30px">
+                <span class="dropdown-menu-container">
+                    <ul>
+                        ...
+                        <span class="dropdown-content">
+                                @defining(escapeEcmaScript(player.name).dropRight(2)){ name =>
+                                <li>
+                                    <a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.slap(@player.serverId, '@name'),'Slapped @name' );">
+                                        Slap</a>
+                                </li>
+                                @if(loggedInUser.rank != Ranks.Mod) {
+
+
+                                        <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.nuke(@player.serverId, '@name'), 'Nuked @name');">Nuke</a></li>
+
+                                        <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.kill(@player.serverId, '@name'),'Killed @name' );">
+                                            Kill</a></li>
+                                        <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.kick(@player.serverId, '@name'),'Kicked @name');">
+                                            Kick</a></li>
+                                        <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.forceRed(@player.serverId, '@name'),'Forced red @name');">
+                                            Force Red</a></li>
+                                        <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.forceBlue(@player.serverId, '@name'),'Forced blue @name');">
+                                            Force Blue</a></li>
+                                        <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.forceSpec(@player.serverId, '@name'),'Forced spec @name' );">
+                                            Force Spec</a></li>
+                                    }
+                                }
+
+
+                        </span>
+                    </ul>
+                </span>
+            </td>
+        </tr>
+
+    }
+        <tr>
+            <td colspan="8" id="online-player-count">&sum; @players.length</td>
+</tr>
+</table>

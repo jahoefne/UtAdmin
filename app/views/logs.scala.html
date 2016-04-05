@@ -1,0 +1,26 @@
+@(logs: Seq[LogEntry], loggedInUser: UtAdminUser)(implicit lang: play.api.i18n.Lang)
+
+@baseTemplate("Userlist", loggedInUser) {
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="panel panel-default">
+                <div class="panel-heading">Amdmin Logs</div>
+                <table class="table table-striped table-condensed">
+                    <tr>
+                        <th>Time</th>
+                        <th>Admin</th>
+                        <th>Log</th>
+                    </tr>
+                    @for(log <- logs) {
+                        <tr>
+                            <td>@log.timestamp.toString("dd.MMM.yyyy (hh:mm:ss)")</td>
+                            <td>@log.user.main.userId</td>
+                            <td>@log.message</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+
+        </div>
+    </div>
+}

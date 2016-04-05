@@ -1,0 +1,163 @@
+body {
+    background: #04080A;
+    color: #f0f0f0;
+    font-family: 'Roboto', sans-serif;
+    margin-bottom: 0;
+}
+
+#left {
+    width: calc(50% - 10px);
+    float: left;
+    height: 100%;
+}
+
+#right {
+    margin-left: calc(50% + 10px);
+    height: 100%;
+}
+
+#divider {
+    position: fixed;
+    left: 50%;
+    z-index: -1;
+    height: 100%;
+    top: 20px;
+    border-left: 1px solid #0e1f2e;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+}
+
+.smaller {
+    color: gray;
+}
+
+@media screen and (max-width: 680px) {
+    #left {
+        width: 100%;
+        height: 50%;
+    }
+
+    #divider {
+        display: none;
+    }
+
+    #right {
+        width: 100%;
+        margin-left: 0%;
+        padding-top: 20px;
+        height: 50%;
+    }
+}
+
+/** Footer */
+.footer {
+    bottom: 0;
+    left: 0;
+    height: 20px;
+    width: 100%;
+    background: #102333;
+    opacity: 0.9;
+    border-top: 1px solid black;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.online-admin-container {
+    vertical-align: middle;
+}
+
+.footer span, .footer div {
+    vertical-align: middle;
+}
+
+.online-admin {
+    padding-top: 5px !important;
+    color: white;
+    font-weight: bolder;
+    opacity: 1;
+    z-index: 900;
+    font-size: medium !important;
+}
+
+.label {
+    border-radius: 2px;
+    background: #9a0000;
+    padding-left: 3px;
+    text-align: center;
+    padding-right: 3px;
+}
+
+.label-warning {
+    background: #420005;
+}
+
+.label-default {
+    background: #424242;
+    color: white;
+}
+
+.label-primary {
+    background: #0039bd;
+}
+
+.label-std {
+    background: #3d3d3d;
+    display: inline-block;
+    margin: 2px;
+}
+
+.label-success {
+    background: #00b51c;
+    color: #000;
+}
+
+#myChart {
+    padding: 0;
+    left: 0;
+    overflow: hidden;
+}
+
+#userLocationMap {
+    height: 320px;
+
+}
+
+.custom-control-group {
+    border-radius: 4px;
+    background-color: #17324b;
+    width: 160px;
+    margin: 20px;
+}
+
+.custom-control-group input {
+    border-radius: 4px;
+    height: 20px;
+    width: 90px;
+    padding: 5px;
+    outline: none;
+}
+
+.from-to-counter {
+    font-size: medium;
+}
+
+.pointer-cursor {
+    cursor: pointer;
+}
+
+.custom-control-group-password {
+    width: 30%;
+    padding: 15px;
+}
+
+#pwdChangeBtn {
+    padding: 10px;
+    display: block;
+}
+
+.big-font {
+    font-size: large !important;
+}

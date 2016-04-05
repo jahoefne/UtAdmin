@@ -1,0 +1,66 @@
+@(users: Seq[B3User],
+        offsetCount: Option[(Int, Int)],
+        title: String,
+        displaySearchField: Boolean = true,
+        loggedInUser: UtAdminUser)(implicit lang: play.api.i18n.Lang)
+    @import views.RankFormatter
+    @import views.Color
+
+    @baseTemplate(title, loggedInUser) {
+        <script src="@routes.Assets.at("javascripts/Usersearch.js")"></script>
+
+
+        @if(displaySearchField) {
+            <div align="center">
+                <div class="custom-control-group">
+                    <input type="text" class="form-control" id="usersearchTextfield" placeholder="Username">
+                    <button class="btn-simple" id="usersearchButton"><i class="fa fa-filter"></i></button>
+                </div>
+            </div>
+        }
+
+
+        <div class="table-heading-container big-font"><span class="table-heading">@title (@users.length)
+
+            @if(displaySearchField) {
+                @offsetCount match {
+                    case Some(controlls) => {
+                        <span class="from-to-counter">@controlls._1 - @{
+                            controlls._1 + controlls._2
+                        }</span>
+                        <a class="btn-simple" href="/userlist?count=@controlls._2&offset=@{
+                            controlls._1 - controlls._2
+                        }">
+                            <i class="fa fa-arrow-left"></i>
+                        </a>
+                        <a class="btn-simple" href="/userlist?count=@controlls._2&offset=@{
+                            controlls._1 + controlls._2
+                        }">
+                            <i class="fa fa-arrow-right"></i>
+                        </a>
+                    }
+                }
+            }</span></div>
+        <table class="online-table table-highlight std-margin big-font">
+            <tr>
+                <th>Name</th>
+                <th>Id</th>
+                <th>Ip</th>
+                <th>Connections</th>
+                <th>Last Seen <i class="fa fa-sort-desc"></i></th>
+                <th>Rank</th>
+            </tr>
+            @users.map { user =>
+                <tr onclick="window.location='/user?id=@user.id';" class="pointer-cursor">
+                    <td>@Color.colorize(user.name)</td>
+                    <td>@user.id</td>
+                    <td>@user.ip</td>
+                    <td>@user.connections</td>
+                    <td>@user.lastSeen.toString("dd.MMM.yyyy (HH:mm:ss)", lang.toLocale)</td>
+                    <td>
+                        <div>@RankFormatter.labelForRank(user.group)</div>
+                    </td>
+                </tr>
+            }
+        </table>
+    }

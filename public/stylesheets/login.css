@@ -1,0 +1,66 @@
+
+body{
+    background: #081114;
+    color:white;
+}
+.container{
+    text-align:center;
+    font-family: 'Lucida Console', 'Lucida Sans Typewriter', monaco, 'Bitstream Vera Sans Mono', monospace;
+}
+
+.page-header:after{
+    content:"to ~|DN|~ Echelon";
+}
+
+.clearfix p a {
+    display: none;
+}
+
+fieldset{
+    width: 20%;
+    left:39%;
+    position: absolute;
+    border:none;
+    padding-bottom:0;
+    padding-top:20px;
+    background: #295d7e;
+}
+.help-block{
+    display:none;
+}
+a{
+    text-decoration: none;
+    color:white;
+}
+input{
+    outline: none;
+    border-radius: 2px;
+    height:28px;
+    border:0px;
+    font-size: large;
+}
+button{
+    height:28px;
+    border-radius: 2px;
+    margin:10px;
+    border:0;
+    outline: none;
+    font-size:large;
+    background:white;
+}
+button:hover{
+    background: #3996ff;
+}
+button:active{
+    background: #2e74c8;
+}
+.control-group{
+    padding:5px;
+}
+.control-label{
+    display: inline-block;
+}
+.control-label::after{
+    content: ":";
+}
+

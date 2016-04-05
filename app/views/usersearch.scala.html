@@ -1,0 +1,40 @@
+@(users: Seq[Username], loggedInUser: UtAdminUser)(implicit lang: play.api.i18n.Lang)
+    @import views.Color
+
+    @baseTemplate("User Search", loggedInUser){
+        <script src="@routes.Assets.at("javascripts/Usersearch.js")"></script>
+
+        <div align="center">
+            <div class="custom-control-group">
+                <input type="text" class="form-control" id="usersearchTextfield" placeholder="Username">
+                <button class="btn-simple" id="usersearchButton"><i class="fa fa-filter"></i></button>
+            </div>
+        </div>
+
+        <table class="online-table table-highlight std-margin">
+        @if(users.nonEmpty) {
+            <tr>
+                <th>Name</th>
+                <th>Id</th>
+                <th>Used</th>
+                <th>Last Seen</th>
+            </tr>
+            @users.map { user =>
+                <tr>
+                    <td><a href="/user?id=@user.userId">@Color.colorize(user.name)</a></td>
+                    <td>@user.userId</td>
+                    <td>@user.usedCount</td>
+                    <td>
+                    @user.lastUsed.toString("dd.MMM.yyyy (HH:mm:ss)", lang.toLocale)
+                    </td>
+                </tr>
+            }
+        } else {
+            <tr>
+                <td>
+                    No users match query!
+                </td>
+            </tr>
+        }
+        </table>
+    }

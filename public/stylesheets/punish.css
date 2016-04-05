@@ -1,0 +1,26 @@
+.punish-container{
+    margin:15px;
+    text-align: center;
+}
+
+.punish-container button{
+    border-radius: 2px;
+    height:28px;
+    background:red;
+    border:none;
+}
+.punish-container input{
+    border-radius: 3px;
+    height: 28px;
+    outline:none;
+    font-size: large;
+    border:none;
+}
+.punish-container select{
+    border-radius: 2px;
+    height: 28px;
+    font-size: large;
+    outline:none;
+    border:none;
+}
+

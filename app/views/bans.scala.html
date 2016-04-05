@@ -1,0 +1,13 @@
+@(penalties: Seq[Penalty], title: String, loggedInUser: UtAdminUser)
+
+    @baseTemplate(title, loggedInUser) {
+        <div class="table-heading-container"><span class="table-heading">@title</span></div>
+        @penaltyFormatter(penalties = penalties,
+            showPlayerName = true,
+            showType = true,
+            showReason = true,
+            showExpires = true,
+            showCreatedOn = true,
+            showAdminName = true,
+            showRemoveButton = true)
+    }

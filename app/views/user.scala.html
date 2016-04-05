@@ -1,0 +1,197 @@
+@(user: User, history: List[(String, Long)], loggedInUser: UtAdminUser)(implicit lang: play.api.i18n.Lang)
+@import views.Color
+@import org.joda.time.format.PeriodFormatterBuilder
+
+@baseTemplate("User " + user.currentName, loggedInUser) {
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <link rel="stylesheet" href="@routes.Assets.at("javascripts/deps/awesome-markers/leaflet.awesome-markers.css")">
+    <script src="@routes.Assets.at("javascripts/deps/awesome-markers/leaflet.awesome-markers.js")"></script>
+
+    <script>
+            var userIp = " @user.currentIp ";
+            var userName = " @user.currentName ";
+            var userId = @user.b3Id ;
+    </script>
+
+    <script src="@routes.Assets.at("javascripts/UserInfo.js")"></script>
+    <script src="@routes.Assets.at("javascripts/Punisher.js")"></script>
+
+    <div class="table-heading-container"><span class="table-heading"><i id ="userCountryFlag" class="flag-icon"></i>&nbsp;@user.currentName</span></div>
+
+    <table class="online-table std-margin">
+        <tr>
+            <td colspan="3">
+                <div id="userLocationMap"></div>
+            </td>
+        </tr>
+        <tr>
+            <td> Connections:</td>
+            <td> @user.numberOfConnections </td>
+            <td rowspan="8" width="520" id="onlineHistoryChart">@onlineHistoryChart(history)</td>
+        </tr>
+        <tr>
+            <td>IP:</td>
+            <td>@user.currentIp</td>
+        </tr>
+        <tr>
+            <td>B3-Id:</td>
+            <td>@@ @user.b3Id</td>
+        </tr>
+
+            <!-- <tr>
+            <td>Xlrstats:</td>
+            <td>
+            @user.xlrId match {
+        case Some(id) => {
+            <a class="btn btn-heading btn-xs"
+            href="http://144.76.158.173/xlrstats/index.php/1/player_stats/view/@id">
+                                        Show
+            </a>
+        }
+        case _ => {
+            @user.currentName doesn't have xlrstats
+        }
+    }
+        </td>
+        </tr>-->
+        <tr>
+            <td>Rank:</td>
+            <td>
+                @views.RankFormatter.labelForRank(user.group)
+                @user.maskedAs match {
+                    case Some(group) if group.level != 0 => {Masked as: @views.RankFormatter.labelForRank(group)}
+                    case _ => {}
+                } <p>
+                @if(loggedInUser.rank == Ranks.God) {
+                    <div>
+                        <span class="dropdown-menu-container change-rank-btn">
+                            <ul>
+                                Change Rank
+                                <span class="dropdown-content">
+                                @for( group <- B3GroupController.getGroups()) {
+                                    <li>
+                                        <a href="@routes.Administrator.changeGroupOfUser(user.b3Id, group.bits)">
+                                            @group.name (@group.level)
+                                        </a>
+                                    </li>
+                                }
+                                </span>
+                            </ul>
+                        </span>
+                    </div>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>GUID:</td>
+            <td>@user.guid</td>
+        </tr>
+        <tr>
+            <td>Played (last 30d):</td>
+            <td>
+            @{
+                new PeriodFormatterBuilder().appendDays()
+                        .appendSuffix("day", "days")
+                        .appendSeparator(" ")
+                        .appendHours()
+                        .appendSuffix("h", "h")
+                        .appendSeparator(" ")
+                        .appendMinutes()
+                        .appendSuffix("min", "mins")
+                        .appendSeparator(" ")
+                        .appendSeconds()
+                        .appendSuffix("s", "s")
+                        .toFormatter().print(user.totalTimeOnServer)
+            }</td>
+        </tr>
+        <tr>
+            <td>
+                First seen:
+            </td>
+            <td>
+            @user.firstSeen.toString("dd.MMM.yyyy (HH:mm:ss)", lang.toLocale)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Last seen:
+            </td>
+            <td>
+            @user.lastSeen.toString("dd.MMM.yyyy (HH:mm:ss)", lang.toLocale)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Aliases:
+            </td>
+            <td colspan="2">
+            @user.aliases.length match {
+                case 0 => {
+                    @user.currentName doesn't have any aliases. }
+                case _ => {
+                    @for( alias: Username <- user.aliases) {
+                        <span class="label label-std"><b>@alias.name</b></span>
+                    }
+                }
+            }
+            </td>
+        </tr>
+        <tr>
+            <td>
+                IPs:
+            </td>
+            <td colspan="2">
+            @user.ipAliases.length match {
+                case 0 => {
+                    @user.currentName didn't use any other Ip's }
+                case _ => {
+                    @for( ip: IpAlias <- user.ipAliases) {
+                        <span class="label label-std"><b>@ip.ip</b></span>
+                    }
+                }
+            }
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Penalties:
+            </td>
+            <td colspan="2">
+            @user.penalties.length match {
+                case 0 => {
+                    @user.currentName doesn't have any recorded penalties. }
+                case _ => {
+                    @penaltyFormatter(penalties = user.penalties,
+                        showPlayerName = false,
+                        showType = true,
+                        showReason = true,
+                        showExpires = true,
+                        showCreatedOn = true,
+                        showAdminName = true,
+                        showRemoveButton = true)
+                }
+            }
+            @penaltyModal(user.b3Id, user.currentName, loggedInUser)
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="3">
+                Chatlog:
+                <div align="center">
+                        <span class="btn-simple" onclick="prevPageChatlog();">
+                            <i class="fa fa-arrow-left"></i>
+                        </span>
+                        <span class="btn-simple" onclick="nextPageChatlog();">
+                            <i class="fa fa-arrow-right"></i>
+                        </span>
+                </div>
+                <div id="chatlogTable" style="margin-left:90px;margin-right:90px;">
+                </div>
+            </td>
+        </tr>
+    </table>
+
+}

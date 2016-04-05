@@ -1,0 +1,52 @@
+@(messages: Seq[ChatMessage],
+        count: Int,
+        offset: Int,
+        relativeTime: Boolean = true,
+        smallView: Boolean = false,
+        showJumpToConv: Boolean = false,
+        highLightMsgId: Int = -1)(implicit lang: play.api.i18n.Lang)
+
+    @import views.Color
+
+
+    <table class="chatlog-table table-highlight">
+    @if(messages.isEmpty) {
+        <tr>
+            <td>No older messages!</td>
+        </tr>
+    } else {
+        @messages.map { msg =>
+            <tr @if(highLightMsgId == msg.msgId){ style="background: green;"}>
+                <td class="name">
+                    <svg height="10" width="10">
+                        <circle cx="5" cy="5" r="3" stroke="black" stroke-width="0" fill="@msg.userTeam match {
+                            case Teams.blue => {blue}
+                            case Teams.red => {red}
+                            case Teams.spec | Teams.free => {gray}
+                            case _ => {green}
+                        }"></circle>
+                    </svg>
+                    <a href="@routes.Application.userById(msg.userId)">@msg.username</a>
+
+                </td>
+                <td class="message-td">
+                    <div class="bubble">
+                        <div class="message-content">@Color.colorize(msg.msg)</div>
+                        <div class="chat-detail">@msg.msgType @relativeTime match {
+                            case true => {
+                                @views.TimeFormatter.timePassedSince(msg.timestamp)
+                                ago}
+                            case false => {
+                                @msg.timestamp.toString("dd.MM.yy HH:mm:ss", lang.toLocale)
+                            }
+                        }
+                            @if(showJumpToConv) {
+                                <a class="jump-to-conv" href="/chatlogForId?msgId=@msg.msgId">Show Conversation</a>
+                            }
+            </div>
+                    </div>
+                </td>
+            </tr>
+        }
+    }
+    </table>

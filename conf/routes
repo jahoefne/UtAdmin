@@ -1,0 +1,64 @@
+# Map static resources from the /public folder to the /assets URL path
+GET            /assets/*file             controllers.Assets.at(path="/public", file)
+
+
+GET            /                         @controllers.Application.index(count: Int ?= 25, offset: Int ?= 0)
+GET            /user                     @controllers.Application.userById(id:Int)
+GET            /chatlog-plain            @controllers.Application.chatLogPlain(count:Int ?=25 , offset:Int ?= 0, user:Option[Int] ?= None, includeRadio:Boolean ?= false, showJumpToConv: Boolean ?= false)
+GET            /chatlog                  @controllers.Application.chatLog(count:Int ?=30 , offset:Int ?= 0)
+GET            /chatlogForId             @controllers.Application.chatLogForId(msgId: Int)
+
+GET            /online-plain             @controllers.Application.onlinePlayersPlain()
+GET            /userlist                 @controllers.Application.userlist(count:Int, offset:Int ?= 0, minLevel: Int ?= 0, title: String ?= "Users", displaySearchField: Boolean ?= true)
+GET            /usersearch               @controllers.Application.userSearch(name:String)
+GET            /admin-list               @controllers.Application.userlist(count:Int ?= 100, offset:Int ?= 0, minLevel: Int ?= 55, title: String ?= "Admins", displaySearchField: Boolean ?= false)
+GET            /clan-list                @controllers.Application.userlist(count:Int ?= 100, offset:Int ?= 0, minLevel: Int ?= 40, title: String ?= "Clan", displaySearchField: Boolean ?= false)
+
+
+
+####
+# JS Routes, generated javascript for acessing REST-Services
+GET            /jsRoutes                 @controllers.Application.javascriptRoutes
+
+#########################
+# Penalty related routes
+GET            /add-punishment           @controllers.PenaltyController.punishPlayer(userId: Int, reason: String, penalty:String, duration:Option[String])
+GET            /remove-punishment        @controllers.PenaltyController.removePunishment(penaltyId:Int)
+GET            /adminbans                @controllers.PenaltyController.adminBans(noticeOnly: Boolean ?= false)
+GET            /notices                  @controllers.PenaltyController.adminBans(noticeOnly: Boolean ?= true)
+GET            /allbans                  @controllers.PenaltyController.allBans()
+
+#########################
+# Administrator routes
+GET            /accounts                 @controllers.Administrator.accounts()
+POST           /addUser                  @controllers.Administrator.addUser(user:String,password: String , rank:Int, b3Id:Int)
+GET            /accountDelete            @controllers.Administrator.deleteUser(user:String)
+GET            /restart-server           @controllers.Administrator.restartServer()
+
+GET            /allLogs                  @controllers.Administrator.allLogs()
+GET            /password-change          @controllers.Administrator.passwordChange()
+GET            /changePassword           @controllers.Administrator.changePassword(password: String)
+GET            /changeGroup              @controllers.Administrator.changeGroupOfUser(userId: Int, groupBits: Int)
+
+##############
+# RCON SERVICE
+POST            /slap                     @controllers.Rcon.slap(player: Int,name: String)
+POST            /say                      @controllers.Rcon.say(text: String)
+POST            /pm                       @controllers.Rcon.privateMessage(receiverSlot: Int ,text: String)
+POST            /kick                     @controllers.Rcon.kick(player: Int, name: String)
+POST            /nuke                     @controllers.Rcon.nuke(player: Int, name: String)
+POST            /kill                     @controllers.Rcon.kill(player: Int, name: String)
+POST            /forceRed                 @controllers.Rcon.forceRed(player: Int, name: String)
+POST            /forceBlue                @controllers.Rcon.forceBlue(player: Int, name: String)
+POST            /forceSpec                @controllers.Rcon.forceSpec(player: Int, name: String)
+
+
+########################################################################
+# Public routes - these methods do not require the user to be logged in
+OPTIONS        /*all                     @controllers.Public.preflight(all: String)
+GET            /publicstatus             @controllers.Public.publicStatus()
+GET            /publicbans               @controllers.Public.publicBans()
+
+
+# Link to SecureSocial routes
+->             /auth                     securesocial.Routes
