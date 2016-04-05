@@ -9,7 +9,7 @@ body{
 }
 
 .page-header:after{
-    content:"to ~|DN|~ Echelon";
+    content:"to UtAdmin";
 }
 
 .clearfix p a {
