@@ -102,9 +102,10 @@ class Application(override implicit val env: RuntimeEnvironment[UtAdminUser]) ex
   def userById(id: Int) = SecuredAction { request =>
     User.UserInfo.getUserByB3Id(server.b3.connection, id) match {
       case Some(user) =>
-        val userHistory = User.UserInfo.getOnlineHistory(server.b3.connection, user.guid)
+        val onlineHistoryChartData = User.UserInfo.getOnlineHistoryChartData(server.b3.connection, user.guid)
+        val onlineHistory = User.UserInfo.getOnlineHistory(server.b3.connection, user.guid)
         MongoLogger.logAction(request.user, "Userinfo for" + user.currentName + " " + user.guid)
-        Ok(views.html.user(user, userHistory, request.user))
+        Ok(views.html.user(user, onlineHistoryChartData, onlineHistory, request.user))
       case None =>
         Ok(views.html.styledError(Html("The User you are looking for could not be found!"), Some(request.user)))
     }

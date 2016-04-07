@@ -87,7 +87,20 @@ object User {
   object UserInfo {
     val log = Logger(this getClass() getName())
 
-    def getOnlineHistory(conn: Connection, guid: String): List[(String, Long)] = {
+    def getOnlineHistory(conn: Connection, guid: String): List[(DateTime, DateTime)] = {
+      val query = conn.prepareStatement( """
+        SELECT * FROM `ctime` WHERE `ctime`.`guid` LIKE ?
+        ORDER BY  `ctime`.`came` DESC LIMIT 0 , 70 """)
+      query.setString(1, guid)
+      val rs = query.executeQuery()
+
+      var history = List.empty[(DateTime, DateTime)]
+      while (rs.next())
+        history :+= (new DateTime(rs.getLong("came") * 1000L), new DateTime(rs.getLong("gone") * 1000L))
+      history
+    }
+
+    def getOnlineHistoryChartData(conn: Connection, guid: String): List[(String, Long)] = {
       case class HistoryPlain(came: Long, gone: Long)
       val query = conn.prepareStatement( """
         SELECT * FROM `ctime` WHERE `ctime`.`guid` LIKE ?

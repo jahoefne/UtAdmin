@@ -23,7 +23,7 @@
 }
 
 .online-table tr:nth-child(odd) {
-    background: #0f171a;
+    background: #0f171a !important;
 }
 
 .table-highlight tr:hover {
