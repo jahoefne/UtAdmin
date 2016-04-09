@@ -45,17 +45,11 @@
             <td>Xlrstats:</td>
             <td>
             @user.xlrId match {
-        case Some(id) => {
             <a class="btn btn-heading btn-xs"
 
-            href="http://144.76.158.173/index.php?func=player&playerdbid=@id&config=1">
+            href="http://144.76.158.173/index.php?func=player&playerdbid=@user.b3Id&config=1">
                                         Show
             </a>
-        }
-        case _ => {
-            @user.currentName doesn't have xlrstats
-        }
-    }
         </td>
         </tr>
         <tr>
