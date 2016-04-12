@@ -10,30 +10,32 @@
                    We have @players.length players online
                 </h3>
             </div>
-            <table class="table playerlist">
-                <tr>
-                    <th>Number</th>
-                    <th>Name</th>
-                    <th>Score</th>
-                    <th>Online since</th>
-                </tr>
-                @for((player, count) <- players.zipWithIndex) {
+            @if(players.nonEmpty) {
+                <table class="table playerlist">
                     <tr>
-                        <td>@{
-                            count + 1
-                        }
-                        </td>
-                        <td>
-                       <a class="xlrstats-link" href="http://144.76.158.173/index.php?func=player&playerdbid=@player.id&config=0">
-                        @Color.colorize(player.name)
-                       </a>
-                        </td>
-                        <td>@player.score</td>
-                        <td>
-                        @views.TimeFormatter.timePassedSince(player.joined)</td>
+                        <th>Number</th>
+                        <th>Name</th>
+                        <th>Score</th>
+                        <th>Online since</th>
                     </tr>
-                }
-            </table>
+                    @for((player, count) <- players.zipWithIndex) {
+                        <tr>
+                            <td>@{
+                                count + 1
+                            }
+                            </td>
+                            <td>
+                                <a class="xlrstats-link" href="http://144.76.158.173/index.php?func=player&playerdbid=@player.id&config=0">
+                                @Color.colorize(player.name)
+                                </a>
+                            </td>
+                            <td>@player.score</td>
+                            <td>
+                            @views.TimeFormatter.timePassedSince(player.joined)</td>
+                        </tr>
+                    }
+                </table>
+            }
         </div>
     </div>
 </div>
