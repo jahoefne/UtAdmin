@@ -34,22 +34,10 @@ a {
     color: gray;
 }
 
-@media screen and (max-width: 680px) {
-    #left {
-        width: 100%;
-        height: 50%;
-    }
-
-    #divider {
-        display: none;
-    }
-
-    #right {
-        width: 100%;
-        margin-left: 0%;
-        padding-top: 20px;
-        height: 50%;
-    }
+.error-image {
+    display: block;
+    margin: 10vw auto;
+    max-width: 100%;
 }
 
 /** Footer */
@@ -160,4 +148,22 @@ a {
 
 .big-font {
     font-size: large !important;
+}
+
+@media screen and (max-width: 680px) {
+    #left {
+        width: 100%;
+        height: 50%;
+    }
+
+    #divider {
+        display: none;
+    }
+
+    #right {
+        width: 100%;
+        margin-left: 0%;
+        padding-top: 20px;
+        height: 50%;
+    }
 }

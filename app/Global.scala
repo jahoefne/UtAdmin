@@ -54,9 +54,7 @@ object Global extends WithFilters(new GzipFilter()) with play.api.GlobalSettings
       views.html.styledError(
         Html(
           """
-            <div align="center" style="padding:50px;">
-            <image src="http://i.imgur.com/MMmmegA.jpg"></image>
-            </div>
+            <img src="http://i.imgur.com/MMmmegA.jpg" class="error-image">
           """),
         None)
     )
@@ -68,9 +66,7 @@ object Global extends WithFilters(new GzipFilter()) with play.api.GlobalSettings
       views.html.styledError(
         Html(
           """
-            <div align="center" style="padding:50px;">
-            <image src="http://i.imgur.com/9PgKgLL.jpg"></image>
-            </div>
+            <img src="http://i.imgur.com/9PgKgLL.jpg" class="error-image">
           """),
         None)
     )
@@ -78,12 +74,11 @@ object Global extends WithFilters(new GzipFilter()) with play.api.GlobalSettings
 
   // 404 - page not found error
   override def onHandlerNotFound(request: RequestHeader) = Future.successful{
-    NotFound(      views.html.styledError(
+    NotFound(
+      views.html.styledError(
       Html(
         """
-            <div align="center" style="padding:50px;">
-            <image src="http://i.imgur.com/SkkGRnD.jpg"></image>
-            </div>
+          <img src="http://i.imgur.com/SkkGRnD.jpg" class="error-image">
         """),
       None
     ))
