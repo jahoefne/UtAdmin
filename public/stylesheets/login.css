@@ -1,14 +1,14 @@
-
-body{
+body {
     background: #081114;
     color:white;
 }
-.container{
+
+.container {
     text-align:center;
     font-family: 'Lucida Console', 'Lucida Sans Typewriter', monaco, 'Bitstream Vera Sans Mono', monospace;
 }
 
-.page-header:after{
+.page-header:after {
     content:"to UtAdmin";
 }
 
@@ -16,30 +16,35 @@ body{
     display: none;
 }
 
-fieldset{
-    width: 20%;
-    left:39%;
-    position: absolute;
+.form-horizontal {
+    display: inline-flex;
+}
+
+.form-horizontal fieldset {
     border:none;
     padding-bottom:0;
     padding-top:20px;
     background: #295d7e;
 }
-.help-block{
+
+.help-block {
     display:none;
 }
-a{
+
+a {
     text-decoration: none;
     color:white;
 }
-input{
+
+input {
     outline: none;
     border-radius: 2px;
     height:28px;
     border:0px;
     font-size: large;
 }
-button{
+
+button {
     height:28px;
     border-radius: 2px;
     margin:10px;
@@ -47,20 +52,27 @@ button{
     outline: none;
     font-size:large;
     background:white;
-}
-button:hover{
-    background: #3996ff;
-}
-button:active{
-    background: #2e74c8;
-}
-.control-group{
-    padding:5px;
-}
-.control-label{
-    display: inline-block;
-}
-.control-label::after{
-    content: ":";
+    transition: 200ms;
+    cursor: pointer;
 }
 
+button:hover {
+    background: #3996ff;
+    transition: 200ms;
+}
+
+button:active {
+    background: #2e74c8;
+}
+
+.control-group {
+    padding:5px;
+}
+
+.control-label {
+    display: inline-block;
+}
+
+.control-label::after {
+    content: ":";
+}
