@@ -27,7 +27,7 @@
             <ul>
                 <li><a href="/">Status</a></li>
                 <li>
-                    Users
+                    <span>Users</span>
                     <ul>
                         <li><a
                         href="@routes.Application.userlist(count = 45,
@@ -40,22 +40,25 @@
                     </ul>
                 </li>
                 <li>
-                    Penalties
+                    <span>Penalties</span>
                     <ul>
                         <li><a href="/adminbans">Admin Bans</a></li>
                         <li><a href="/notices">Notices</a></li>
                         <li><a href ="/allbans">All Penalties</a></li>
                     </ul>
                 </li>
-                <li class="right"> <i class="fa fa-lock"></i> @loggedInUser.main.userId
+                <li class="right">
+                    <span><i class="fa fa-lock"></i> @loggedInUser.main.userId</span>
                     <ul>
                         <li><a href="/auth/logout"> <i class="fa fa-sign-out"></i> Logout</a></li>
-                        <li><a href="/password-change"><i class="fa fa-key"></i>Change Password</a></li>
+                        <li><a href="/password-change"><i class="fa fa-key"></i> Change Password</a></li>
                         @if(loggedInUser.rank == 0) {
-                            <li><a href="/accounts">
-                                <i class="fa fa-user-plus"></i>
-                                User Administration
-                            </a></li>
+                            <li>
+                                <a href="/accounts">
+                                    <i class="fa fa-user-plus"></i>
+                                    User Administration
+                                </a>
+                            </li>
                         }
                     </ul>
                 </li>

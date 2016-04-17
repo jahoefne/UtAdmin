@@ -1,15 +1,16 @@
-.navbar{
-    width:100%;
+.navbar {
+    width: 100%;
     background: #1c425d;
     text-align: center;
-    top:0;
-    margin-bottom:15px;
+    top: 0;
+    margin-bottom: 15px;
+    cursor: default;
 }
 .navbar ul {
     text-align: left;
     display: inline;
     margin: 0;
-    left:0;
+    left: 0;
     list-style: none;
 }
 
@@ -18,7 +19,7 @@
     display: inline-block;
     margin-right: -4px;
     position: relative;
-    padding: 15px 30px;
+    padding: 0px;
     background: #1c425d;
     -webkit-transition: all 0.2s;
     -moz-transition: all 0.2s;
@@ -64,10 +65,13 @@
     visibility: visible;
 }
 
-.navbar a{
-    display:block;
-    width:100%;
-    height:100%;
+.navbar a, .navbar span {
+    display: block;
+    padding: 15px 30px;
+}
+
+.navbar a {
+    display: block;
     cursor: pointer;
     color: white;
     text-decoration: none;
