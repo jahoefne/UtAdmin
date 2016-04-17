@@ -7,7 +7,7 @@ import play.twirl.api.Html
  **/
 object Color {
   private def generate(text: String, color: String): String = {
-    "<font color=\"" + color + "\">" + text + "</font>"
+    "<span style=\"color: " + color + ";\">" + text + "</span>"
   }
 
   def colorize(s: String): Html = Html({
