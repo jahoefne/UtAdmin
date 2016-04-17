@@ -37,48 +37,48 @@ object UtAdminUserService extends UserService[UtAdminUser] {
   val log = Logger(this getClass() getName())
 
   def getAllUsers: Seq[UtAdminUser] = {
-    log.debug("Querying all admin accounts")
+    log.info("Querying all admin accounts")
     var allUsers = Seq.empty[UtAdminUser]
     users.find(MongoDBObject("_id" -> MongoDBObject("$exists" -> true))).foreach((u: DBObject)
     => allUsers :+= fromMongoDbObject(u)
     )
-    log.debug("Done!")
+    log.info("Done querying all admin accounts!")
     allUsers
   }
 
   def deleteUser(id: String): Boolean = {
-    log.debug("Trying to delete user with id - " + id)
+    log.info("Trying to delete user with id - " + id)
     users.find((obj: DBObject) => {
       log.debug("Checking - " + obj.main.userId + " against id " + id + "  is " + (obj.main.userId == id));
       obj.main.userId == id
     }) match {
       case Some(u) =>
         users.remove(u)
-        log.error("Deleted!")
+        log.info("Deleted!")
         true
       case _ =>
-        log.error("User not found!!")
+        log.warn("User not found!!")
         false
     }
   }
 
   override def find(providerId: String, userId: String): Future[Option[BasicProfile]] = {
-    log.debug("Find " + providerId + " " + userId)
+    log.info("Find " + providerId + " " + userId)
     users.find((obj: DBObject) => {
       log.debug("Checking :" + obj.main.userId + "  " + obj.main.providerId)
       obj.main.providerId == providerId && obj.main.userId == userId
     }) match {
       case Some(u) =>
-        log.error("Found user:" + u.main.email)
+        log.info("Found user:" + u.main.email)
         Future.successful(Some(u.main))
       case _ =>
-        log.error("User not found!")
+        log.warn("User not found!")
         Future.successful(None)
     }
   }
 
   override def findByEmailAndProvider(email: String, providerId: String): Future[Option[BasicProfile]] = {
-    log.debug("Find by email and provider " + email + " " + providerId)
+    log.info("Find by email and provider " + email + " " + providerId)
     users.find((obj: DBObject) => obj.main.email.getOrElse("") == email && obj.main.providerId == providerId) match {
       case Some(u) => Future.successful(Some(u.main))
       case _ => Future.successful(None)
@@ -95,7 +95,6 @@ object UtAdminUserService extends UserService[UtAdminUser] {
 
   /** We do not support linking of profiles */
   override def link(current: UtAdminUser, to: BasicProfile): Future[UtAdminUser] = Future.successful(current)
-
 
   override def passwordInfoFor(user: UtAdminUser): Future[Option[PasswordInfo]] =
     users.find((obj: DBObject) => obj.main.providerId == user.main.providerId && obj.main.userId == user.main.userId) match {
@@ -135,7 +134,6 @@ object UtAdminUserService extends UserService[UtAdminUser] {
             users.save(newUser)
             Future.successful(newUser)
         }
-
 
       case SaveMode.PasswordChange =>
         val found = users.find((obj: DBObject) => obj.main.providerId == profile.providerId && obj.main.userId == profile.userId)

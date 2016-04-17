@@ -69,7 +69,7 @@ object B3UserController {
   }
 
   def listOnlineUsers(conn: Connection): Seq[OnlineUser] = {
-   // log.error("Querying online users!")
+   // log.info("Querying online users!")
     val query = conn.prepareStatement(
       """SELECT
            `current_clients`.* ,
