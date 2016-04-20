@@ -32,7 +32,14 @@
                 <td class="message-td">
                     <div class="bubble">
                         <div class="message-content">@Color.colorize(msg.msg)</div>
-                        <div class="chat-detail">@msg.msgType @relativeTime match {
+                        <div class="chat-detail">
+                            @msg.msgType
+
+                            @if(msg.targetId.isDefined){
+                                <a href="@routes.Application.userById(msg.targetId.get)">to @msg.targetName.getOrElse("Unknown Name")</a>
+                            }
+
+                            @relativeTime match {
                             case true => {
                                 @views.TimeFormatter.timePassedSince(msg.timestamp)
                                 ago}
