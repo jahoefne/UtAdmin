@@ -220,34 +220,53 @@ button {
 /***
 * Dropdown Button
 */
-.dropdown-menu-container ul{
-    margin:2px;
-    padding:0;
-}
-.dropdown-menu-container ul {
-    display: block;
-    border:1px solid white;
-    border-radius: 2px;
-    text-align:center;
+
+.dropdown-menu-container {
+    display: inline-flex;
 }
 
-.dropdown-menu-container ul:hover .dropdown-content li{
-    display: block;
-    padding: 5px 20px;
+.dropdown-menu-container > * {
+    display: inline-flex;
+    white-space: nowrap;
 }
 
-.dropdown-menu-container ul:hover .dropdown-content li:hover{
-    background: #286188;
+.dropdown-menu-container .dropdown-trigger {
+    padding: 8px 12px;
+    background: rgb(34, 103, 130);
+    cursor: default;
 }
 
-.dropdown-menu-container ul:hover .dropdown-content{
+.dropdown-menu-container .dropdown-content {
+    border: 0px none;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown-menu-container .dropdown-content li {
+    display: none;
+}
+
+.dropdown-menu-container:hover .dropdown-content {
     position: absolute;
     display: inline-block;
     z-index: 200;
-    background:#1c425d;
+    background: #1c425d;
 }
-.dropdown-menu-container ul li {
-    display:none;
+
+.dropdown-menu-container:hover .dropdown-content li {
+    display: flex;
+    padding: 0px;
+}
+
+.dropdown-menu-container:hover .dropdown-content li:hover {
+    background: #286188;
+}
+
+.dropdown-menu-container:hover .dropdown-content li a {
+    display: block;
+    width: 100%;
+    padding: 8px 12px;
 }
 
 .std-margin{
@@ -267,11 +286,6 @@ button {
     border-radius: 5px 5px 0px 0px;
     margin-bottom:5px;
 }
-.change-rank-btn, .change-rank-btn ul{
-    width:90px;
-    padding:5px;
-}
-
 
 .btn-simple{
     border-radius: 2px;

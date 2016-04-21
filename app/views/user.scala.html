@@ -62,10 +62,9 @@
                 } <p>
                 @if(loggedInUser.rank == Ranks.God) {
                     <div>
-                        <span class="dropdown-menu-container change-rank-btn">
-                            <ul>
-                                Change Rank
-                                <span class="dropdown-content">
+                        <div class="dropdown-menu-container change-rank-btn">
+                            <span class="dropdown-trigger">Change Rank</span>
+                            <ul class="dropdown-content">
                                 @for( group <- B3GroupController.getGroups()) {
                                     <li>
                                         <a href="@routes.Administrator.changeGroupOfUser(user.b3Id, group.bits)">
@@ -73,9 +72,8 @@
                                         </a>
                                     </li>
                                 }
-                                </span>
                             </ul>
-                        </span>
+                        </div>
                     </div>
                 }
             </td>
