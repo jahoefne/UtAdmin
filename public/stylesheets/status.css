@@ -4,22 +4,19 @@
 .online-table {
     width: 100%;
     font-size: smaller;
-    border:1px solid #1c425d;
     border-spacing: 0;
-    margin-bottom:8px;
+    margin-bottom: 8px;
 }
 
 .online-table tr{
-    border-collapse: collapse;
-    padding-top:5px;
-    padding-bottom:5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 .online-table th {
     text-align: left;
     background: #1c425d;
-    padding-bottom:10px;
-    padding-top:10px;
-    border-bottom:1px solid #4c4c4c;
+    padding-bottom: 10px;
+    padding-top: 10px;
 }
 
 .online-table tr:nth-child(odd) {
@@ -187,14 +184,14 @@ button {
 .restart-button-container{
 }
 .restart-button, .server-info{
-    border-radius:5px 5px 0px 0px;
-    float:right;
-    border:0;
-    color:white;
-    z-index:-100;
+    border-radius: 5px 5px 0px 0px;
+    float: right;
+    border: 0;
+    color: white;
+    z-index: -100;
     background: #1c425d;
     vertical-align: middle;
-    padding:5px;
+    padding: 5px;
     font-size: small;
     cursor: pointer;
     cursor: pointer;
@@ -202,7 +199,7 @@ button {
     -webkit-user-select: none;
 }
 .server-info{
-    float:left;
+    float: left;
 }
 .restart-button:hover{
     background: #ff0000;
@@ -271,48 +268,55 @@ button {
 
 .std-margin{
     margin-left: 30px;
-    margin-right:30px;
+    margin-right: 30px;
     width: calc(100% - 60px);
 }
 
 .table-heading-container{
-    text-align: center;
-}
-.table-heading{
-    background: #1c425D;
-    padding-top:5px;
-    padding-left:5px;
-    padding-right:5px;
-    border-radius: 5px 5px 0px 0px;
-    margin-bottom:5px;
+    display: flex;
+    justify-content: center;
 }
 
-.btn-simple{
+.table-heading {
+    display: inline-flex;
+    background: #1c425D;
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 5px 5px 0px 0px;
+    text-align: center;
+}
+
+.btn-simple {
     border-radius: 2px;
     border-radius: 2px;
-    padding:5px;
-    margin:5px;
-    color:white;
+    padding: 5px;
+    margin: 5px;
+    color: white;
     background: transparent;
     cursor: pointer;
 }
 
-.btn-simple:hover{
+.btn-simple:hover {
     border-radius: 2px;
-    padding:5px;
-    margin:5px;
+    padding: 5px;
+    margin: 5px;
     background: #2f7bd2;
     cursor: pointer;
 }
 
-.btn{
+.btn {
     border-radius: 2px;
-    padding:5px;
-    margin:5px;
+    padding: 5px;
+    margin: 5px;
     background: #17324b;
     cursor: pointer;
 }
 
-.jump-to-conv{
-    margin-left:10px;
+.jump-to-conv {
+    margin-left: 10px;
+}
+
+.user-profile {
+    border: 1px solid #1c425d;
 }
