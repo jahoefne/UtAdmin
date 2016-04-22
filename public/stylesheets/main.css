@@ -148,6 +148,10 @@ a {
     font-size: large !important;
 }
 
+.flag-icon {
+    margin-right: 8px;
+}
+
 @media screen and (max-width: 680px) {
     #left {
         width: 100%;
