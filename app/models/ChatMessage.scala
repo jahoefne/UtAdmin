@@ -1,6 +1,6 @@
 package models
 
-import java.sql.{JDBCType, Connection, ResultSet}
+import java.sql.{Connection, ResultSet}
 
 import org.joda.time.DateTime
 import play.api.Logger
@@ -120,18 +120,20 @@ object ChatMessage {
     val ins = connection.prepareStatement(
       s"""INSERT INTO  `b3bot`.`chatlog` ( `id` , `msg_time`, `msg_type` , `client_id` , `client_name`,
            `client_team`, `msg` , `target_id` , `target_name`, `target_team` ) VALUES ( NULL , ?,
-           '$msgType',  '$adminId', ?,  '42', ?, ? , ? , NULL )""")
+           '$msgType',  '$adminId', ?,  '42', ?,
+        ${if(targetId.isDefined){"?"}else{"NULL"}} , ${if(targetName.isDefined){"?"}else{"NULL"}}  , NULL )""")
 
     ins.setLong(1, DateTime.now().getMillis / 1000)
     ins.setString(2, adminName)
     ins.setString(3, message)
+
     targetId match {
       case Some(id) => ins.setInt(4, id)
-      case _ => ins.setNull(4, java.sql.Types.INTEGER);
+      case _ =>
     }
     targetName match {
       case Some(name) => ins.setString(5, name.dropRight(2))
-      case _ => ins.setNull(5, java.sql.Types.VARCHAR);
+      case _ =>
     }
 
 
