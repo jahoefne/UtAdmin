@@ -71,11 +71,9 @@ a {
 }
 
 .label {
-    border-radius: 2px;
     background: #9a0000;
-    padding-left: 3px;
+    padding: 4px 6px;
     text-align: center;
-    padding-right: 3px;
 }
 
 .label-warning {
@@ -148,6 +146,10 @@ a {
 
 .big-font {
     font-size: large !important;
+}
+
+.flag-icon {
+    margin-right: 8px;
 }
 
 @media screen and (max-width: 680px) {

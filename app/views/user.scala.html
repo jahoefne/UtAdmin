@@ -19,198 +19,199 @@
     <script src="@routes.Assets.at("javascripts/UserInfo.js")"></script>
     <script src="@routes.Assets.at("javascripts/Punisher.js")"></script>
 
-    <div class="table-heading-container"><span class="table-heading"><i id ="userCountryFlag" class="flag-icon"></i>&nbsp;@user.currentName</span></div>
+    <div class="table-heading-container">
+        <div class="table-heading">
+            <i id="userCountryFlag" class="flag-icon"></i>
+            <span>@user.currentName<span>
+        </div>
+    </div>
 
-    <table class="online-table std-margin">
-        <tr>
-            <td colspan="3">
-                <div id="userLocationMap"></div>
+    <div class="std-margin user-profile">
+        <div id="userLocationMap"></div>
+        <table class="online-table">
+            <tr>
+                <td> Connections:</td>
+                <td> @user.numberOfConnections </td>
+                <td rowspan="8" width="520" id="onlineHistoryChart">@onlineHistoryChart(onlineHistoryChartData)</td>
+            </tr>
+            <tr>
+                <td>IP:</td>
+                <td>@user.currentIp</td>
+            </tr>
+            <tr>
+                <td>B3-Id:</td>
+                <td>@@ @user.b3Id</td>
+            </tr>
+
+                <tr>
+                <td>Xlrstats:</td>
+                <td>
+
+                <a class="btn btn-heading btn-xs"
+
+                href="http://144.76.158.173/index.php?func=player&playerdbid=@user.b3Id&config=1">
+                                            Show
+                </a>
             </td>
-        </tr>
-        <tr>
-            <td> Connections:</td>
-            <td> @user.numberOfConnections </td>
-            <td rowspan="8" width="520" id="onlineHistoryChart">@onlineHistoryChart(onlineHistoryChartData)</td>
-        </tr>
-        <tr>
-            <td>IP:</td>
-            <td>@user.currentIp</td>
-        </tr>
-        <tr>
-            <td>B3-Id:</td>
-            <td>@@ @user.b3Id</td>
-        </tr>
+            </tr>
+            <tr>
+                <td>Rank:</td>
+                <td>
+                    @views.RankFormatter.labelForRank(user.group)
+                    @user.maskedAs match {
+                        case Some(group) if group.level != 0 => {Masked as: @views.RankFormatter.labelForRank(group)}
+                        case _ => {}
+                    } <p>
+                    @if(loggedInUser.rank == Ranks.God) {
+                        <div>
+                            <div class="dropdown-menu-container change-rank-btn">
+                                <span class="dropdown-trigger">Change Rank</span>
+                                <ul class="dropdown-content">
+                                    @for( group <- B3GroupController.getGroups()) {
+                                        <li>
+                                            <a href="@routes.Administrator.changeGroupOfUser(user.b3Id, group.bits)">
+                                                @group.name (@group.level)
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>GUID:</td>
+                <td>@user.guid</td>
+            </tr>
+            <tr>
+                <td>Played (last 30d):</td>
+                <td>
+                @{
+                    new PeriodFormatterBuilder().appendDays()
+                            .appendSuffix("day", "days")
+                            .appendSeparator(" ")
+                            .appendHours()
+                            .appendSuffix("h", "h")
+                            .appendSeparator(" ")
+                            .appendMinutes()
+                            .appendSuffix("min", "mins")
+                            .appendSeparator(" ")
+                            .appendSeconds()
+                            .appendSuffix("s", "s")
+                            .toFormatter().print(user.totalTimeOnServer)
+                }</td>
+            </tr>
+            <tr>
+                <td>
+                    First seen:
+                </td>
+                <td>
+                @user.firstSeen.toString("dd.MMM.yyyy (HH:mm:ss)", lang.toLocale)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Last seen:
+                </td>
+                <td>
+                @user.lastSeen.toString("dd.MMM.yyyy (HH:mm:ss)", lang.toLocale)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Aliases:
+                </td>
+                <td colspan="2">
+                @user.aliases.length match {
+                    case 0 => {
+                        @user.currentName doesn't have any aliases. }
+                    case _ => {
+                        @for( alias: Username <- user.aliases) {
+                            <span class="label label-std"><b>@alias.name</b></span>
+                        }
+                    }
+                }
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    IPs:
+                </td>
+                <td colspan="2">
+                @user.ipAliases.length match {
+                    case 0 => {
+                        @user.currentName didn't use any other Ip's }
+                    case _ => {
+                        @for( ip: IpAlias <- user.ipAliases) {
+                            <span class="label label-std"><b>@ip.ip</b></span>
+                        }
+                    }
+                }
+                </td>
+            </tr>
 
             <tr>
-            <td>Xlrstats:</td>
-            <td>
+                <td>
+                    Penalties:
+                </td>
+                <td colspan="2">
+                @user.penalties.length match {
+                    case 0 => {
+                        @user.currentName doesn't have any recorded penalties. }
+                    case _ => {
+                        @penaltyFormatter(penalties = user.penalties,
+                            showPlayerName = false,
+                            showType = true,
+                            showReason = true,
+                            showExpires = true,
+                            showCreatedOn = true,
+                            showAdminName = true,
+                            showRemoveButton = true)
+                    }
+                }
+                @penaltyModal(user.b3Id, user.currentName, loggedInUser)
+                </td>
+            </tr>
 
-            <a class="btn btn-heading btn-xs"
-
-            href="http://144.76.158.173/index.php?func=player&playerdbid=@user.b3Id&config=1">
-                                        Show
-            </a>
-        </td>
-        </tr>
-        <tr>
-            <td>Rank:</td>
-            <td>
-                @views.RankFormatter.labelForRank(user.group)
-                @user.maskedAs match {
-                    case Some(group) if group.level != 0 => {Masked as: @views.RankFormatter.labelForRank(group)}
-                    case _ => {}
-                } <p>
-                @if(loggedInUser.rank == Ranks.God) {
-                    <div>
-                        <span class="dropdown-menu-container change-rank-btn">
-                            <ul>
-                                Change Rank
-                                <span class="dropdown-content">
-                                @for( group <- B3GroupController.getGroups()) {
-                                    <li>
-                                        <a href="@routes.Administrator.changeGroupOfUser(user.b3Id, group.bits)">
-                                            @group.name (@group.level)
-                                        </a>
-                                    </li>
-                                }
-                                </span>
-                            </ul>
-                        </span>
+            <tr>
+                <td colspan="3">
+                    Chatlog:
+                    <div align="center">
+                            <span class="btn-simple" onclick="prevPageChatlog();">
+                                <i class="fa fa-arrow-left"></i>
+                            </span>
+                            <span class="btn-simple" onclick="nextPageChatlog();">
+                                <i class="fa fa-arrow-right"></i>
+                            </span>
                     </div>
-                }
-            </td>
-        </tr>
-        <tr>
-            <td>GUID:</td>
-            <td>@user.guid</td>
-        </tr>
-        <tr>
-            <td>Played (last 30d):</td>
-            <td>
-            @{
-                new PeriodFormatterBuilder().appendDays()
-                        .appendSuffix("day", "days")
-                        .appendSeparator(" ")
-                        .appendHours()
-                        .appendSuffix("h", "h")
-                        .appendSeparator(" ")
-                        .appendMinutes()
-                        .appendSuffix("min", "mins")
-                        .appendSeparator(" ")
-                        .appendSeconds()
-                        .appendSuffix("s", "s")
-                        .toFormatter().print(user.totalTimeOnServer)
-            }</td>
-        </tr>
-        <tr>
-            <td>
-                First seen:
-            </td>
-            <td>
-            @user.firstSeen.toString("dd.MMM.yyyy (HH:mm:ss)", lang.toLocale)
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Last seen:
-            </td>
-            <td>
-            @user.lastSeen.toString("dd.MMM.yyyy (HH:mm:ss)", lang.toLocale)
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Aliases:
-            </td>
-            <td colspan="2">
-            @user.aliases.length match {
-                case 0 => {
-                    @user.currentName doesn't have any aliases. }
-                case _ => {
-                    @for( alias: Username <- user.aliases) {
-                        <span class="label label-std"><b>@alias.name</b></span>
-                    }
-                }
-            }
-            </td>
-        </tr>
-        <tr>
-            <td>
-                IPs:
-            </td>
-            <td colspan="2">
-            @user.ipAliases.length match {
-                case 0 => {
-                    @user.currentName didn't use any other Ip's }
-                case _ => {
-                    @for( ip: IpAlias <- user.ipAliases) {
-                        <span class="label label-std"><b>@ip.ip</b></span>
-                    }
-                }
-            }
-            </td>
-        </tr>
+                    <div id="chatlogTable" style="margin-left:90px;margin-right:90px;">
+                    </div>
+                </td>
+            </tr>
 
-        <tr>
-            <td>
-                Penalties:
-            </td>
-            <td colspan="2">
-            @user.penalties.length match {
-                case 0 => {
-                    @user.currentName doesn't have any recorded penalties. }
-                case _ => {
-                    @penaltyFormatter(penalties = user.penalties,
-                        showPlayerName = false,
-                        showType = true,
-                        showReason = true,
-                        showExpires = true,
-                        showCreatedOn = true,
-                        showAdminName = true,
-                        showRemoveButton = true)
-                }
-            }
-            @penaltyModal(user.b3Id, user.currentName, loggedInUser)
-            </td>
-        </tr>
-
-        <tr>
-            <td colspan="3">
-                Chatlog:
-                <div align="center">
-                        <span class="btn-simple" onclick="prevPageChatlog();">
-                            <i class="fa fa-arrow-left"></i>
-                        </span>
-                        <span class="btn-simple" onclick="nextPageChatlog();">
-                            <i class="fa fa-arrow-right"></i>
-                        </span>
-                </div>
-                <div id="chatlogTable" style="margin-left:90px;margin-right:90px;">
-                </div>
-            </td>
-        </tr>
-
-        <tr>
-            <td colspan="3">
-                Online History:
-                <div align="center">
-                <table class="online-table table-highlight">
-                    <tr>
-                        <th>Came</th>
-                        <th>Left</th>
-                        <th>Duration</th>
-                    </tr>
-                    @for((came,gone) <- onlineHistory){
+            <tr>
+                <td colspan="3">
+                    Online History:
+                    <div align="center">
+                    <table class="online-table table-highlight">
                         <tr>
-                            <td>@TimeFormatter.timeToString(came)</td>
-                            <td>@TimeFormatter.timeToString(gone)</td>
-                            <td>@TimeFormatter.formatDuration(new Duration(came, gone))</td>
+                            <th>Came</th>
+                            <th>Left</th>
+                            <th>Duration</th>
                         </tr>
-                    }
-                </table>
-                </div>
-            </td>
-        </tr>
-    </table>
+                        @for((came,gone) <- onlineHistory){
+                            <tr>
+                                <td>@TimeFormatter.timeToString(came)</td>
+                                <td>@TimeFormatter.timeToString(gone)</td>
+                                <td>@TimeFormatter.formatDuration(new Duration(came, gone))</td>
+                            </tr>
+                        }
+                    </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
 
 }
