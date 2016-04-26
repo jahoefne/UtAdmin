@@ -1,6 +1,6 @@
-function privateMessage(playerSlot, playerName){
+function privateMessage(playerSlot, playerName, playerId){
     sweetPrompt("Please enter your message", "for "+ playerName , "Send!", "Cancel", function(response) {
-        $.ajax(jsRoutes.controllers.Rcon.privateMessage(playerSlot, response));
+        $.ajax(jsRoutes.controllers.Rcon.privateMessage(playerSlot, response, playerId, playerName));
     });
 }
 

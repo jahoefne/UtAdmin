@@ -44,7 +44,7 @@ GET            /changeGroup              @controllers.Administrator.changeGroupO
 # RCON SERVICE
 POST            /slap                     @controllers.Rcon.slap(player: Int,name: String)
 POST            /say                      @controllers.Rcon.say(text: String)
-POST            /pm                       @controllers.Rcon.privateMessage(receiverSlot: Int ,text: String)
+POST            /pm                       @controllers.Rcon.privateMessage(receiverSlot: Int ,text: String, b3Id: Int, receiverName: String)
 POST            /kick                     @controllers.Rcon.kick(player: Int, name: String)
 POST            /nuke                     @controllers.Rcon.nuke(player: Int, name: String)
 POST            /kill                     @controllers.Rcon.kill(player: Int, name: String)

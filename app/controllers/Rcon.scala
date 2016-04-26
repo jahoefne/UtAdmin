@@ -60,7 +60,8 @@ class Rcon(override implicit val env: RuntimeEnvironment[UtAdminUser])
       Redirect("/")
   }
 
-  def privateMessage(receiverSlot: Int, text: String) = SecuredAction { request =>
+  def privateMessage(receiverSlot: Int, text: String, b3Id: Int, receiverName: String) = SecuredAction { request =>
+    println(b3Id+ "  "+receiverName)
     MongoLogger.logAction(request.user, s"PM TO : $receiverSlot text: $text")
     val toSend = "^2" + request.user.main.userId + "^7: " + text
     server.rcon.rcon(s"tell $receiverSlot $toSend")
@@ -69,7 +70,9 @@ class Rcon(override implicit val env: RuntimeEnvironment[UtAdminUser])
       adminName = request.user.main.userId,
       message = text,
       msgType = "PM",
-      request.user.b3Id
+      adminId = request.user.b3Id,
+      targetId = Some(b3Id),
+      targetName = Some(receiverName)
     )
     Ok("Sent!.")
   }

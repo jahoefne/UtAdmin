@@ -42,7 +42,7 @@
             @views.TimeFormatter.timePassedSince(player.joined)
             </td>
             <td>
-                <span class="btn-simple" onclick="privateMessage(@player.serverId, '@escapeEcmaScript(player.name)');"><i class="fa fa-envelope-o"></i></span>
+                <span class="btn-simple" onclick="privateMessage(@player.serverId, '@escapeEcmaScript(player.name)', @player.id);"><i class="fa fa-envelope-o"></i></span>
             </td>
             <td width="30px">
                 <span class="dropdown-menu-container">
