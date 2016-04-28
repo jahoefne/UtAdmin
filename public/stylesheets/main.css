@@ -2,7 +2,6 @@ body {
     background: #04080A;
     color: #f0f0f0;
     font-family: 'Roboto', sans-serif;
-    margin-bottom: 0;
 }
 
 #left {
@@ -42,12 +41,12 @@ a {
 
 /** Footer */
 .footer {
-    bottom: 0;
+    position: fixed;
     left: 0;
     height: 20px;
     width: 100%;
     background: #102333;
-    opacity: 0.9;
+    opacity: 0.8;
     border-top: 1px solid black;
     text-align: center;
     vertical-align: middle;
