@@ -21,7 +21,8 @@ object UtServer {
   val sshIp = "SSH_IP"
   val sshPass = "SSH_PASS"
   val sshUser = "SSH_USER"
-  val restartCmd = "e.g. screen -S Server -X quit;  screen -m -d -S sh startServer.sh"
+  val restartServerCmd = "SSH COMMAND"
+  val restartB3Cmd = "SSH COMMAND"
 
 
   val log = Logger(this getClass() getName())

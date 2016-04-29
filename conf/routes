@@ -34,6 +34,7 @@ GET            /accounts                 @controllers.Administrator.accounts()
 POST           /addUser                  @controllers.Administrator.addUser(user:String,password: String , rank:Int, b3Id:Int)
 GET            /accountDelete            @controllers.Administrator.deleteUser(user:String)
 GET            /restart-server           @controllers.Administrator.restartServer()
+GET            /restart-b3               @controllers.Administrator.restartB3()
 
 GET            /allLogs                  @controllers.Administrator.allLogs()
 GET            /password-change          @controllers.Administrator.passwordChange()

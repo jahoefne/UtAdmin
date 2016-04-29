@@ -21,7 +21,7 @@ class Administrator(override implicit val env: RuntimeEnvironment[UtAdminUser]) 
 
       jassh.SSH.once(UtServer.sshIp, UtServer.sshUser, UtServer.sshPass) {
         ssh =>
-          print(ssh.execute(UtServer.restartCmd))
+          print(ssh.execute(UtServer.restartServerCmd))
       }
       Ok("Done.")
   }
@@ -131,5 +131,16 @@ class Administrator(override implicit val env: RuntimeEnvironment[UtAdminUser]) 
   def passwordChange() = SecuredAction {
     request =>
       Ok(views.html.passwordChange(request.user))
+  }
+
+  def restartB3() = SecuredAction {
+    request =>
+      MongoLogger.logAction(request.user, "Restarting Urt B3!")
+
+      jassh.SSH.once(UtServer.sshIp, UtServer.sshUser, UtServer.sshPass) {
+        ssh =>
+          print(ssh.execute(UtServer.restartB3Cmd))
+      }
+      Ok("Done.")
   }
 }

@@ -183,7 +183,11 @@ button {
 
 .restart-button-container{
 }
-.restart-button, .server-info{
+
+.restart-b3-button{
+    margin-right:10px;
+}
+.restart-server-button, .server-info{
     border-radius: 5px 5px 0px 0px;
     float: right;
     border: 0;

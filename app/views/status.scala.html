@@ -26,7 +26,8 @@
         <div id="left">
             <div class="restart-button-container">
                 <span class="server-info">@UtServer.name</span>
-                <span class="restart-button" id="restartServerButton">Restart</span>
+                 <span class="restart-server-button" id="restartServerButton">Restart Server</span>
+                 <span class="restart-server-button restart-b3-button" id="restartB3Button">Restart B3</span>
             </div>
             <span id="statusPanel">
                     <!-- loaded dynamically -->
@@ -43,7 +44,7 @@
                     <input type="text" id="talkback"><button id="say">Say!</button>
                 </div>
                 <span id="chat-div">
-                    @chatlog(messages, count, offset, true, false)
+                @chatlog(messages, count, offset, true, false)
                 </span>
             </div>
         </div>
