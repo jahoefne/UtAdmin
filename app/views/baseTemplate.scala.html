@@ -65,12 +65,14 @@
             </ul>
         </div>
 
+        <div class="content">
         @content
+        </div>
 
         <div class="footer">
-                @for( u <- MongoLogger.getLoggedInUsers) {
-                    <span class="online-admin">@u</span>
-                }
+        @for(u <- MongoLogger.getLoggedInUsers) {
+            <span class="online-admin">@u</span>
+        }
         </div>
     </body>
 </html>

@@ -152,6 +152,10 @@ a {
     margin-right: 8px;
 }
 
+.content{
+    padding-bottom: 20px;
+}
+
 @media screen and (max-width: 680px) {
     #left {
         width: 100%;
