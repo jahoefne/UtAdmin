@@ -89,6 +89,17 @@ object User {
   }
 
   object UserInfo {
+    def resetXlrStats(id: Int) = DB localTx { implicit session =>
+      sql"DELETE FROM xlr_history_monthly WHERE client_id = $id".execute().apply()
+      sql"DELETE FROM xlr_history_weekly WHERE client_id = $id".execute().apply()
+      sql"DELETE FROM xlr_opponents WHERE target_id = $id OR killer_id = $id".execute().apply()
+      sql"DELETE FROM xlr_playeractions WHERE player_id = $id".execute().apply()
+      sql"DELETE FROM xlr_playerbody WHERE player_id = $id".execute().apply()
+      sql"DELETE FROM xlr_playermaps WHERE player_id = $id".execute().apply()
+      sql"DELETE FROM xlr_playerstats WHERE client_id = $id".execute().apply()
+      sql"DELETE FROM xlr_weaponusage WHERE player_id = $id".execute().apply()
+    }
+
     val log = Logger(this getClass() getName())
 
     def getOnlineHistory(guid: String): List[(DateTime, DateTime)] = DB readOnly { implicit session =>

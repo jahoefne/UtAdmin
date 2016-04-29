@@ -152,4 +152,13 @@ class Administrator(override implicit val env: RuntimeEnvironment[UtAdminUser]) 
       BadRequest("")
     }
   }
+
+  def resetXlrstats(id: Int) = SecuredAction { request =>
+    if (request.user.rank == Ranks.God) {
+      User.UserInfo.resetXlrStats(id)
+      Ok("Done")
+    }else{
+      BadRequest("")
+    }
+  }
 }

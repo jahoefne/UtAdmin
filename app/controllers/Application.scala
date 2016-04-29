@@ -53,7 +53,8 @@ class Application(override implicit val env: RuntimeEnvironment[UtAdminUser]) ex
         routes.javascript.Rcon.privateMessage,
         routes.javascript.Application.chatLogPlain,
         routes.javascript.Administrator.addUser,
-        routes.javascript.Administrator.setXlrVisibility
+        routes.javascript.Administrator.setXlrVisibility,
+        routes.javascript.Administrator.resetXlrstats
       )
     ).as("text/javascript")
   }

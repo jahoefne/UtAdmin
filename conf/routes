@@ -13,8 +13,10 @@ GET            /userlist                 @controllers.Application.userlist(count
 GET            /usersearch               @controllers.Application.userSearch(name:String)
 GET            /admin-list               @controllers.Application.userlist(count:Int ?= 100, offset:Int ?= 0, minLevel: Int ?= 55, title: String ?= "Admins", displaySearchField: Boolean ?= false)
 GET            /clan-list                @controllers.Application.userlist(count:Int ?= 100, offset:Int ?= 0, minLevel: Int ?= 40, title: String ?= "Clan", displaySearchField: Boolean ?= false)
-GET            /set-xlr-visibility       @controllers.Administrator.setXlrVisibility(id:Int, value:Boolean)
 
+## XLRSTATS STUFF
+POST            /set-xlr-visibility       @controllers.Administrator.setXlrVisibility(id:Int, value:Boolean)
+POST            /reset-xlrstats           @controllers.Administrator.resetXlrstats(id:Int)
 
 
 ####
