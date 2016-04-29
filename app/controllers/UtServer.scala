@@ -27,5 +27,4 @@ object UtServer {
 
   val log = Logger(this getClass() getName())
   log.debug("Initalizing server:"+name)
-  b3.connect()
 }
