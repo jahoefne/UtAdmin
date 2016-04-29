@@ -20,7 +20,7 @@
                 <th>Last Seen</th>
             </tr>
             @users.map { user =>
-                <tr onclick="window.location='/user?id=@user.userId';">
+                <tr onclick="window.location='/user?id=@user.userId';" class="pointer-cursor">
                     <td>@Color.colorize(user.name)</td>
                     <td>@user.userId</td>
                     <td>@user.usedCount</td>
