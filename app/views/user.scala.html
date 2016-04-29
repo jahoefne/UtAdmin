@@ -9,6 +9,7 @@
     <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
     <link rel="stylesheet" href="@routes.Assets.at("javascripts/deps/awesome-markers/leaflet.awesome-markers.css")">
     <script src="@routes.Assets.at("javascripts/deps/awesome-markers/leaflet.awesome-markers.js")"></script>
+    <script src="@routes.Assets.at("javascripts/XlrstatsHandler.js")"></script>
 
     <script>
             var userIp = " @user.currentIp ";
@@ -47,11 +48,19 @@
                 <td>Xlrstats:</td>
                 <td>
 
-                <a class="btn btn-heading btn-xs"
+                <a class="btn btn-simple" href="http://144.76.158.173/index.php?func=player&playerdbid=@user.b3Id&config=1">Show</a>
+                   @user.xlrVisible match {
+                       case true => {
+                           <span class="label label-danger">HIDDEN</span>
+                           <span class="btn btn-simple" onclick="setXlrStatsVisibility(@user.b3Id, true);">Make Visible!</span>
 
-                href="http://144.76.158.173/index.php?func=player&playerdbid=@user.b3Id&config=1">
-                                            Show
-                </a>
+                       }
+                       case _ => {
+                           <span class="label label-primary">Visible</span>
+                           <span class="btn btn-simple" onclick="setXlrStatsVisibility(@user.b3Id, false);">Hide Stats!</span>
+
+                       }
+                   }
             </td>
             </tr>
             <tr>

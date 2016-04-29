@@ -1,5 +1,5 @@
 body {
-    background: #04080A;
+    background: #020B21;
     color: #f0f0f0;
     font-family: 'Roboto', sans-serif;
 }
@@ -46,7 +46,7 @@ a {
     left: 0;
     height: 20px;
     width: 100%;
-    background: #102333;
+    background: #051437;
     opacity: 0.8;
     border-top: 1px solid black;
     text-align: center;
@@ -81,7 +81,7 @@ a {
 }
 
 .label-default {
-    background: #424242;
+    background: #2A3F6F;
     color: white;
 }
 
@@ -90,7 +90,7 @@ a {
 }
 
 .label-std {
-    background: #3d3d3d;
+    background: #2A3F6F;
     display: inline-block;
     margin: 2px;
 }
@@ -98,6 +98,30 @@ a {
 .label-success {
     background: #00b51c;
     color: #000;
+}
+
+.userSearchTextfield{
+    padding:0;
+    width:200px;
+    margin:0;
+    border:none;
+    height:32px;
+}
+
+
+.userSearchButton {
+    height:32px;
+    outline: none;
+    font-size:large;
+    color:white;
+    background:#2A3F6F;
+    transition: 200ms;
+    cursor: pointer;
+}
+
+.userSearchButton:hover {
+    background: #345591;
+    transition: 200ms;
 }
 
 #myChart {
@@ -112,22 +136,23 @@ a {
 }
 
 .custom-control-group {
-    border-radius: 4px;
-    background-color: #17324b;
-    width: 160px;
-    margin: 20px;
+    width: 360px;
+    margin: 10px;
+    padding:10px;
+    border:none;
+    white-space: nowrap;
 }
 
 .custom-control-group input {
     border-radius: 4px;
     height: 20px;
-    width: 90px;
     padding: 5px;
     outline: none;
 }
 
 .from-to-counter {
-    font-size: medium;
+    font-size: large;
+    padding:10px;
 }
 
 .pointer-cursor {

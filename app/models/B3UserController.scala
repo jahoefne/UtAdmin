@@ -3,14 +3,11 @@
   */
 package models
 
-import java.sql.{ResultSet, Connection}
+import java.sql.Connection
 
 import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
 import play.api.Logger
-import scala.concurrent.ExecutionContext
-import ExecutionContext.Implicits.global
-import scala.concurrent.duration._
+import scalikejdbc._
 
 case class B3User(name: String,
                   ip: String,
@@ -36,76 +33,57 @@ case class OnlineUser(name: String,
 
 object B3UserController {
   val log = Logger(this getClass() getName())
-  private def b3UserFromResultSet(set: ResultSet): B3User = {
-    B3User(
-      name = set.getString("name"),
-      ip = set.getString("ip"),
-      id = set.getInt("id"),
-      connections = set.getInt("connections"),
-      guid = set.getString("guid"),
-      pbid = set.getString("pbid"),
-      group = Group(bits = set.getInt("group_bits"), level = set.getInt("group_level"), name = set.getString("group_name")),
-      firstSeen = new DateTime(set.getLong("time_add") * 1000L),
-      lastSeen = new DateTime(set.getLong("time_edit") * 1000L)
+
+  private def b3UserFromResultSet(set: WrappedResultSet): B3User =  B3User(
+      name = set.string("name"),
+      ip = set.string("ip"),
+      id = set.int("id"),
+      connections = set.int("connections"),
+      guid = set.string("guid"),
+      pbid = set.string("pbid"),
+      group = Group(bits = set.int("group_bits"),
+        level = set.int("group_level"),
+        name = set.string("group_name")),
+      firstSeen = new DateTime(set.long("time_add") * 1000L),
+      lastSeen = new DateTime(set.long("time_edit") * 1000L)
     )
+
+  def getUsers(count: Int, offset: Int, minLevel: Int): Seq[B3User] = DB readOnly { implicit session =>
+    sql"""SELECT
+          clients.*,
+          groups.name as group_name,
+          groups.id as group_bits,
+          groups.level as group_level
+       FROM
+       ( clients INNER JOIN groups ON groups.id = clients.group_bits)
+       WHERE level >= $minLevel
+       ORDER BY  clients.time_edit DESC LIMIT $offset, $count""".map(b3UserFromResultSet).list.apply().toSeq
   }
 
-  def getUsers(conn: Connection, count: Int, offset: Int, minLevel: Int): Seq[B3User] = {
-    val query = conn.prepareStatement(
-      """SELECT `clients`.*, `groups`.`name` as `group_name`, `groups`.`id` as `group_bits`, `groups`.`level` as `group_level`
-       FROM ( `clients` INNER JOIN `groups` ON `groups`.`id` = `clients`.`group_bits` )
-       WHERE `level` >= ? ORDER BY  `clients`.`time_edit` DESC LIMIT ?, ? """)
-
-    query.setInt(1, minLevel)
-    query.setInt(2, offset)
-    query.setInt(3, count)
-    var users = Seq.empty[B3User]
-    val resultSet = query.executeQuery()
-    while (resultSet.next())
-      users :+= B3UserController.b3UserFromResultSet(resultSet)
-    query.close()
-    resultSet.close()
-    users
-  }
-
-  def listOnlineUsers(conn: Connection): Seq[OnlineUser] = {
-   // log.info("Querying online users!")
-    val query = conn.prepareStatement(
-      """SELECT
-           `current_clients`.* ,
-           `clients`.`time_edit` ,
-           `xlr_playerstats`.`id` AS  `xlr_id`,
-           `groups`.`name` AS `group_name`,
-           `groups`.`id` AS `group_bits`,
-           `groups`.`level` AS `group_level`
-         FROM
-           `current_clients`,
-           `clients`,
-           `xlr_playerstats`,
-           `groups`
-         WHERE  `current_clients`.`guid` = `clients`.`GUID`
-                 AND  `xlr_playerstats`.`client_id` =  `current_clients`.`DBID`
-                 AND `current_clients`.`level` = `groups`.`level`""")
-
-    var users = Seq.empty[OnlineUser]
-    val set = query.executeQuery()
-    while (set.next())
-      users :+= OnlineUser(
-        name = set.getString("ColorName"),
-        ip = set.getString("ip"),
-        id = set.getInt("DBID"),
-        connections = set.getInt("Connections"),
+  def listOnlineUsers: Seq[OnlineUser] = DB readOnly { implicit session =>
+    sql"""SELECT current_clients.*,
+          clients.time_edit,
+          xlr_playerstats.id AS  xlr_id,
+          groups.name AS group_name,
+          groups.id AS group_bits,
+          groups.level AS group_level
+      FROM current_clients, clients, xlr_playerstats, groups
+      WHERE current_clients.guid = clients.guid
+      AND xlr_playerstats.client_id = current_clients.dbid
+      AND current_clients.level = groups.level"""
+      .map(rs => OnlineUser(
+        name = rs.string("ColorName"),
+        ip = rs.string("ip"),
+        id = rs.int("DBID"),
+        connections = rs.int("Connections"),
         group = Group(
-          bits = set.getInt("group_bits"),
-          level = set.getInt("group_level"),
-          name = set.getString("group_name")),
-        score = set.getInt("Score"),
-        team = set.getInt("Team"),
-        joined = new DateTime(set.getLong("time_edit") * 1000L),
-        serverId = set.getInt("CID"),
-        xlrId = set.getInt("xlr_id"))
-    query.close()
-    set.close()
-    users
+          bits = rs.int("group_bits"),
+          level = rs.int("group_level"),
+          name = rs.string("group_name")),
+        score = rs.int("Score"),
+        team = rs.underlying.getInt("Team"),
+        joined = new DateTime(rs.long("time_edit") * 1000L),
+        serverId = rs.int("CID"),
+        xlrId = rs.int("xlr_id"))).list().apply().toSeq
   }
 }

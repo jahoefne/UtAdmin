@@ -1,5 +1,5 @@
 body {
-    background: #081114;
+    background: #020B21;
     color:white;
 }
 
@@ -21,10 +21,15 @@ body {
 }
 
 .form-horizontal fieldset {
-    border:none;
     padding-bottom:0;
     padding-top:20px;
-    background: #295d7e;
+    background: #051437;
+    border:1px solid #2A3F6F;
+    text-align: left;
+}
+
+.form-actions{
+    text-align: center;
 }
 
 .help-block {
@@ -38,9 +43,10 @@ a {
 
 input {
     outline: none;
+    margin-top:5px;
     border-radius: 2px;
     height:28px;
-    border:0px;
+    border:none;
     font-size: large;
 }
 
@@ -48,16 +54,18 @@ button {
     height:28px;
     border-radius: 2px;
     margin:10px;
+    margin-top:20px;
     border:0;
     outline: none;
     font-size:large;
-    background:white;
+    color:white;
+    background:#2A3F6F;
     transition: 200ms;
     cursor: pointer;
 }
 
 button:hover {
-    background: #3996ff;
+    background: #345591;
     transition: 200ms;
 }
 

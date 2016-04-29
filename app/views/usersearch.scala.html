@@ -6,8 +6,8 @@
 
         <div align="center">
             <div class="custom-control-group">
-                <input type="text" class="form-control" id="usersearchTextfield" placeholder="Username">
-                <button class="btn-simple" id="usersearchButton"><i class="fa fa-filter"></i></button>
+                <input type="text" class="userSearchTextfield" placeholder="Username, IP, or GUID" size="80">
+                <button class="userSearchButton">Search!</button>
             </div>
         </div>
 
@@ -20,8 +20,8 @@
                 <th>Last Seen</th>
             </tr>
             @users.map { user =>
-                <tr>
-                    <td><a href="/user?id=@user.userId">@Color.colorize(user.name)</a></td>
+                <tr onclick="window.location='/user?id=@user.userId';">
+                    <td>@Color.colorize(user.name)</td>
                     <td>@user.userId</td>
                     <td>@user.usedCount</td>
                     <td>

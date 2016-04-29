@@ -5,7 +5,9 @@
     width: 100%;
     font-size: smaller;
     border-spacing: 0;
-    margin-bottom: 8px;
+    margin-bottom: 30px;
+    border-collapse:collapse;
+    border: 1px solid #0e1f2e;
 }
 
 .online-table tr {
@@ -15,17 +17,17 @@
 
 .online-table th {
     text-align: left;
-    background: #1c425d;
+    background: #122551;
     padding-bottom: 10px;
     padding-top: 10px;
 }
 
 .online-table tr:nth-child(odd) {
-    background: #0f171a;
+    background: #00050E;
 }
 
 .table-highlight tr:hover {
-    background: #1c425d;
+    background: #122551;
 }
 
 .online-table td {
@@ -40,7 +42,7 @@
     text-align: center;
     padding: 5px;
     font-size: small;
-    background: #1c425d;
+    background: #122551;
 }
 
 /** Chatlog Part */
@@ -107,10 +109,11 @@
 .bubble {
     position: relative;
     font-size: small;
-    background: #0e2836;
-    border: 1px solid #1c3952;
+    background: #122551;
+    border: 1px solid #051437;
     border-radius: 2px;
     padding: 2px 0px 2px 0px;
+    margin-right:5px;
     word-break: break-all;
     margin-left: 5px;
 }
@@ -128,20 +131,20 @@
 
 .bubble:after {
     border-color: rgba(213, 213, 213, 0);
-    border-right-color: #0e2836;
+    border-right-color: #122551;
     border-width: 5px;
     margin-top: -5px;
 }
 
 .bubble:before {
     border-color: rgba(0, 131, 245, 0);
-    border-right-color: #1c3952;
+    border-right-color: #122551;
     border-width: 6px;
     margin-top: -6px;
 }
 
 .chat-detail {
-    border-top: 1px solid #1c3952;
+    border-top: 1px solid #051437;
 }
 
 /***************************************/
@@ -170,7 +173,7 @@ button {
 
 #chatlog-all {
     background: transparent;
-    border: 1px solid #1c425d;
+    border: 1px solid #122551;
     color: white;
     font-size: small;
     margin: 0px;
@@ -180,12 +183,12 @@ button {
 }
 
 #chatlog-all:hover {
-    background: #3a7cb6;
+    background: #122551;
 }
 
 .talkback-group #say {
     border-radius: 0px 5px 5px 0px;
-    border-left: 1px solid #1c425d;
+    border-left: 1px solid #122551;
     margin: 5px 5px 5px 0px;
 }
 
@@ -198,11 +201,11 @@ button {
 
 .restart-server-button, .server-info {
     border-radius: 5px 5px 0px 0px;
+    border: 1px solid #0e1f2e;
     float: right;
-    border: 0;
     color: white;
     z-index: -100;
-    background: #1c425d;
+    background: #122551;
     vertical-align: middle;
     padding: 5px;
     font-size: small;
@@ -216,7 +219,7 @@ button {
     float: left;
 }
 
-.restart-button:hover {
+.restart-server-button:hover {
     background: #ff0000;
 }
 
@@ -227,6 +230,7 @@ button {
 #include-radio-container {
     font-size: x-small;
     float: right;
+    padding-right:10px;
 }
 
 /***
@@ -244,12 +248,12 @@ button {
 }
 
 .dropdown-menu-container:hover {
-    color: #2f7bd2;
+    color: #1a367f;
 }
 
 .dropdown-menu-container .dropdown-trigger {
     padding: 8px 12px;
-    background: rgb(34, 103, 130);
+    background: #051437;
     cursor: default;
 }
 
@@ -268,7 +272,7 @@ button {
     position: absolute;
     display: inline-block;
     z-index: 200;
-    background: #1c425d;
+    background: #122551;
 }
 
 .dropdown-menu-container:hover .dropdown-content li {
@@ -277,7 +281,7 @@ button {
 }
 
 .dropdown-menu-container:hover .dropdown-content li:hover {
-    background: #286188;
+    background: #2A3F6F;
 }
 
 .dropdown-menu-container:hover .dropdown-content li a {
@@ -303,16 +307,22 @@ button {
 
 .table-heading {
     display: inline-flex;
-    background: #1c425D;
-    padding-top: 5px;
-    padding-left: 5px;
-    padding-right: 5px;
+    background: #051437;
+    padding:10px;
     border-radius: 5px 5px 0px 0px;
+    border:2px solid #122551;
+    text-align: center;
+}
+
+.table-heading-break {
+    background: #051437;
+    padding:10px;
+    border-radius: 5px 5px 0px 0px;
+    border:2px solid #122551;
     text-align: center;
 }
 
 .btn-simple {
-    border-radius: 2px;
     border-radius: 2px;
     padding: 5px;
     margin: 5px;
@@ -325,7 +335,7 @@ button {
     border-radius: 2px;
     padding: 5px;
     margin: 5px;
-    background: #2f7bd2;
+    background: #2A3F6F;
     cursor: pointer;
 }
 
@@ -342,5 +352,5 @@ button {
 }
 
 .user-profile {
-    border: 1px solid #1c425d;
+    border: 2px solid #122551;
 }

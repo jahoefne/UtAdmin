@@ -13,14 +13,15 @@
         @if(displaySearchField) {
             <div align="center">
                 <div class="custom-control-group">
-                    <input type="text" class="form-control" id="usersearchTextfield" placeholder="Username">
-                    <button class="btn-simple" id="usersearchButton"><i class="fa fa-filter"></i></button>
+                    <input type="text" class="userSearchTextfield" placeholder="Username, IP, or GUID" size="80">
+                    <button class="userSearchButton">Search!</button>
                 </div>
             </div>
         }
 
 
-        <div class="table-heading-container big-font"><span class="table-heading">@title (@users.length)
+        <div class="table-heading-container big-font"><span class="table-heading-break">
+            @title (@users.length)
 
             @if(displaySearchField) {
                 @offsetCount match {

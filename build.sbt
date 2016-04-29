@@ -31,6 +31,7 @@ libraryDependencies ++= Seq(
   "ws.securesocial" % "securesocial_2.11" % "3.0-M3",
   "joda-time" % "joda-time" % "2.7",
   "com.novus" %% "salat" % "1.9.9",
+  "org.scalikejdbc" %% "scalikejdbc" % "2.3.5",
   "mysql" % "mysql-connector-java" % "5.1.38",
   "org.mongodb" %% "casbah" % "2.7.3",
   "fr.janalyse"   %% "janalyse-ssh" % "0.9.16" % "compile",

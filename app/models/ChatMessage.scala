@@ -4,6 +4,7 @@ import java.sql.{Connection, ResultSet}
 
 import org.joda.time.DateTime
 import play.api.Logger
+import scalikejdbc._
 
 case class ChatMessage(msgId: Int,
                        timestamp: DateTime,
@@ -57,89 +58,51 @@ object ChatMessage {
     )
 
 
-  def getOffsetFor(connection: Connection, msgId: Int): Int = {
-    val query = connection.prepareStatement("SELECT COUNT(*) as count FROM `chatlog` " +
-      "WHERE `chatlog`.`msg` NOT LIKE  'RADIO %' AND `chatlog`.`id` > ?")
-    query.setInt(1, msgId)
-    var chatHistory = Seq.empty[ChatMessage]
-    val resultSet = query.executeQuery()
-
-    resultSet.next()
-    val offset = resultSet.getInt("count")
-    println("Calculated offset ")
-    query.close()
-    resultSet.close()
-    offset
+  def getOffsetFor(msgId: Int): Int = DB readOnly { implicit session =>
+    sql"SELECT COUNT(*) as count FROM chatlog WHERE msg NOT LIKE 'RADIO %' AND id > $msgId"
+      .map(rs => rs.int("count")).first().apply().getOrElse(0)
   }
 
-  def getChatLog(connection: Connection, count: Int, offset: Int, userId: Option[Int], includeRadio: Boolean): Seq[ChatMessage] = {
-    log.debug("Querying Chatlog!")
-    val query = connection.prepareStatement("SELECT * FROM `chatlog` " +
-      "WHERE `chatlog`.`msg` NOT LIKE " + {
-      if (!includeRadio) {
-        "'RADIO %' "
-      } else {
-        "' '"
+  def getChatLog(count: Int, offset: Int, userId: Option[Int], includeRadio: Boolean): Seq[ChatMessage] = DB readOnly {
+    implicit session =>
+      val msgStructure = includeRadio match {
+        case true => "RADIO %"
+        case _ => " "
       }
-    }
-      + {
-      if (userId.isDefined) {
-        " AND `chatlog`.`client_id` = ? "
-      } else {
-        " "
-      }
-    } +
-      "ORDER BY `chatlog`.`msg_time` DESC LIMIT ?, ?")
 
-    if (userId.isDefined) {
-      query.setInt(1, userId.get)
-      query.setInt(2, offset)
-      query.setInt(3, count)
-    } else {
-      query.setInt(1, offset)
-      query.setInt(2, count)
-    }
-
-    var chatHistory = Seq.empty[ChatMessage]
-    val resultSet = query.executeQuery()
-    while (resultSet.next())
-      chatHistory :+= ChatMessage.fromResultSet(resultSet)
-
-    query.close()
-    resultSet.close()
-    chatHistory
+      sql"""SELECT * FROM chatlog WHERE
+       ($includeRadio = TRUE OR msg NOT LIKE 'RADIO %')
+        AND (${userId.isDefined} = FALSE OR client_id = ${userId.getOrElse(-1)})
+        ORDER BY msg_time DESC LIMIT $offset, $count"""
+        .map(rs => {
+          ChatMessage(
+            rs.int("id"),
+            new DateTime(rs.long("msg_time") * 1000L),
+            rs.string("msg_type"),
+            rs.int("client_id"),
+            rs.string("client_name"),
+            rs.underlying.getInt("client_team"),
+            rs.string("msg"),
+            rs.intOpt("target_id"),
+            rs.stringOpt("target_name"),
+            Some(rs.underlying.getInt("target_team"))
+          )
+        }
+        ).list().apply.toSeq
   }
 
-  def insertChatMessage(connection: Connection,
-                        adminName: String,
+  def insertChatMessage(adminName: String,
                         message: String,
                         msgType: String = "ALL",
                         adminId: Int,
                         targetId: Option[Int] = None,
-                        targetName: Option[String] = None): Unit = {
-    val ins = connection.prepareStatement(
-      s"""INSERT INTO  `b3bot`.`chatlog` ( `id` , `msg_time`, `msg_type` , `client_id` , `client_name`,
-           `client_team`, `msg` , `target_id` , `target_name`, `target_team` ) VALUES ( NULL , ?,
-           '$msgType',  '$adminId', ?,  '42', ?,
-        ${if(targetId.isDefined){"?"}else{"NULL"}} , ${if(targetName.isDefined){"?"}else{"NULL"}}  , NULL )""")
+                        targetName: Option[String] = None): Unit = DB localTx { implicit session =>
 
-    ins.setLong(1, DateTime.now().getMillis / 1000)
-    ins.setString(2, adminName)
-    ins.setString(3, message)
-
-    targetId match {
-      case Some(id) => ins.setInt(4, id)
-      case _ =>
-    }
-    targetName match {
-      case Some(name) => ins.setString(5, name.dropRight(2))
-      case _ =>
-    }
-
-
-    if (!ins.execute()) {
-      println("Error while inserting chatmessage!")
-    }
-    ins.close()
+    sql"""INSERT INTO  b3bot.chatlog (id , msg_time, msg_type , client_id , client_name,
+           client_team, msg , target_id , target_name, target_team )
+           VALUES ( NULL ,
+      ${DateTime.now().getMillis / 1000},
+           $msgType,  $adminId, $adminName,  '42', $message,
+       $targetId, ${targetName.getOrElse("").dropRight(2)} , NULL )""".execute().apply()
   }
 }

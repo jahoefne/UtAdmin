@@ -61,7 +61,7 @@ class Administrator(override implicit val env: RuntimeEnvironment[UtAdminUser]) 
                   b3Id = b3Id))
                 Ok("Added user!")
 
-               /** user existed already, update the profile */
+              /** user existed already, update the profile */
               case Some(u) =>
                 UtAdminUserService.insertUtAdminUser(new UtAdminUser(
                   rank = rank,
@@ -92,7 +92,7 @@ class Administrator(override implicit val env: RuntimeEnvironment[UtAdminUser]) 
       MongoLogger.logAction(request.user, "Changing group for user " + userId + " to bits: " + groupBits)
       request.user.rank match {
         case Ranks.God =>
-          B3GroupController.setGroupForUser(UtServer.b3.connection, userId, groupBits)
+          B3GroupController.setGroupForUser(userId, groupBits)
           Redirect(request.request.headers.get("referer").getOrElse("/"))
         case _ =>
           Unauthorized("You have no power here")
@@ -142,5 +142,14 @@ class Administrator(override implicit val env: RuntimeEnvironment[UtAdminUser]) 
           print(ssh.execute(UtServer.restartB3Cmd))
       }
       Ok("Done.")
+  }
+
+  def setXlrVisibility(b3Id: Int, visibility: Boolean) = SecuredAction { request =>
+    if (request.user.rank == Ranks.Admin || request.user.rank == Ranks.God) {
+      User.UserInfo.setXlrStatsVisibility(b3Id, visibility)
+      Ok("Done")
+    }else{
+      BadRequest("")
+    }
   }
 }

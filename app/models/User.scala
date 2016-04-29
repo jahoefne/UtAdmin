@@ -5,6 +5,10 @@ import java.sql.{ResultSet, Connection}
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.{Hours, Period, DateTime}
 import play.api.Logger
+import scalikejdbc._
+
+import scala.tools.nsc.doc.model.Visibility
+
 
 case class Username(name: String,
                     firstUsed: DateTime,
@@ -27,10 +31,11 @@ case class User(currentName: String,
                 lastSeen: DateTime,
                 numberOfConnections: Int,
                 b3Id: Int,
-                group:Group,
+                group: Group,
                 maskedAs: Option[Group],
                 totalTimeOnServer: Period,
-                xlrId: Option[Int])
+                xlrId: Option[Int],
+                xlrVisible: Boolean)
 
 object User {
 
@@ -38,188 +43,139 @@ object User {
 
     val log = Logger(this getClass() getName())
 
-    private def fromResultSet(set: ResultSet): Username = {
+    private def fromResultSet(set: WrappedResultSet): Username = {
       Username(
-        name = set.getString("alias"),
-        firstUsed = new DateTime(set.getLong("time_edit") * 1000L),
-        lastUsed = new DateTime(set.getLong("time_edit") * 1000L),
-        userId = set.getInt("client_id"),
-        usedCount = set.getInt("num_used")
+        name = set.string("alias"),
+        firstUsed = new DateTime(set.long("time_edit") * 1000L),
+        lastUsed = new DateTime(set.long("time_edit") * 1000L),
+        userId = set.int("client_id"),
+        usedCount = set.int("num_used")
       )
     }
 
-    def findUser(conn: Connection, name: String): Seq[Username] = {
-      log.debug(s"Finding user ${name}")
-      val query = conn.prepareStatement( """
-        SELECT * FROM `aliases` WHERE `aliases`.`alias` LIKE ?
-        ORDER BY  `aliases`.`time_edit` DESC LIMIT 0 , 200 """)
-      query.setString(1, '%' + name + '%')
-      var users = Seq.empty[Username]
-      val resultSet = query.executeQuery()
-      while (resultSet.next())
-        users :+= User.UserSearch.fromResultSet(resultSet)
+    def findUser(query: String): Seq[Username] = DB readOnly { implicit session =>
+      val likeAlias = sqls.like(sqls"`alias`", "%" + query + "%")
+      val likeName = sqls.like(sqls"`name`", "%" + query + "%")
+      val likeIp = sqls.like(sqls"`ip`", "%" + query + "%")
+      val likeGuid = sqls.like(sqls"`guid`", "%" + query + "%")
+      val likeIpAlias = sqls.like(sqls"`ipaliases`.`ip`", "%" + query + "%")
 
-      val query2 = conn.prepareStatement( """
-        SELECT * FROM `clients` WHERE `clients`.`name` LIKE ?
-        ORDER BY  `clients`.`time_edit` DESC LIMIT 0 , 200 """)
-      query2.setString(1, '%' + name + '%')
-      val resultSet2 = query2.executeQuery()
-      while (resultSet2.next()) {
-        val found = Username(
-          name = resultSet2.getString("name"),
-          firstUsed = new DateTime(resultSet2.getLong("time_add") * 1000L),
-          lastUsed = new DateTime(resultSet2.getLong("time_edit") * 1000L),
-          userId = resultSet2.getInt("id"),
-          usedCount = 1)
-        if (users.count(x => {
-          x.userId == found.userId
-        }) == 0)
-          users :+= found
-      }
-      resultSet.close()
-      resultSet2.close()
-      query.close()
-      query2.close()
-      users
+      sql"""SELECT * FROM aliases WHERE $likeAlias ORDER BY time_edit DESC LIMIT 0, 500"""
+        .map(set => Username(
+          name = set.string("alias"),
+          firstUsed = new DateTime(set.long("time_edit") * 1000L),
+          lastUsed = new DateTime(set.long("time_edit") * 1000L),
+          userId = set.int("client_id"),
+          usedCount = set.int("num_used")
+        )).list().apply().toSeq.union(
+        sql"""SELECT * FROM clients WHERE $likeName OR $likeIp OR $likeGuid ORDER BY time_edit DESC LIMIT 0, 500"""
+          .map(rs => Username(
+            name = rs.string("name"),
+            firstUsed = new DateTime(rs.long("time_add") * 1000L),
+            lastUsed = new DateTime(rs.long("time_edit") * 1000L),
+            userId = rs.int("id"),
+            usedCount = 1)
+          ).list().apply().toSeq).union(
+        sql"""SELECT DISTINCT(clients.id), clients.name, clients.time_edit, clients.time_add FROM clients
+              INNER JOIN ipaliases ON clients.id = ipaliases.id WHERE $likeIpAlias"""
+          .map(rs => Username(
+            name = rs.string("name"),
+            firstUsed = new DateTime(rs.long("time_add") * 1000L),
+            lastUsed = new DateTime(rs.long("time_edit") * 1000L),
+            userId = rs.int("id"),
+            usedCount = 1)).list().apply().toSeq
+      )
     }
   }
 
   object UserInfo {
     val log = Logger(this getClass() getName())
 
-    def getOnlineHistory(conn: Connection, guid: String): List[(DateTime, DateTime)] = {
-      val query = conn.prepareStatement( """
-        SELECT * FROM `ctime` WHERE `ctime`.`guid` LIKE ?
-        ORDER BY  `ctime`.`came` DESC LIMIT 0 , 70 """)
-      query.setString(1, guid)
-      val rs = query.executeQuery()
-
-      var history = List.empty[(DateTime, DateTime)]
-      while (rs.next())
-        history :+= (new DateTime(rs.getLong("came") * 1000L), new DateTime(rs.getLong("gone") * 1000L))
-      history
+    def getOnlineHistory(guid: String): List[(DateTime, DateTime)] = DB readOnly { implicit session =>
+      sql"SELECT  * FROM ctime WHERE guid LIKE $guid ORDER BY came DESC LIMIT 0, 70"
+        .map(rs => (new DateTime(rs.long("came") * 1000L), new DateTime(rs.long("gone") * 1000L))).list.apply()
     }
 
-    def getOnlineHistoryChartData(conn: Connection, guid: String): List[(String, Long)] = {
+    def getOnlineHistoryChartData(guid: String): List[(String, Long)] = DB readOnly { implicit session =>
       case class HistoryPlain(came: Long, gone: Long)
-      val query = conn.prepareStatement( """
-        SELECT * FROM `ctime` WHERE `ctime`.`guid` LIKE ?
-        ORDER BY  `ctime`.`came` DESC LIMIT 0 , 70 """)
-      query.setString(1, guid)
-      var history = Seq.empty[HistoryPlain]
-      val rs = query.executeQuery()
-
-      while (rs.next())
-        history :+= HistoryPlain(rs.getLong("came") * 1000L, rs.getLong("gone") * 1000L)
-
       val format = DateTimeFormat.forPattern("E dd.MM.yy")
-      history.groupBy((x) => new DateTime(x.came).toString(format))
+      sql"SELECT * FROM ctime WHERE guid LIKE $guid ORDER BY came DESC LIMIT 0, 70"
+        .map(rs => HistoryPlain(rs.long("came") * 1000L, rs.long("gone") * 1000L)).list().apply()
+        .groupBy((x) => new DateTime(x.came).toString(format))
         .mapValues((y) => y.map((z) => (z.gone - z.came) / 1000 / 60).sum)
         .toList.sortWith((x, y) => {
         format.parseDateTime(x._1).isBefore(format.parseDateTime(y._1))
-      }
-        )
+      })
     }
 
-    def getIpAliases(dbConn: Connection, b3Id: Int): Seq[IpAlias] = {
-      val query = dbConn.prepareStatement("SELECT * FROM `ipaliases` WHERE `client_id` = ?")
-      query.setInt(1, b3Id)
-      val response = query.executeQuery()
-      var result = Seq.empty[IpAlias]
-
-      while (response.next()) {
-        result :+= IpAlias(
-          ip = response.getString("ip"),
-          usedCount = response.getInt("num_used"),
-          firstUsed = new DateTime(response.getLong("time_add") * 1000L),
-          lastUsed = new DateTime(response.getLong("time_edit") * 1000L)
-        )
-      }
-      result
+    def getIpAliases(b3Id: Int): Seq[IpAlias] = DB readOnly { implicit session =>
+      sql"SELECT  * FROM ipaliases WHERE  client_id = $b3Id"
+        .map(rs => IpAlias(ip = rs.string("ip"),
+          usedCount = rs.int("num_used"),
+          firstUsed = new DateTime(rs.long("time_add") * 1000L),
+          lastUsed = new DateTime(rs.long("time_edit") * 1000L))).list().apply().toSeq
     }
 
-    def getTotalTimeOnServer(conn: Connection, guid: String): Period = {
-      val q = conn.prepareStatement( """
-        SELECT SUM( `ctime`.`gone`- `ctime`.`came` ) AS  `total_time`
-        FROM  `ctime`
-        WHERE  `ctime`.`guid` =  ? """)
-      q.setString(1, guid)
-      val rs = q.executeQuery()
-      rs.next()
-      new Period(new DateTime(0), new DateTime(rs.getLong("total_time") * 1000L))
+    def getTotalTimeOnServer(guid: String): Period = DB readOnly { implicit session =>
+      sql"SELECT SUM(ctime.gone - ctime.came) AS total_time FROM ctime WHERE guid = $guid"
+        .map(rs => new Period(new DateTime(0), new DateTime(rs.longOpt("total_time").getOrElse(0L) * 1000L)))
+        .first().apply().getOrElse(new Period())
     }
 
-    def getAliases(dbConn: Connection, b3Id: Int): Seq[Username] = {
-      val query = dbConn.prepareStatement("SELECT * FROM `aliases` WHERE `client_id` = ?")
-      query.setInt(1, b3Id)
-      val response = query.executeQuery()
-      var result = Seq.empty[Username]
-
-      while (response.next()) {
-        result :+= Username(
-          name = response.getString("alias"),
-          firstUsed = new DateTime(response.getLong("time_add") * 1000L),
-          lastUsed = new DateTime(response.getLong("time_edit") * 1000L),
-          userId = response.getInt("client_id"),
-          usedCount = response.getInt("num_used")
-        )
-      }
-      result
+    def getAliases(b3Id: Int): Seq[Username] = DB readOnly { implicit session =>
+      sql"SELECT * FROM aliases WHERE client_id = $b3Id"
+        .map(rs => Username(name = rs.string("alias"),
+          firstUsed = new DateTime(rs.long("time_add") * 1000L),
+          lastUsed = new DateTime(rs.long("time_edit") * 1000L),
+          userId = rs.int("client_id"),
+          usedCount = rs.int("num_used"))).list().apply()
     }
 
-    def getXlrStatsId(dbConn: Connection, b3Id: Int): Option[Int] = {
-      val query = dbConn.prepareStatement("SELECT * FROM `xlr_playerstats` WHERE `xlr_playerstats`.`client_id` = ? ")
-      query.setInt(1, b3Id)
-      val rs = query.executeQuery()
-      rs.next() match {
-        case true => Some(rs.getInt("id"))
-        case _ => None
-      }
+    def getXlrStatsId(b3Id: Int): Option[Int] = DB readOnly { implicit session =>
+      sql"SELECT id FROM xlr_playerstats WHERE xlr_playerstats.client_id = $b3Id".map(rs => rs.int("id")).first().apply()
     }
 
-    def getUserByB3Id(dbConn: Connection, b3Id: Int): Option[User] = {
-      val query = dbConn.prepareStatement("SELECT * FROM `clients` WHERE `clients`.`id` = ? ")
-      query.setInt(1, b3Id)
-      val resultSet = query.executeQuery()
+    def getXlrStatsVisibility(b3Id:Int) : Boolean = DB readOnly{implicit session =>
+      sql"SELECT * FROM xlr_playerstats WHERE client_id = $b3Id".map(_.boolean("hide")).first().apply().getOrElse(false)
+    }
 
-      resultSet.next() match {
-        case true =>
-          val maskLevel = resultSet.getInt("mask_level")
-          val guid = resultSet.getString("guid")
+    def setXlrStatsVisibility(b3Id:Int, visibility: Boolean ) : Boolean = DB localTx { implicit session =>
+      sql"UPDATE xlr_playerstats SET hide = ${!visibility} WHERE client_id = $b3Id".execute().apply()
+    }
 
-          val group = B3GroupController.getGroupForGroupBits(dbConn, resultSet.getInt("group_bits"))
-          val maskedAs = B3GroupController.getGroupForGroupLevel(dbConn, resultSet.getInt("mask_level"))match {
+    def getUserByB3Id(b3Id: Int): Option[User] = DB readOnly { implicit session =>
+      sql"""SELECT * FROM clients WHERE id = $b3Id"""
+        .map(rs => {
+          val maskLevel = rs.underlying.getInt("mask_level")
+          val guid = rs.string("guid")
+          val group = B3GroupController.getGroupForGroupLevel(rs.int("group_bits"))
+          val maskedAs = B3GroupController.getGroupForGroupLevel(rs.underlying.getInt("mask_level")) match {
             case x if x == group => None
             case x => Some(x)
           }
-
-          Some(User(
-            currentName = resultSet.getString("name"),
-            aliases = this.getAliases(dbConn = dbConn, b3Id = b3Id),
-            currentIp = resultSet.getString("ip"),
-            ipAliases = this.getIpAliases(dbConn, b3Id),
-            penalties = PenaltyController.getPenalties(
-              dbConn = dbConn,
-              userId = Some(b3Id),
-              banOnly = false,
-              adminOnly = false,
-              activeOnly = false,
-              noticeOnly = false),
-            guid = guid,
-            firstSeen = new DateTime(resultSet.getLong("time_add") * 1000L),
-            lastSeen = new DateTime(resultSet.getLong("time_edit") * 1000L),
-            numberOfConnections = resultSet.getInt("connections"),
-            b3Id = b3Id,
-            group = group,
-            maskedAs = maskedAs,
-            totalTimeOnServer = getTotalTimeOnServer(dbConn, guid),
-            xlrId = getXlrStatsId(dbConn, b3Id)
-          )
-          )
-        case _ =>
-          None
-      }
+            User(
+              currentName = rs.string("name"),
+              aliases = this.getAliases(b3Id = b3Id),
+              currentIp = rs.string("ip"),
+              ipAliases = this.getIpAliases(b3Id),
+              penalties = PenaltyController.getPenalties(
+                userId = Some(b3Id),
+                banOnly = false,
+                adminOnly = false,
+                activeOnly = false,
+                noticeOnly = false),
+              guid = guid,
+              firstSeen = new DateTime(rs.long("time_add") * 1000L),
+              lastSeen = new DateTime(rs.long("time_edit") * 1000L),
+              numberOfConnections = rs.int("connections"),
+              b3Id = b3Id,
+              group = group,
+              maskedAs = maskedAs,
+              totalTimeOnServer = getTotalTimeOnServer(guid),
+              xlrId = getXlrStatsId(b3Id),
+              xlrVisible = getXlrStatsVisibility(b3Id)
+            )
+        }).first().apply()
     }
   }
-
 }

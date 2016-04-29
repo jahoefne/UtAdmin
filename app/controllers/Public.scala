@@ -27,7 +27,7 @@ class Public(override implicit val env: RuntimeEnvironment[UtAdminUser])
 
   def publicStatus() = Cached.status(_ => "onlinePlayersPublic", status = 200,duration =  5) {
     Action {
-      Ok(views.html.publicStatus(B3UserController.listOnlineUsers(UtServer.b3.connection).
+      Ok(views.html.publicStatus(B3UserController.listOnlineUsers.
         sortWith(_.score > _.score))).withHeaders(
           "Access-Control-Allow-Origin" -> "*",
           "Access-Control-Allow-Methods" -> "POST, GET, OPTIONS, PUT, DELETE",
@@ -39,7 +39,6 @@ class Public(override implicit val env: RuntimeEnvironment[UtAdminUser])
   def publicBans() = Cached.status(_ => "publicBans", 200, duration = 300){
     Action {
       Ok(views.html.publicBans(PenaltyController.getPenalties(
-        dbConn = server.b3.connection,
         userId = None,
         banOnly = true,
         adminOnly = false,

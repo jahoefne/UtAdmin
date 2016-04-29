@@ -13,7 +13,6 @@ class PenaltyController(override implicit val env: RuntimeEnvironment[UtAdminUse
   def allBans() = SecuredAction { request =>
     MongoLogger.logAction(request.user, "All bans")
     Ok(views.html.bans(PenaltyController.getPenalties(
-      dbConn = server.b3.connection,
       userId = None,
       banOnly = false,
       adminOnly = false,
@@ -26,14 +25,12 @@ class PenaltyController(override implicit val env: RuntimeEnvironment[UtAdminUse
     noticeOnly match {
       case false =>
         Ok(views.html.bans(PenaltyController.getPenalties(
-          dbConn = server.b3.connection,
           userId = None,
           banOnly = true,
           adminOnly = true,
           activeOnly = false,
           noticeOnly = false), "Admin Bans", request.user))
       case _ => Ok(views.html.bans(PenaltyController.getPenalties(
-        dbConn = server.b3.connection,
         userId = None,
         banOnly = false,
         adminOnly = true,
@@ -47,7 +44,6 @@ class PenaltyController(override implicit val env: RuntimeEnvironment[UtAdminUse
       MongoLogger.logAction(request.user, "PUNISHING:" + userId + " " + reason)
       duration match {
         case None => PenaltyController.addPenalty(
-          server.b3.connection,
           userId,
           PenaltyHandler.withName(penalty),
           request.user.main.userId + ": " + reason,
@@ -55,7 +51,6 @@ class PenaltyController(override implicit val env: RuntimeEnvironment[UtAdminUse
           request.user.b3Id
         )
         case Some(d) => PenaltyController.addPenalty(
-          server.b3.connection,
           userId,
           PenaltyHandler.withName(penalty),
           reason,
@@ -68,7 +63,7 @@ class PenaltyController(override implicit val env: RuntimeEnvironment[UtAdminUse
   def removePunishment(penaltyId: Int) = SecuredAction {
     implicit request =>
       MongoLogger.logAction(request.user, "Removing Punishment!")
-      PenaltyController.deletePenalty(server.b3.connection, penaltyId)
+      PenaltyController.deletePenalty(penaltyId)
       Ok("Removed")
   }
 }

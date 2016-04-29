@@ -52,7 +52,8 @@ class Application(override implicit val env: RuntimeEnvironment[UtAdminUser]) ex
         routes.javascript.Rcon.forceSpec,
         routes.javascript.Rcon.privateMessage,
         routes.javascript.Application.chatLogPlain,
-        routes.javascript.Administrator.addUser
+        routes.javascript.Administrator.addUser,
+        routes.javascript.Administrator.setXlrVisibility
       )
     ).as("text/javascript")
   }
@@ -70,12 +71,12 @@ class Application(override implicit val env: RuntimeEnvironment[UtAdminUser]) ex
         case _ => 0
       }
       MongoLogger.logAction(request.user, "index")
-      Ok(views.html.status(ChatMessage.getChatLog(server.b3.connection, c, o, None, false), c, o, request.user))
+      Ok(views.html.status(ChatMessage.getChatLog(c, o, None, false), c, o, request.user))
   }
 
   def onlinePlayersPlain() = SecuredAction {
     request =>
-      Ok(views.html.plainOnlinePlayers(B3UserController.listOnlineUsers(server.b3.connection).sortWith(
+      Ok(views.html.plainOnlinePlayers(B3UserController.listOnlineUsers.sortWith(
         (a, b) => {
           a.team > b.team || a.team == b.team && a.score > b.score
         }), request.user))
@@ -90,7 +91,7 @@ class Application(override implicit val env: RuntimeEnvironment[UtAdminUser]) ex
       case x if x >= 0 => x
       case _ => 0
     }
-    val chatlog = ChatMessage.getChatLog(server.b3.connection, c, o, user, includeRadio)
+    val chatlog = ChatMessage.getChatLog(c, o, user, includeRadio)
 
     MongoLogger.logAction(request.user, "Chatlog")
     user match {
@@ -100,10 +101,10 @@ class Application(override implicit val env: RuntimeEnvironment[UtAdminUser]) ex
   }
 
   def userById(id: Int) = SecuredAction { request =>
-    User.UserInfo.getUserByB3Id(server.b3.connection, id) match {
+    User.UserInfo.getUserByB3Id(id) match {
       case Some(user) =>
-        val onlineHistoryChartData = User.UserInfo.getOnlineHistoryChartData(server.b3.connection, user.guid)
-        val onlineHistory = User.UserInfo.getOnlineHistory(server.b3.connection, user.guid)
+        val onlineHistoryChartData = User.UserInfo.getOnlineHistoryChartData(user.guid)
+        val onlineHistory = User.UserInfo.getOnlineHistory(user.guid)
         MongoLogger.logAction(request.user, "Userinfo for" + user.currentName + " " + user.guid)
         Ok(views.html.user(user, onlineHistoryChartData, onlineHistory, request.user))
       case None =>
@@ -127,7 +128,6 @@ class Application(override implicit val env: RuntimeEnvironment[UtAdminUser]) ex
     }
     Ok(views.html.userlist(
       users = B3UserController.getUsers(
-        conn = server.b3.connection,
         count = c,
         offset = o,
         minLevel = minLevel),
@@ -139,7 +139,7 @@ class Application(override implicit val env: RuntimeEnvironment[UtAdminUser]) ex
 
   def userSearch(name: String) = SecuredAction { request =>
     MongoLogger.logAction(request.user, "Searching for user: " + name)
-    Ok(views.html.usersearch(User.UserSearch.findUser(server.b3.connection, name), request.user))
+    Ok(views.html.usersearch(User.UserSearch.findUser(name), request.user))
   }
 
   def chatLog(count: Int, offset: Int) = SecuredAction { request =>
@@ -152,14 +152,15 @@ class Application(override implicit val env: RuntimeEnvironment[UtAdminUser]) ex
       case _ => 0
     }
     MongoLogger.logAction(request.user, "ChatlogWrapper")
-    val chatlog = ChatMessage.getChatLog(server.b3.connection, c, o, None, false)
+    val chatlog = ChatMessage.getChatLog(c, o, None, false)
 
     Ok(views.html.chatlogWrapper(chatlog, c, o, request.user))
   }
 
   def chatLogForId(msgId: Int) = SecuredAction { request =>
-    val offset = ChatMessage.getOffsetFor(server.b3.connection, msgId)
-    val chatlog = ChatMessage.getChatLog(server.b3.connection, 30, offset-15, None, false)
+    val offset = ChatMessage.getOffsetFor(msgId)
+    val chatlog = ChatMessage.getChatLog(30, offset-15, None, false)
     Ok(views.html.chatlogWrapper(chatlog, 30, offset-15, request.user, msgId))
   }
+
 }

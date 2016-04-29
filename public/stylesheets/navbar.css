@@ -1,8 +1,9 @@
 .navbar {
     width: 100%;
-    background: #1c425d;
+    background: #051437;
     text-align: center;
-    top: 0;
+    top: 0 !important;
+    padding:0;
     margin-bottom: 15px;
     cursor: default;
 }
@@ -20,7 +21,7 @@
     margin-right: -4px;
     position: relative;
     padding: 0px;
-    background: #1c425d;
+    background: #051437;
     -webkit-transition: all 0.2s;
     -moz-transition: all 0.2s;
     -ms-transition: all 0.2s;
@@ -29,7 +30,7 @@
 }
 
 .navbar ul li:hover {
-    background: #286188;
+    background: #122551;
     color: #fff;
 }
 .navbar ul li ul {
@@ -52,13 +53,13 @@
     -transition: opacity 0.2s;
 }
 .navbar ul li ul li {
-    background: #1c425d;
+    background: #051437;
     display: block;
     color: #fff;
     opacity: 0.9;
     text-shadow: 0 -1px 0 #000;
 }
-.navbar ul li ul li:hover { background: #286188; }
+.navbar ul li ul li:hover { background: #122551; }
 .navbar ul li:hover ul {
     display: block;
     opacity: 1;

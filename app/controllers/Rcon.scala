@@ -66,7 +66,6 @@ class Rcon(override implicit val env: RuntimeEnvironment[UtAdminUser])
     val toSend = "^2" + request.user.main.userId + "^7: " + text
     server.rcon.rcon(s"tell $receiverSlot $toSend")
     ChatMessage.insertChatMessage(
-      connection = server.b3.connection,
       adminName = request.user.main.userId,
       message = text,
       msgType = "PM",
@@ -81,7 +80,6 @@ class Rcon(override implicit val env: RuntimeEnvironment[UtAdminUser])
     val toSend = "^2" + user.main.userId + "^7: " + text
     server.rcon.rcon("say " + toSend)
     ChatMessage.insertChatMessage(
-      connection  = server.b3.connection,
       adminName = user.main.userId,
       message = text,
       adminId = user.b3Id)
