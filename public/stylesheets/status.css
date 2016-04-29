@@ -291,6 +291,10 @@ button {
     margin-right: 30px;
     width: calc(100% - 60px);
 }
+.std-margin tr td{
+    padding-bottom: 10px;
+    padding-top:10px;
+}
 
 .table-heading-container {
     display: flex;
