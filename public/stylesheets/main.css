@@ -152,7 +152,7 @@ a {
     margin-right: 8px;
 }
 
-.content{
+.content {
     padding-bottom: 20px;
 }
 
@@ -172,4 +172,41 @@ a {
         padding-top: 20px;
         height: 50%;
     }
+}
+
+/* Rank Labels */
+.label-god {
+    background-color: #FF5722;
+}
+
+.label-headadmin {
+    background-color: #D84315;
+}
+
+.label-admin {
+    background-color: #3D5AFE;
+}
+
+.label-mod {
+    background-color: #1565C0;
+}
+
+.label-member {
+    background-color: #004D40;
+}
+
+.label-recruit {
+    background-color: #00695C;
+}
+
+.label-regular {
+    background-color: #546E7A;
+}
+
+.label-guest {
+    background-color: #37474F;
+}
+
+.label-friend{
+    background-color: #5c5c5c;
 }
