@@ -51,14 +51,13 @@
                         <span class="dropdown-content">
                         @defining(escapeEcmaScript(player.name).dropRight(2)) { name =>
                             <li>
-                                <a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.slap(@player.serverId, '@name'),'Slapped @name' ); >
+                                <a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.slap(@player.serverId, '@name'),'Slapped @name' );" >
                                     Slap</a>
                             </li>
+
+
                         @if(loggedInUser.rank != Ranks.Mod) {
-
-
-                            <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.nuke(@player.serverId, '@name'), 'Nuked @name');">
-                                Nuke</a></li>
+                            <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.nuke(@player.serverId, '@name'), 'Nuked @name');">Nuke</a></li>
 
                             <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.kill(@player.serverId, '@name'),'Killed @name' );">
                                 Kill</a></li>
