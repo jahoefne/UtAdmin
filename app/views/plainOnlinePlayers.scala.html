@@ -18,7 +18,7 @@
         <th>Punish</th>
     </tr>
 
-    @for( (player, count) <- players.zipWithIndex) {
+    @for((player, count) <- players.zipWithIndex) {
         <tr>
             <td onclick="window.location='/user?id=@player.id';" class="pointer-cursor" >
                 <svg height="10" width="10">
@@ -31,7 +31,7 @@
                 </svg>
             </td>
             <td onclick="window.location='/user?id=@player.id';" class="pointer-cursor" >
-                @Color.colorize(player.name)
+            @Color.colorize(player.name)
             </td>
             <td onclick="window.location='/user?id=@player.id';" class="pointer-cursor" >
             @RankFormatter.labelForRank(player.group)
@@ -49,29 +49,29 @@
                     <ul>
                         ...
                         <span class="dropdown-content">
-                                @defining(escapeEcmaScript(player.name).dropRight(2)){ name =>
-                                <li>
-                                    <a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.slap(@player.serverId, '@name'),'Slapped @name' );">
-                                        Slap</a>
-                                </li>
-                                @if(loggedInUser.rank != Ranks.Mod) {
+                        @defining(escapeEcmaScript(player.name).dropRight(2)) { name =>
+                            <li>
+                                <a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.slap(@player.serverId, '@name'),'Slapped @name' ); >
+                                    Slap</a>
+                            </li>
+                        @if(loggedInUser.rank != Ranks.Mod) {
 
 
-                                        <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.nuke(@player.serverId, '@name'), 'Nuked @name');">Nuke</a></li>
+                            <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.nuke(@player.serverId, '@name'), 'Nuked @name');">
+                                Nuke</a></li>
 
-                                        <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.kill(@player.serverId, '@name'),'Killed @name' );">
-                                            Kill</a></li>
-                                        <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.kick(@player.serverId, '@name'),'Kicked @name');">
-                                            Kick</a></li>
-                                        <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.forceRed(@player.serverId, '@name'),'Forced red @name');">
-                                            Force Red</a></li>
-                                        <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.forceBlue(@player.serverId, '@name'),'Forced blue @name');">
-                                            Force Blue</a></li>
-                                        <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.forceSpec(@player.serverId, '@name'),'Forced spec @name' );">
-                                            Force Spec</a></li>
-                                    }
-                                }
-
+                            <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.kill(@player.serverId, '@name'),'Killed @name' );">
+                                Kill</a></li>
+                            <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.kick(@player.serverId, '@name'),'Kicked @name');">
+                                Kick</a></li>
+                            <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.forceRed(@player.serverId, '@name'),'Forced red @name');">
+                                Force Red</a></li>
+                            <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.forceBlue(@player.serverId, '@name'),'Forced blue @name');">
+                                Force Blue</a></li>
+                            <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.forceSpec(@player.serverId, '@name'),'Forced spec @name' );">
+                                Force Spec</a></li>
+                        }
+                        }
 
                         </span>
                     </ul>
@@ -80,7 +80,22 @@
         </tr>
 
     }
-        <tr>
-            <td colspan="8" id="online-player-count">&sum; @players.length</td>
-</tr>
+    <tr>
+        <td colspan="8" id="online-player-count">
+            <svg height="10" width="10">
+                <circle cx="5" cy="5" r="5" stroke="black" stroke-width="0" fill="blue"></circle>
+            </svg>
+            @players.count(_.team == Teams.blue)&nbsp;
+
+            <svg height="10" width="10">
+
+                <circle cx="5" cy="5" r="5" stroke="black" stroke-width="0" fill="red"></circle>
+            </svg>
+            @players.count(_.team == Teams.red)&nbsp;
+
+            <svg height="10" width="10">
+                <circle cx="5" cy="5" r="5" stroke="black" stroke-width="0" fill="gray"></circle>
+            </svg>
+            @players.count(_.team == Teams.spec)&nbsp;&nbsp;&sum; @players.length</td>
+    </tr>
 </table>
