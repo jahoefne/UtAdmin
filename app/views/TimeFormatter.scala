@@ -11,7 +11,7 @@ object TimeFormatter {
   }
 
   def formatDuration(d: Duration): String ={
-    s"${d.getStandardHours}h ${d.getStandardMinutes-d.getStandardHours*60}m ${d.getStandardSeconds-d.getStandardMinutes*60}s Binary: (${d.getStandardHours.toBinaryString}h ${(d.getStandardMinutes-d.getStandardHours*60).toBinaryString}m ${(d.getStandardSeconds-d.getStandardMinutes*60).toBinaryString})"
+    s"${d.getStandardHours}h ${d.getStandardMinutes-d.getStandardHours*60}m ${d.getStandardSeconds-d.getStandardMinutes*60}s Binary: (${d.getStandardHours.toBinaryString}h ${(d.getStandardMinutes-d.getStandardHours*60).toBinaryString}m ${(d.getStandardSeconds-d.getStandardMinutes*60).toBinaryString}s)"
   }
 
   def timePassedSince(time: DateTime) = Html {
