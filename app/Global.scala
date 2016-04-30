@@ -47,7 +47,7 @@ object Global extends WithFilters(new GzipFilter()) with play.api.GlobalSettings
     instance.getOrElse(super.getControllerInstance(controllerClass))
   }
 
-
+/*
   // called when a route is found, but it was not possible to bind the request parameters
   override def onBadRequest(request: RequestHeader, error: String) = Future.successful{
     BadRequest(
@@ -82,5 +82,5 @@ object Global extends WithFilters(new GzipFilter()) with play.api.GlobalSettings
         """),
       None
     ))
-  }
+  }*/
 }

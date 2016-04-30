@@ -69,6 +69,27 @@ object PenaltyController {
        'echelon', $reason,'', ${DateTime.now().getMillis / 1000},  ${DateTime.now().getMillis / 1000},$expires)""".execute().apply()
   }
 
+  def updatePermBanTable(bannedIps: Array[String]): Unit = DB localTx { implicit session =>
+    sql"DROP TABLE echelon_permbanned".execute().apply()
+    sql"CREATE TABLE echelon_permbanned (actual_ip VARCHAR(32), effective_ip VARCHAR(32), UNIQUE(actual_ip));".execute().apply()
+
+    val insert = bannedIps zip bannedIps.map(ip => ip.dropRight(3))
+      .map(ip => if (ip.endsWith(".0.")) ip.dropRight(2) + "." else ip)
+      .map(ip => if (ip.endsWith(".0.")) ip.dropRight(2) + "." else ip)
+      .map(ip => if (ip.endsWith(".0.")) ip.dropRight(2) + "." else ip)
+    val ins = insert.map(x => sqls"(${x._1},${x._2})").reduceLeft((x: SQLSyntax, y: SQLSyntax) => x.append(sqls",".append(y))).append(sqls";")
+    sql"INSERT IGNORE INTO echelon_permbanned VALUES $ins".update().apply()
+  }
+
+  def getUsersDirectlyAffectedByPermBan: Map[String, List[Username]] = DB readOnly { implicit session =>
+    sql"""SELECT * FROM clients
+          INNER JOIN echelon_permbanned
+          ON clients.ip LIKE CONCAT(echelon_permbanned.effective_ip, '%')"""
+      .map(rs =>
+        (rs.string("actual_ip"), Username(rs.string("name"), new DateTime(), new DateTime, rs.int("id"), 1)))
+          .list.apply().groupBy(_._1).mapValues(_.map(_._2))
+  }
+
   def getPenalties(userId: Option[Int], banOnly: Boolean, adminOnly: Boolean, activeOnly: Boolean, noticeOnly: Boolean): Seq[Penalty] =
     DB readOnly { implicit session =>
       val userIdCheck = if (userId.isDefined) sqls"AND penalties.client_id = $userId" else sqls""

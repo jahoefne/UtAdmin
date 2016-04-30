@@ -23,7 +23,7 @@ object UtServer {
   val sshUser = "SSH_USER"
   val restartServerCmd = "SSH COMMAND"
   val restartB3Cmd = "SSH COMMAND"
-
+  val banlistTxtFile = "path to banlist file on ssh server"
 
   val log = Logger(this getClass() getName())
   log.debug("Initalizing server:"+name)

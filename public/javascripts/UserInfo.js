@@ -1,4 +1,4 @@
-var count = 25;
+var count = 15;
 var offset = 0;
 
 function reloadChatlog() {

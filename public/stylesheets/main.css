@@ -57,6 +57,19 @@ a {
     vertical-align: middle;
 }
 
+caption{
+    color:white;
+    text-align: center;
+    border-bottom:0;
+}
+
+.permban-table{
+    width:60%;
+}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+    border:none;
+}
+
 .footer span, .footer div {
     vertical-align: middle;
 }
@@ -70,10 +83,55 @@ a {
     font-size: medium !important;
 }
 
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
+    background-color: #122551;
+    color:white;
+    border:1px solid #3a7cb6;
+}
+
+button{
+    color:black;
+}
+
+a:hover{
+    text-decoration: none;
+    color:white;
+    font-weight: bold;
+}
+
+.nav>li>a:focus, .nav>li>a:hover{
+    background-color: #142d68;
+    border:1px solid #3a7cb6;
+    color:white;
+}
+
+.nav{
+    border-bottom:1px solid #3a7cb6;
+    text-align: center;
+}
+
+.nav-tabs > li, .nav-pills > li {
+    float:none;
+    display:inline-block;
+    *display:inline; /* ie7 fix */
+    zoom:1; /* hasLayout ie7 trigger */
+}
+
+.nav-tabs, .nav-pills {
+    text-align:center;
+}
+.tab-pane{
+    padding:20px;
+
+}
+
 .label {
     background: #9a0000;
-    padding: 4px 6px;
     text-align: center;
+    padding:5px;
+    font-weight: normal;
+    border-radius: 0;
+    font-size:small;
 }
 
 .label-warning {
@@ -117,6 +175,10 @@ a {
     background:#2A3F6F;
     transition: 200ms;
     cursor: pointer;
+}
+
+.btn:hover{
+    color:white;
 }
 
 .userSearchButton:hover {

@@ -30,6 +30,7 @@ GET            /remove-punishment        @controllers.PenaltyController.removePu
 GET            /adminbans                @controllers.PenaltyController.adminBans(noticeOnly: Boolean ?= false)
 GET            /notices                  @controllers.PenaltyController.adminBans(noticeOnly: Boolean ?= true)
 GET            /allbans                  @controllers.PenaltyController.allBans()
+GET            /permbanlist              @controllers.PenaltyController.permBans()
 
 #########################
 # Administrator routes

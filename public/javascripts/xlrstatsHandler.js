@@ -4,7 +4,7 @@ function setXlrStatsVisibility(b3Id, visibility) {
     setTimeout(function () {
         location.reload();
     }, 500);
-}
+};
 
 $(document).ready(function () {
     $("#resetStatsBtn").click(function () {

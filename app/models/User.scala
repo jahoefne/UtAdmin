@@ -76,7 +76,7 @@ object User {
             userId = rs.int("id"),
             usedCount = 1)
           ).list().apply().toSeq).union(
-        sql"""SELECT DISTINCT(clients.id), clients.name, clients.time_edit, clients.time_add FROM clients
+        sql"""SELECT clients.id, clients.name, clients.time_edit, clients.time_add FROM clients
               INNER JOIN ipaliases ON clients.id = ipaliases.id WHERE $likeIpAlias"""
           .map(rs => Username(
             name = rs.string("name"),

@@ -141,96 +141,89 @@
                     @user.lastSeen.toString("dd.MMM.yyyy (HH:mm:ss)", lang.toLocale)
                     </td>
                 </tr>
-                <tr>
-                    <td>
-                        Aliases:
-                    </td>
-                    <td colspan="2">
-                    @user.aliases.length match {
-                        case 0 => {
-                            @user.currentName doesn't have any aliases. }
-                        case _ => {
-                            @for(alias: Username <- user.aliases) {
-                                <span class="label label-std"><b>@alias.name</b></span>
-                            }
-                        }
-                    }
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        IPs:
-                    </td>
-                    <td colspan="2">
-                    @user.ipAliases.length match {
-                        case 0 => {
-                            @user.currentName didn't use any other Ip's }
-                        case _ => {
-                            @for(ip: IpAlias <- user.ipAliases) {
-                                <span class="label label-std"><b>@ip.ip</b></span>
-                            }
-                        }
-                    }
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        Penalties:
-                    </td>
-                    <td colspan="2">
-                        @user.penalties.length match {
-                            case 0 => {
-                                @user.currentName doesn't have any recorded penalties. }
-                            case _ => {
-                                @penaltyFormatter(penalties = user.penalties,
-                                    showPlayerName = false,
-                                    showType = true,
-                                    showReason = true,
-                                    showExpires = true,
-                                    showCreatedOn = true,
-                                    showAdminName = true,
-                                    showRemoveButton = true)
-                            }
-                        }
-                        @penaltyModal(user.b3Id, user.currentName, loggedInUser)
-                    </td>
-                </tr>
 
                 <tr>
                     <td colspan="3">
-                        Chatlog:
-                        <div align="center">
-                            <span class="btn-simple" onclick="prevPageChatlog();">
-                                <i class="fa fa-arrow-left"></i>
-                            </span>
-                            <span class="btn-simple" onclick="nextPageChatlog();">
-                                <i class="fa fa-arrow-right"></i>
-                            </span>
-                        </div>
-                        <div id="chatlogTable" style="margin-left:90px ; margin-right:90px ;">
-                        </div>
-                    </td>
-                </tr>
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#aliases">Aliases (@user.aliases.length)</a></li>
+                            <li><a data-toggle="tab" href="#ips">Ips (@user.ipAliases.length)</a></li>
+                            <li><a data-toggle="tab" href="#penalties">Penalties (@user.penalties.length)</a></li>
+                            <li><a data-toggle="tab" href="#chatlog">Chatlog</a></li>
+                            <li><a data-toggle="tab" href="#onlinehistory">Online Hitory</a></li>
+                        </ul>
 
-                <tr>
-                    <td colspan="3">
-                        Online History:
-                        <div align="center">
-                            <table class="online-table table-highlight">
-                                <tr>
-                                    <th>Came</th>
-                                    <th>Left</th>
-                                    <th>Duration</th>
-                                </tr>
-                                @for((came, gone) <- onlineHistory) {
-                                    <tr>
-                                        <td>@TimeFormatter.timeToString(came)</td>
-                                        <td>@TimeFormatter.timeToString(gone)</td>
-                                        <td>@TimeFormatter.formatDuration(new Duration(came, gone))</td>
-                                    </tr>
+                        <div class="tab-content">
+                            <div id="aliases" class="tab-pane fade in active">
+                            @user.aliases.length match {
+                                case 0 => {
+                                    @user.currentName doesn't have any aliases. }
+                                case _ => {
+                                    @for(alias: Username <- user.aliases) {
+                                        <span class="label label-std"><b>@alias.name</b></span>
+                                    }
                                 }
-                            </table>
+                            }
+                            </div>
+                            <div id="ips" class="tab-pane fade">
+                            @user.ipAliases.length match {
+                                case 0 => {
+                                    @user.currentName didn't use any other Ip's }
+                                case _ => {
+                                    @for(ip: IpAlias <- user.ipAliases) {
+                                        <span class="label label-std"><b>@ip.ip</b></span>
+                                    }
+                                }
+                            }
+                            </div>
+                            <div id="penalties" class="tab-pane fade">
+                                @user.penalties.length match {
+                                    case 0 => {
+                                        @user.currentName doesn't have any recorded penalties. }
+                                    case _ => {
+                                        @penaltyFormatter(penalties = user.penalties,
+                                            showPlayerName = false,
+                                            showType = true,
+                                            showReason = true,
+                                            showExpires = true,
+                                            showCreatedOn = true,
+                                            showAdminName = true,
+                                            showRemoveButton = true)
+                                    }
+                                }
+                                @penaltyModal(user.b3Id, user.currentName, loggedInUser)
+                            </div>
+
+                            <div id="chatlog" class="tab-pane fade">
+                                <div align="center">
+                                    <span class="btn-simple" onclick="prevPageChatlog();">
+                                        <i class="fa fa-arrow-left"></i>
+                                    </span>
+                                    <span class="btn-simple" onclick="nextPageChatlog();">
+                                        <i class="fa fa-arrow-right"></i>
+                                    </span>
+                                </div>
+                                <div id="chatlogTable" style="margin-left:90px ; margin-right:90px ;">
+                                </div>
+                            </div>
+
+                            <div id="onlinehistory" class="tab-pane fade">
+                                <div align="center">
+                                    <table class="online-table table-highlight">
+                                        <tr>
+                                            <th>Came</th>
+                                            <th>Left</th>
+                                            <th>Duration</th>
+                                        </tr>
+                                        @for((came, gone) <- onlineHistory) {
+                                            <tr>
+                                                <td>@TimeFormatter.timeToString(came)</td>
+                                                <td>@TimeFormatter.timeToString(gone)</td>
+                                                <td>@TimeFormatter.formatDuration(new Duration(came, gone))</td>
+                                            </tr>
+                                        }
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </td>
                 </tr>

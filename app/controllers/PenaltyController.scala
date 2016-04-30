@@ -3,6 +3,8 @@ package controllers
 import models._
 import play.api.Logger
 import securesocial.core.RuntimeEnvironment
+import play.api.cache._
+import play.api.Play.current
 
 class PenaltyController(override implicit val env: RuntimeEnvironment[UtAdminUser])
   extends securesocial.core.SecureSocial[UtAdminUser] {
@@ -10,6 +12,7 @@ class PenaltyController(override implicit val env: RuntimeEnvironment[UtAdminUse
   val log = Logger(this getClass() getName())
 
   val server = UtServer
+
   def allBans() = SecuredAction { request =>
     MongoLogger.logAction(request.user, "All bans")
     Ok(views.html.bans(PenaltyController.getPenalties(
@@ -66,4 +69,16 @@ class PenaltyController(override implicit val env: RuntimeEnvironment[UtAdminUse
       PenaltyController.deletePenalty(penaltyId)
       Ok("Removed")
   }
+
+  def permBans() = SecuredAction {
+    implicit request =>
+
+      jassh.SSH.once(UtServer.sshIp, UtServer.sshUser, UtServer.sshPass) {
+        ssh =>
+          val banlisttxt = ssh.execute("cat " + UtServer.banlistTxtFile).split("\n")
+          PenaltyController.updatePermBanTable(banlisttxt)
+          Ok(views.html.permBans(banlisttxt,PenaltyController.getUsersDirectlyAffectedByPermBan,request.user))
+      }
+  }
+
 }

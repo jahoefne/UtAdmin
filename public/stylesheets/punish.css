@@ -1,6 +1,7 @@
 .punish-container{
-    margin:15px;
     text-align: center;
+    width:20%;
+    margin:auto;
 }
 
 .punish-container button{
