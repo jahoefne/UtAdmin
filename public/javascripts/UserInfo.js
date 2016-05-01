@@ -24,7 +24,7 @@ $(document).ready(function () {
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         history.eventColor = '#07256A';
         history.displayEventEnd = true;
-        $('#calendar').fullCalendar(window.history);
+        $('#calendar').fullCalendar(history);
     });
 
     function getIpLocationJson(ip) {
