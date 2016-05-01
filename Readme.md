@@ -5,11 +5,11 @@ A modern, web-based, server management tool for [UrbanTerror 4.2](http://www.urb
 UtAdmin is written in Scala using the Play! Framework.
 
 ###Functionality
-* Status Page with dynamic chatlog and online player list, talkback functionality, and the use of admin commands (Fore Team, Kick, Ban, ...) from the website
+* Status Page with dynamic chatlog and online player list, talkback functionality, and the use of admin commands (Force Team, Kick, Ban, Slap, ...) from the website
 * Detailed user page with aliases, online history, ip addresses, chatlog, penalties, geo-location map, ...
 * Punish players or remove existing punishments
 * Create multiple admin accounts with 3 different user levels
-* Search for players, See all  bans, special view for clan members and admins
+* Search for players, See all bans, special view for clan members and admins
 * ... 
 
 ###Installation
@@ -27,4 +27,3 @@ Installation is quite simple, you just need Java/Scala, a MongoDB and the PlayFr
 
 ### TODO - Limitations
 * Right now only one game server is supported
-* **there seems to be a memory leak somewhere** this needs to be fixed
