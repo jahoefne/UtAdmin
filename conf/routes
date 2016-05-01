@@ -4,7 +4,6 @@ GET            /assets/*file             controllers.Assets.at(path="/public", f
 
 GET            /                         @controllers.Application.index(count: Int ?= 25, offset: Int ?= 0)
 GET            /user                     @controllers.Application.userById(id:Int)
-GET            /user-history-json        @controllers.Application.userHistoryJson(id:Int)
 GET            /chatlog-plain            @controllers.Application.chatLogPlain(count:Int ?=25 , offset:Int ?= 0, user:Option[Int] ?= None, includeRadio:Boolean ?= false, showJumpToConv: Boolean ?= false)
 GET            /chatlog                  @controllers.Application.chatLog(count:Int ?=30 , offset:Int ?= 0)
 GET            /chatlogForId             @controllers.Application.chatLogForId(msgId: Int)
