@@ -2,10 +2,11 @@ package controllers
 
 
 import models._
+import org.joda.time.format.{DateTimeFormatter, ISODateTimeFormat}
 import play.api.{Routes, Logger}
 import play.twirl.api.Html
 import securesocial.core.providers.utils.PasswordHasher
-
+import play.api.libs.json._
 import securesocial.core.{RuntimeEnvironment, BasicProfile, AuthenticationMethod}
 
 
@@ -54,7 +55,8 @@ class Application(override implicit val env: RuntimeEnvironment[UtAdminUser]) ex
         routes.javascript.Application.chatLogPlain,
         routes.javascript.Administrator.addUser,
         routes.javascript.Administrator.setXlrVisibility,
-        routes.javascript.Administrator.resetXlrstats
+        routes.javascript.Administrator.resetXlrstats,
+        routes.javascript.Application.userHistoryJson
       )
     ).as("text/javascript")
   }
@@ -160,8 +162,20 @@ class Application(override implicit val env: RuntimeEnvironment[UtAdminUser]) ex
 
   def chatLogForId(msgId: Int) = SecuredAction { request =>
     val offset = ChatMessage.getOffsetFor(msgId)
-    val chatlog = ChatMessage.getChatLog(30, offset-15, None, false)
-    Ok(views.html.chatlogWrapper(chatlog, 30, offset-15, request.user, msgId))
+    val chatlog = ChatMessage.getChatLog(30, offset - 15, None, false)
+    Ok(views.html.chatlogWrapper(chatlog, 30, offset - 15, request.user, msgId))
   }
 
+  def userHistoryJson(id: Int) = SecuredAction { request =>
+    val onlineHistory = User.UserInfo.getOnlineHistory(User.UserInfo.getUserByB3Id(id).get.guid)
+      .map(x => {
+        val fmt = ISODateTimeFormat.dateHourMinuteSecond()
+        JsObject(Seq(
+          "title" -> JsString(""),
+          "start" -> JsString(x._1.toString(fmt)),
+          "end" -> JsString(x._2.toString(fmt)),
+          "allDay" -> JsBoolean(false)))
+      })
+    Ok(JsObject(Seq("events" -> JsArray(onlineHistory))))
+  }
 }

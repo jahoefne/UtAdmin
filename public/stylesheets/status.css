@@ -22,11 +22,11 @@
     padding-top: 10px;
 }
 
-.online-table tr:nth-child(odd) {
+.online-table > tr:nth-child(odd) {
     background: #00050E;
 }
 
-.table-highlight tr:hover {
+.table-highlight > tr:hover {
     background: #122551;
 }
 

@@ -57,10 +57,17 @@ a {
     vertical-align: middle;
 }
 
+#calendar{
+    border:1px solid #3a7cb6;
+    padding-top:10px;
+}
 caption{
     color:white;
     text-align: center;
     border-bottom:0;
+}
+.fc-toolbar{
+    padding:10px;
 }
 
 .permban-table{
@@ -123,6 +130,11 @@ a:hover{
 .tab-pane{
     padding:20px;
 
+}
+
+.calendar-view{
+    width:60%;
+    margin: 0 auto;
 }
 
 .label {

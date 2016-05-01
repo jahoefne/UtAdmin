@@ -12,10 +12,13 @@
 
         <script src="@routes.Assets.at("javascripts/XlrstatsHandler.js")"></script>
 
-        <script src="@routes.Assets.at("javascripts/sweet-alert.min.js")"></script>
-        <link href="@routes.Assets.at("stylesheets/sweet-alert.css")" rel="stylesheet">
+        <script src="@routes.Assets.at("javascripts/deps/moment.js")"></script>
+        <script src="@routes.Assets.at("javascripts/deps/fullcalendar.js")"></script>
+        <link rel="stylesheet" href="@routes.Assets.at("javascripts/deps/fullcalendar.css")">
 
-        <script>
+    <script src="@routes.Assets.at("javascripts/sweet-alert.min.js")"></script>
+        <link href="@routes.Assets.at("stylesheets/sweet-alert.css")" rel="stylesheet">
+    <script>
                 var userIp = " @user.currentIp ";
                 var userName = " @user.currentName ";
                 var userId = @user.b3Id ;
@@ -149,7 +152,7 @@
                             <li><a data-toggle="tab" href="#ips">Ips (@user.ipAliases.length)</a></li>
                             <li><a data-toggle="tab" href="#penalties">Penalties (@user.penalties.length)</a></li>
                             <li><a data-toggle="tab" href="#chatlog">Chatlog</a></li>
-                            <li><a data-toggle="tab" href="#onlinehistory">Online Hitory</a></li>
+                            <li><a data-toggle="tab" href="#onlinehistory">Online Calendar</a></li>
                         </ul>
 
                         <div class="tab-content">
@@ -207,21 +210,8 @@
                             </div>
 
                             <div id="onlinehistory" class="tab-pane fade">
-                                <div align="center">
-                                    <table class="online-table table-highlight">
-                                        <tr>
-                                            <th>Came</th>
-                                            <th>Left</th>
-                                            <th>Duration</th>
-                                        </tr>
-                                        @for((came, gone) <- onlineHistory) {
-                                            <tr>
-                                                <td>@TimeFormatter.timeToString(came)</td>
-                                                <td>@TimeFormatter.timeToString(gone)</td>
-                                                <td>@TimeFormatter.formatDuration(new Duration(came, gone))</td>
-                                            </tr>
-                                        }
-                                    </table>
+                                <div align="center" class="calendar-view">
+                                    <div id="calendar" align="center"></div>
                                 </div>
                             </div>
                         </div>
