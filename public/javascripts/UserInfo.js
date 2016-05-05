@@ -1,7 +1,9 @@
 var count = 15;
 var offset = 0;
 
-
+$.getJSON("/user-history-json?id=" + userId, function (data) {
+    window.historydata = data
+});
 function reloadChatlog() {
     $('#chatlogTable').load(jsRoutes.controllers.Application.chatLogPlain(count, offset, userId, false, true).absoluteURL())
 }
@@ -22,9 +24,9 @@ $(document).ready(function () {
     getIpLocationJson(userIp);
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        history.eventColor = '#07256A';
-        history.displayEventEnd = true;
-        $('#calendar').fullCalendar(history);
+        window.historydata.eventColor = '#07256A';
+        window.historydata.displayEventEnd = true;
+        $('#calendar').fullCalendar(window.historydata);
     });
 
     function getIpLocationJson(ip) {

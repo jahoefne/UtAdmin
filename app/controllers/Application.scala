@@ -55,7 +55,8 @@ class Application(override implicit val env: RuntimeEnvironment[UtAdminUser]) ex
         routes.javascript.Application.chatLogPlain,
         routes.javascript.Administrator.addUser,
         routes.javascript.Administrator.setXlrVisibility,
-        routes.javascript.Administrator.resetXlrstats
+        routes.javascript.Administrator.resetXlrstats,
+        routes.javascript.Application.userHistoryJson
       )
     ).as("text/javascript")
   }
@@ -106,19 +107,9 @@ class Application(override implicit val env: RuntimeEnvironment[UtAdminUser]) ex
     User.UserInfo.getUserByB3Id(id) match {
       case Some(user) =>
         val onlineHistoryChartData = User.UserInfo.getOnlineHistoryChartData(user.guid)
-
-        val onlineHistoryJson = JsObject(Seq("events" -> JsArray(User.UserInfo.getOnlineHistory(User.UserInfo.getUserByB3Id(id).get.guid)
-          .map(x => {
-            val fmt = ISODateTimeFormat.dateHourMinuteSecond()
-            JsObject(Seq(
-              "title" -> JsString(""),
-              "start" -> JsString(x._1.toString(fmt)),
-              "end" -> JsString(x._2.toString(fmt)),
-              "allDay" -> JsBoolean(false)))
-          }))))
-
+        val onlineHistory = User.UserInfo.getOnlineHistory(user.guid)
         MongoLogger.logAction(request.user, "Userinfo for" + user.currentName + " " + user.guid)
-        Ok(views.html.user(user, onlineHistoryChartData, onlineHistoryJson, request.user))
+        Ok(views.html.user(user, onlineHistoryChartData, onlineHistory, request.user))
       case None =>
         Ok(views.html.styledError(Html("The User you are looking for could not be found!"), Some(request.user)))
     }
@@ -173,5 +164,18 @@ class Application(override implicit val env: RuntimeEnvironment[UtAdminUser]) ex
     val offset = ChatMessage.getOffsetFor(msgId)
     val chatlog = ChatMessage.getChatLog(30, offset - 15, None, false)
     Ok(views.html.chatlogWrapper(chatlog, 30, offset - 15, request.user, msgId))
+  }
+
+  def userHistoryJson(id: Int) = SecuredAction { request =>
+    val onlineHistory = User.UserInfo.getOnlineHistory(User.UserInfo.getUserByB3Id(id).get.guid)
+      .map(x => {
+        val fmt = ISODateTimeFormat.dateHourMinuteSecond()
+        JsObject(Seq(
+          "title" -> JsString(""),
+          "start" -> JsString(x._1.toString(fmt)),
+          "end" -> JsString(x._2.toString(fmt)),
+          "allDay" -> JsBoolean(false)))
+      })
+    Ok(JsObject(Seq("events" -> JsArray(onlineHistory))))
   }
 }

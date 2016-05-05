@@ -2,10 +2,7 @@
 @import org.joda.time.format.PeriodFormatterBuilder
 @import org.joda.time._
 
-@import play.api.libs.json.JsObject
-@import play.twirl.api.Html
-
-@(user: User, onlineHistoryChartData: List[(String, Long)], onlineHistoryJson: JsObject, loggedInUser: UtAdminUser)(implicit lang: play.api.i18n.Lang)
+@(user: User, onlineHistoryChartData: List[(String, Long)], onlineHistory: List[(DateTime, DateTime)], loggedInUser: UtAdminUser)(implicit lang: play.api.i18n.Lang)
 
     @baseTemplate("User " + user.currentName, loggedInUser) {
         <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
@@ -25,7 +22,6 @@
                 var userIp = " @user.currentIp ";
                 var userName = " @user.currentName ";
                 var userId = @user.b3Id ;
-                var history = @Html(onlineHistoryJson.toString());
         </script>
 
         <script src="@routes.Assets.at("javascripts/UserInfo.js")"></script>
@@ -34,7 +30,7 @@
         <div class="table-heading-container">
             <div class="table-heading">
                 <i id="userCountryFlag" class="flag-icon"></i>
-                <span>@user.currentName </span>
+                <span>@user.currentName <span>
             </div>
         </div>
 
