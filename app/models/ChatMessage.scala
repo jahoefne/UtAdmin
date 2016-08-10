@@ -65,15 +65,9 @@ object ChatMessage {
 
   def getChatLog(count: Int, offset: Int, userId: Option[Int], includeRadio: Boolean): Seq[ChatMessage] = DB readOnly {
     implicit session =>
-      val msgStructure = includeRadio match {
-        case true => "RADIO %"
-        case _ => " "
-      }
-
       sql"""SELECT * FROM chatlog WHERE
-       ($includeRadio = TRUE OR msg NOT LIKE 'RADIO %')
-        AND (${userId.isDefined} = FALSE OR client_id = ${userId.getOrElse(-1)})
-        ORDER BY msg_time DESC LIMIT $offset, $count"""
+        (${userId.isDefined} = FALSE OR client_id = ${userId.getOrElse(-1)})
+        ORDER BY msg_time DESC LIMIT $offset, 200"""
         .map(rs => {
           ChatMessage(
             rs.int("id"),
@@ -88,7 +82,7 @@ object ChatMessage {
             Some(rs.underlying.getInt("target_team"))
           )
         }
-        ).list().apply.toSeq
+        ).list().apply.toSeq.filter(includeRadio || !_.msg.startsWith("RADIO")).take(count);
   }
 
   def insertChatMessage(adminName: String,
