@@ -18,11 +18,11 @@ case class ChatMessage(msgId: Int,
                        targetTeam: Option[Int])
 
 object Teams extends Enumeration {
-  val unknown = -1
-  val free = 0
-  val spec = 1
-  val red = 2
-  val blue = 3
+  val unknown = Value(-1, "green")
+  val free = Value(0, "green")
+  val spec =  Value(1, "grey")
+  val red =  Value(2, "red")
+  val blue =  Value(3, "blue")
 }
 
 object ChatMessage {
@@ -59,15 +59,23 @@ object ChatMessage {
 
 
   def getOffsetFor(msgId: Int): Int = DB readOnly { implicit session =>
-    sql"SELECT COUNT(*) as count FROM chatlog WHERE msg NOT LIKE 'RADIO %' AND id > $msgId"
+    val c = sql"SELECT COUNT(*) AS count FROM chatlog WHERE msg NOT LIKE 'RADIO %' AND id > $msgId"
       .map(rs => rs.int("count")).first().apply().getOrElse(0)
+
+    println(c)
+    c
   }
 
   def getChatLog(count: Int, offset: Int, userId: Option[Int], includeRadio: Boolean): Seq[ChatMessage] = DB readOnly {
     implicit session =>
+      val offset2 = if (offset > 0) {
+        offset
+      } else {
+        0
+      }
       sql"""SELECT * FROM chatlog WHERE
         (${userId.isDefined} = FALSE OR client_id = ${userId.getOrElse(-1)})
-        ORDER BY msg_time DESC LIMIT $offset, 200"""
+        ORDER BY msg_time DESC LIMIT $offset2, 200"""
         .map(rs => {
           ChatMessage(
             rs.int("id"),

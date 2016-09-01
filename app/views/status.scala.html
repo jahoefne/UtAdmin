@@ -3,51 +3,43 @@
         offset: Int,
         loggedInUser: UtAdminUser)(implicit lang: play.api.i18n.Lang)
 
-    @baseTemplate("Server Status", loggedInUser) {
-        <script>
-                var count = @count ;
-                var offset = @offset ;
-        </script>
+@baseTemplate("Server Status", loggedInUser) {
+    <script>
+            var count = @count ;
+            var offset = @offset ;
+    </script>
 
-        <script src="@routes.Assets.at("javascripts/RestartHandler.js")"></script>
-        <script src="@routes.Assets.at("javascripts/sweet-alert.min.js")"></script>
-        <link href="@routes.Assets.at("stylesheets/sweet-alert.css")" rel="stylesheet">
-
-        <script src="@routes.Assets.at("javascripts/deps/sweet-prompt.min.js")"></script>
-        <link href="@routes.Assets.at("javascripts/deps/sweet-prompt.css")" rel="stylesheet">
-        <script src="@routes.Assets.at("javascripts/OnlinePlayerActions.js")"></script>
-        <script src="@routes.Assets.at("javascripts/StatusUpdater.js")"></script>
-
-        <script src="@routes.Assets.at("javascripts/deps/notify-combined.min.js")"></script>
-        <script src="@routes.Assets.at("javascripts/deps/notify-metro.js")"></script>
-        <link href="@routes.Assets.at("javascripts/deps/notify-metro.css")" rel="stylesheet">
+    <script src="@routes.Assets.at("javascripts/RestartHandler.js")"></script>
+    <script src="@routes.Assets.at("javascripts/OnlinePlayerActions.js")"></script>
+    <script src="@routes.Assets.at("javascripts/StatusUpdater.js")"></script>
 
 
-        <div id="left">
-            <div class="restart-button-container">
-                <span class="server-info">@UtServer.name</span>
-                 <span class="restart-server-button" id="restartServerButton">Restart Server</span>
-                 <span class="restart-server-button restart-b3-button" id="restartB3Button">Restart B3</span>
+        <div class="row">
+            <div class="col s6" id="statusPanel">
+               <!-- <div class="restart-button-container">
+                    <span class="server-info">@UtServer.name</span>
+                    <span class="restart-server-button" id="restartServerButton">Restart Server</span>
+                    <span class="restart-server-button restart-b3-button" id="restartB3Button">Restart B3</span>
+                </div>-->
+
             </div>
-            <span id="statusPanel">
-                    <!-- loaded dynamically -->
-            </span>
+            <div class="col s6">
+              <!--  <div id="chatbox">
+                    <div class="talkback-group">
+                        <a id="chatlog-all" href="/chatlog">Complete Chatlog</a>
+                        <span id="include-radio-container">
+                            Radio<input id="includeRadioCheckbox" type="checkbox" title="Radio">
+                        </span>
+                        <input type="text" id="talkback"><button id="say">Say!</button>
+                    </div>
+                    <span id="chat-div">-->
+
+                    @chatlog(messages, count, offset, true, false)
+                  <!--  </span>
+                </div>-->
+
         </div>
-        <div id="divider"></div>
-        <div id="right">
-            <div id="chatbox">
-                <div class="talkback-group">
-                    <a id="chatlog-all" href="/chatlog">Complete Chatlog</a>
-                    <span id="include-radio-container">
-                        Radio<input id="includeRadioCheckbox" type="checkbox" title="Radio">
-                    </span>
-                    <input type="text" id="talkback"><button id="say">Say!</button>
-                </div>
-                <span id="chat-div">
-                @chatlog(messages, count, offset, true, false)
-                </span>
-            </div>
-        </div>
-        <script src="@routes.Assets.at("javascripts/Talkback.js")"></script>
+    </div>
+        <!--  <script src=" @routes.Assets.at("javascripts/Talkback.js")"></script> -->
 
     }

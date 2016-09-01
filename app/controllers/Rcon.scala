@@ -13,6 +13,20 @@ class Rcon(override implicit val env: RuntimeEnvironment[UtAdminUser])
   val log = Logger(this getClass() getName())
   val server = UtServer
 
+  def startServerDemo(player: Int, name: String) = SecuredAction {
+    request =>
+      MongoLogger.logAction(request.user, "Starting server demo for player " + player)
+      server.rcon.rcon("startserverdemo " + player)
+      Redirect("/")
+  }
+
+  def stopServerDemo(player: Int, name: String) = SecuredAction {
+    request =>
+      MongoLogger.logAction(request.user, "Stopping server demo for player " + player)
+      server.rcon.rcon("stopserverdemo" + player)
+      Redirect("/")
+  }
+
   def slap(player: Int, name: String) = SecuredAction {
     request =>
       MongoLogger.logAction(request.user, "Slapping player " + player)

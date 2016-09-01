@@ -35,4 +35,8 @@ object RankFormatter {
       }
     }
   }
+  def adminStar(rank:Group) = Html(
+    if(rank.level>55) """<i class="material-icons amber-text">stars</i>"""
+    else ""
+  )
 }

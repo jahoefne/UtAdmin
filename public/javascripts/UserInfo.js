@@ -47,7 +47,6 @@ $(document).ready(function () {
                     ext: 'png'
                 }).addTo(map);
 
-                console.log("Foo");
                 var marker = L.marker([json.location.latitude, json.location.longitude],
                     {
                         icon: L.AwesomeMarkers.icon(
@@ -61,7 +60,6 @@ $(document).ready(function () {
                         )
                     }
                 ).addTo(map);
-                console.log("Bar");
 
                 var cityOpt = ""
                 if (typeof json.city !== 'undefined') {
@@ -75,9 +73,10 @@ $(document).ready(function () {
                     + cityOpt +
                     "</b>").openPopup();
 
-                $("#userCountryFlag").addClass("flag-icon-" + json.country.iso_code.toLowerCase());
-                $('[data-toggle="tooltip"]').tooltip();
-                console.log("Baz");
+
+                $("#userCountryFlag").attr("src", "/assets/javascripts/deps/flag-icon-css/flags/4x3/"+ json.country.iso_code.toLowerCase()+".svg");
+               console.log(json.country.names.en);
+                $("#userCountryName").text(json.country.names.en);
             }
         );
     }

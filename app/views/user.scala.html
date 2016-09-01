@@ -4,220 +4,273 @@
 
 @(user: User, onlineHistoryChartData: List[(String, Long)], onlineHistory: List[(DateTime, DateTime)], loggedInUser: UtAdminUser)(implicit lang: play.api.i18n.Lang)
 
-    @baseTemplate("User " + user.currentName, loggedInUser) {
-        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
-        <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-        <link rel="stylesheet" href="@routes.Assets.at("javascripts/deps/awesome-markers/leaflet.awesome-markers.css")">
-        <script src="@routes.Assets.at("javascripts/deps/awesome-markers/leaflet.awesome-markers.js")"></script>
+@baseTemplate("User " + user.currentName, loggedInUser) {
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <link rel="stylesheet" href="@routes.Assets.at("javascripts/deps/awesome-markers/leaflet.awesome-markers.css")">
+    <script src="@routes.Assets.at("javascripts/deps/awesome-markers/leaflet.awesome-markers.js")"></script>
 
-        <script src="@routes.Assets.at("javascripts/XlrstatsHandler.js")"></script>
+    <script src="@routes.Assets.at("javascripts/XlrstatsHandler.js")"></script>
 
-        <script src="@routes.Assets.at("javascripts/deps/moment.js")"></script>
-        <script src="@routes.Assets.at("javascripts/deps/fullcalendar.js")"></script>
-        <link rel="stylesheet" href="@routes.Assets.at("javascripts/deps/fullcalendar.css")">
+    <script src="@routes.Assets.at("javascripts/deps/moment.js")"></script>
+    <script src="@routes.Assets.at("javascripts/deps/fullcalendar.js")"></script>
+    <link rel="stylesheet" href="@routes.Assets.at("javascripts/deps/fullcalendar.css")">
 
     <script src="@routes.Assets.at("javascripts/sweet-alert.min.js")"></script>
-        <link href="@routes.Assets.at("stylesheets/sweet-alert.css")" rel="stylesheet">
+    <link href="@routes.Assets.at("stylesheets/sweet-alert.css")" rel="stylesheet">
     <script>
-                var userIp = " @user.currentIp ";
-                var userName = " @user.currentName ";
-                var userId = @user.b3Id ;
-        </script>
+            var userIp = " @user.currentIp ";
+            var userName = " @user.currentName ";
+            var userId = @user.b3Id ;
+    </script>
 
-        <script src="@routes.Assets.at("javascripts/UserInfo.js")"></script>
-        <script src="@routes.Assets.at("javascripts/Punisher.js")"></script>
+    <script src="@routes.Assets.at("javascripts/UserInfo.js")"></script>
+    <script src="@routes.Assets.at("javascripts/Punisher.js")"></script>
 
-        <div class="table-heading-container">
-            <div class="table-heading">
-                <i id="userCountryFlag" class="flag-icon"></i>
-                <span>@user.currentName <span>
+    <link href="@routes.Assets.at("javascripts/deps/flag-icon-css/css/flag-icon.min.css")" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="@routes.Assets.at("stylesheets/main.css")" media="screen,projection"/>
+
+
+
+    <div class="row">
+
+        <!-- Country-Flag and basic information card -->
+        <div class="col s5">
+            <div class="card horizontal hoverable">
+                <div class="card-image">
+                    <img id="userCountryFlag" src="" alt="">
+                </div>
+                <div class="card-content white-text">
+                    <div class="row">
+                        <div class="col s4">Name:</div>
+                        <div class="col s8">@user.currentName</div>
+                    </div>
+                    <div class="row">
+                        <div class="col s4">IP:</div>
+                        <div class="col s8">@user.currentIp</div>
+                    </div>
+                    <div class="row">
+                        <div class="col s4">B3-Id:</div>
+                        <div class="col s8">@@ @user.b3Id</div>
+                    </div>
+                    <div class="row">
+                        <div class="col s4">From:</div>
+                        <div class="col s8"><span id="userCountryName" class="truncate"></span></div>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
 
-        <div class="std-margin user-profile">
-            <div id="userLocationMap"></div>
-            <table class="online-table">
-                <tr>
-                    <td> Connections:</td>
-                    <td> @user.numberOfConnections </td>
-                    <td rowspan="8" width="520" id="onlineHistoryChart">@onlineHistoryChart(onlineHistoryChartData)</td>
-                </tr>
-                <tr>
-                    <td>IP:</td>
-                    <td>@user.currentIp</td>
-                </tr>
-                <tr>
-                    <td>B3-Id:</td>
-                    <td>@@ @user.b3Id</td>
-                </tr>
 
-                <tr>
-                    <td>Xlrstats:</td>
-                    <td>
 
-                    @if(user.xlrId.isDefined) {
-                        <a class="btn btn-simple" href="http://144.76.158.173/index.php?func=player&playerdbid=@user.b3Id&config=1">
-                            Show</a>
-                        @if(loggedInUser.rank == Ranks.God || loggedInUser.rank == Ranks.Admin) {
-                            @user.xlrVisible match {
-                                case true => {
-                                    <span class="label label-danger">HIDDEN</span>
-                                    <span class="btn btn-simple" onclick="setXlrStatsVisibility(@user.b3Id, true);">Make Visible!</span>
 
-                                }
-                                case _ => {
-                                    <span class="label label-primary">Visible</span>
-                                    <span class="btn btn-simple" onclick="setXlrStatsVisibility(@user.b3Id, false);">Hide Stats!</span>
 
-                                }
+
+
+
+
+
+
+    <div class="table-heading-container">
+        <div class="table-heading">
+            <i id="" class="flag-icon"></i>
+            <span>@user.currentName </span>
+        </div>
+    </div>
+
+    <div class="std-margin user-profile">
+        <div id="userLocationMap"></div>
+        <table class="online-table">
+            <tr>
+                <td> Connections:</td>
+                <td> @user.numberOfConnections </td>
+                <td rowspan="8" width="520" id="onlineHistoryChart">@onlineHistoryChart(onlineHistoryChartData)</td>
+            </tr>
+            <tr>
+                <td>IP:</td>
+                <td>@user.currentIp</td>
+            </tr>
+            <tr>
+                <td>B3-Id:</td>
+                <td>@@ @user.b3Id</td>
+            </tr>
+
+            <tr>
+                <td>Xlrstats:</td>
+                <td>
+
+                @if(user.xlrId.isDefined) {
+                    <a class="btn btn-simple" href="http://144.76.158.173/index.php?func=player&playerdbid=@user.b3Id&config=1">
+                        Show</a>
+                    @if(loggedInUser.rank == Ranks.God || loggedInUser.rank == Ranks.Admin) {
+                        @user.xlrVisible match {
+                            case true => {
+                                <span class="label label-danger">HIDDEN</span>
+                                <span class="btn btn-simple" onclick="setXlrStatsVisibility(@user.b3Id, true);">Make Visible!</span>
+
+                            }
+                            case _ => {
+                                <span class="label label-primary">Visible</span>
+                                <span class="btn btn-simple" onclick="setXlrStatsVisibility(@user.b3Id, false);">Hide Stats!</span>
+
                             }
                         }
-                        @if(loggedInUser.rank == Ranks.God) {
-                          <!--  <span class="btn btn-danger" id="resetStatsBtn">Reset Xlrstats!</span> -->
-                        }
-                    } else {
-                        @user.currentName doesn't have stats…
                     }
-                    </td>
-                </tr>
-                <tr>
-                    <td>Rank:</td>
-                    <td>
-                        @views.RankFormatter.labelForRank(user.group)
-                        @user.maskedAs match {
-                            case Some(group) if group.level != 0 => {Masked as: @views.RankFormatter.labelForRank(group)}
-                            case _ => {}
-                        } <p>
-                        @if(loggedInUser.rank == Ranks.God) {
-                            <div>
-                                <div class="dropdown-menu-container change-rank-btn">
-                                    <span class="dropdown-trigger">Change Rank</span>
-                                    <ul class="dropdown-content">
-                                    @for(group <- B3GroupController.getGroups()) {
-                                        <li>
-                                            <a href="@routes.Administrator.changeGroupOfUser(user.b3Id, group.bits)">
-                                                @group.name (@group.level)
-                                            </a>
-                                        </li>
-                                    }
-                                    </ul>
-                                </div>
-                            </div>
+                    @if(loggedInUser.rank == Ranks.God) {
+                            <!--  <span class="btn btn-danger" id="resetStatsBtn">Reset Xlrstats!</span> -->
                         }
-                    </td>
-                </tr>
-                <tr>
-                    <td>GUID:</td>
-                    <td>@user.guid</td>
-                </tr>
-                <tr>
-                    <td>Played (last 30d):</td>
-                    <td>
-                    @{
-                        new PeriodFormatterBuilder().appendDays()
-                                .appendSuffix("day", "days")
-                                .appendSeparator(" ")
-                                .appendHours()
-                                .appendSuffix("h", "h")
-                                .appendSeparator(" ")
-                                .appendMinutes()
-                                .appendSuffix("min", "mins")
-                                .appendSeparator(" ")
-                                .appendSeconds()
-                                .appendSuffix("s", "s")
-                                .toFormatter().print(user.totalTimeOnServer)
-                    }</td>
-                </tr>
-                <tr>
-                    <td>
-                        First seen:
-                    </td>
-                    <td>
-                    @user.firstSeen.toString("dd.MMM.yyyy (HH:mm:ss)", lang.toLocale)
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Last seen:
-                    </td>
-                    <td>
-                    @user.lastSeen.toString("dd.MMM.yyyy (HH:mm:ss)", lang.toLocale)
-                    </td>
-                </tr>
-
-                <tr>
-                    <td colspan="3">
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a data-toggle="tab" href="#aliases">Aliases (@user.aliases.length)</a></li>
-                            <li><a data-toggle="tab" href="#ips">Ips (@user.ipAliases.length)</a></li>
-                            <li><a data-toggle="tab" href="#penalties">Penalties (@user.penalties.length)</a></li>
-                            <li><a data-toggle="tab" href="#chatlog">Chatlog</a></li>
-                            <li><a data-toggle="tab" href="#onlinehistory">Online Calendar</a></li>
-                        </ul>
-
-                        <div class="tab-content">
-                            <div id="aliases" class="tab-pane fade in active">
-                            @user.aliases.length match {
-                                case 0 => {
-                                    @user.currentName doesn't have any aliases. }
-                                case _ => {
-                                    @for(alias: Username <- user.aliases) {
-                                        <span class="label label-std"><b>@alias.name</b></span>
-                                    }
+                } else {
+                    @user.currentName doesn't have stats…
+                }
+                </td>
+            </tr>
+            <tr>
+                <td>Rank:</td>
+                <td>
+                    @views.RankFormatter.labelForRank(user.group)
+                    @user.maskedAs match {
+                        case Some(group) if group.level != 0 => {Masked as: @views.RankFormatter.labelForRank(group)}
+                        case _ => {}
+                    } <p>
+                    @if(loggedInUser.rank == Ranks.God) {
+                        <div>
+                            <div class="dropdown-menu-container change-rank-btn">
+                                <span class="dropdown-trigger">Change Rank</span>
+                                <ul class="dropdown-content">
+                                @for(group <- B3GroupController.getGroups()) {
+                                    <li>
+                                        <a href="@routes.Administrator.changeGroupOfUser(user.b3Id, group.bits)">
+                                            @group.name (@group.level)
+                                        </a>
+                                    </li>
                                 }
-                            }
-                            </div>
-                            <div id="ips" class="tab-pane fade">
-                            @user.ipAliases.length match {
-                                case 0 => {
-                                    @user.currentName didn't use any other Ip's }
-                                case _ => {
-                                    @for(ip: IpAlias <- user.ipAliases) {
-                                        <span class="label label-std"><b>@ip.ip</b></span>
-                                    }
-                                }
-                            }
-                            </div>
-                            <div id="penalties" class="tab-pane fade">
-                                @user.penalties.length match {
-                                    case 0 => {
-                                        @user.currentName doesn't have any recorded penalties. }
-                                    case _ => {
-                                        @penaltyFormatter(penalties = user.penalties,
-                                            showPlayerName = false,
-                                            showType = true,
-                                            showReason = true,
-                                            showExpires = true,
-                                            showCreatedOn = true,
-                                            showAdminName = true,
-                                            showRemoveButton = true)
-                                    }
-                                }
-                                @penaltyModal(user.b3Id, user.currentName, loggedInUser)
-                            </div>
-
-                            <div id="chatlog" class="tab-pane fade">
-                                <div align="center">
-                                    <span class="btn-simple" onclick="prevPageChatlog();">
-                                        <i class="fa fa-arrow-left"></i>
-                                    </span>
-                                    <span class="btn-simple" onclick="nextPageChatlog();">
-                                        <i class="fa fa-arrow-right"></i>
-                                    </span>
-                                </div>
-                                <div id="chatlogTable" style="margin-left:90px ; margin-right:90px ;">
-                                </div>
-                            </div>
-
-                            <div id="onlinehistory" class="tab-pane fade">
-                                <div align="center" class="calendar-view">
-                                    <div id="calendar" align="center"></div>
-                                </div>
+                                </ul>
                             </div>
                         </div>
-                    </td>
-                </tr>
-            </table>
-        </div>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>GUID:</td>
+                <td>@user.guid</td>
+            </tr>
+            <tr>
+                <td>Played (last 30d):</td>
+                <td>
+                @{
+                    new PeriodFormatterBuilder().appendDays()
+                            .appendSuffix("day", "days")
+                            .appendSeparator(" ")
+                            .appendHours()
+                            .appendSuffix("h", "h")
+                            .appendSeparator(" ")
+                            .appendMinutes()
+                            .appendSuffix("min", "mins")
+                            .appendSeparator(" ")
+                            .appendSeconds()
+                            .appendSuffix("s", "s")
+                            .toFormatter().print(user.totalTimeOnServer)
+                }</td>
+            </tr>
+            <tr>
+                <td>
+                    First seen:
+                </td>
+                <td>
+                @user.firstSeen.toString("dd.MMM.yyyy (HH:mm:ss)", lang.toLocale)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Last seen:
+                </td>
+                <td>
+                @user.lastSeen.toString("dd.MMM.yyyy (HH:mm:ss)", lang.toLocale)
+                </td>
+            </tr>
 
-    }
+            <tr>
+                <td colspan="3">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#aliases">Aliases (@user.aliases.length)</a></li>
+                        <li><a data-toggle="tab" href="#ips">Ips (@user.ipAliases.length)</a></li>
+                        <li><a data-toggle="tab" href="#penalties">Penalties (@user.penalties.length)</a></li>
+                        <li><a data-toggle="tab" href="#chatlog">Chatlog</a></li>
+                        <li><a data-toggle="tab" href="#onlinehistory">Online Calendar</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div id="aliases" class="tab-pane fade in active">
+                        @user.aliases.length match {
+                            case 0 => {
+                                @user.currentName doesn't have any aliases. }
+                            case _ => {
+                                @for(alias: Username <- user.aliases) {
+                                    <span class="label label-std"><b>@alias.name</b></span>
+                                }
+                            }
+                        }
+                        </div>
+                        <div id="ips" class="tab-pane fade">
+                        @user.ipAliases.length match {
+                            case 0 => {
+                                @user.currentName didn't use any other Ip's }
+                            case _ => {
+                                @for(ip: IpAlias <- user.ipAliases) {
+                                    <span class="label label-std"><b>@ip.ip</b></span>
+                                }
+                            }
+                        }
+                        </div>
+                        <div id="penalties" class="tab-pane fade">
+                            @user.penalties.length match {
+                                case 0 => {
+                                    @user.currentName doesn't have any recorded penalties. }
+                                case _ => {
+                                    @penaltyFormatter(penalties = user.penalties,
+                                        showPlayerName = false,
+                                        showType = true,
+                                        showReason = true,
+                                        showExpires = true,
+                                        showCreatedOn = true,
+                                        showAdminName = true,
+                                        showRemoveButton = true)
+                                }
+                            }
+                            @penaltyModal(user.b3Id, user.currentName, loggedInUser)
+                        </div>
+
+                        <div id="chatlog" class="tab-pane fade">
+                            <div align="center">
+                                <span class="btn-simple" onclick="prevPageChatlog();">
+                                    <i class="fa fa-arrow-left"></i>
+                                </span>
+                                <span class="btn-simple" onclick="nextPageChatlog();">
+                                    <i class="fa fa-arrow-right"></i>
+                                </span>
+                            </div>
+                            <div id="chatlogTable" style="margin-left:90px ; margin-right:90px ;">
+                            </div>
+                            <div align="center">
+                                <span class="btn-simple" onclick="prevPageChatlog();">
+                                    <i class="fa fa-arrow-left"></i>
+                                </span>
+                                <span class="btn-simple" onclick="nextPageChatlog();">
+                                    <i class="fa fa-arrow-right"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div id="onlinehistory" class="tab-pane fade">
+                            <div align="center" class="calendar-view">
+                                <div id="calendar" align="center"></div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+}

@@ -49,7 +49,7 @@ object Global extends WithFilters(new GzipFilter()) with play.api.GlobalSettings
 
 
   // called when a route is found, but it was not possible to bind the request parameters
-  override def onBadRequest(request: RequestHeader, error: String) = Future.successful{
+ /* override def onBadRequest(request: RequestHeader, error: String) = Future.successful{
     BadRequest(
       views.html.styledError(
         Html(
@@ -82,5 +82,5 @@ object Global extends WithFilters(new GzipFilter()) with play.api.GlobalSettings
         """),
       None
     ))
-  }
+  }*/
 }

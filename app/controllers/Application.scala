@@ -48,6 +48,8 @@ class Application(override implicit val env: RuntimeEnvironment[UtAdminUser]) ex
         routes.javascript.Rcon.kick,
         routes.javascript.Rcon.nuke,
         routes.javascript.Rcon.kill,
+        routes.javascript.Rcon.startServerDemo,
+        routes.javascript.Rcon.stopServerDemo,
         routes.javascript.Rcon.forceRed,
         routes.javascript.Rcon.forceBlue,
         routes.javascript.Rcon.forceSpec,
@@ -163,6 +165,7 @@ class Application(override implicit val env: RuntimeEnvironment[UtAdminUser]) ex
   def chatLogForId(msgId: Int) = SecuredAction { request =>
     val offset = ChatMessage.getOffsetFor(msgId)
     val chatlog = ChatMessage.getChatLog(30, offset - 15, None, false)
+    println("offset: "+offset+"   id:"+msgId)
     Ok(views.html.chatlogWrapper(chatlog, 30, offset - 15, request.user, msgId))
   }
 

@@ -6,95 +6,74 @@
 @import org.joda.time.Period
 @import org.apache.commons.lang3.StringEscapeUtils.escapeEcmaScript
 
-<table class="online-table table-highlight">
-    <tr>
-        <th></th>
-        <th>Name</th>
-        <th>Rank</th>
-        <th>Score</th>
-        <th>Ip</th>
-        <th>Online</th>
-        <th>PM</th>
-        <th>Punish</th>
-    </tr>
 
+<table class="bordered highlight responsive-table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Rank</th>
+            <th>Score</th>
+            <th>Ip</th>
+            <th>Online</th>
+            <th>PM</th>
+            <th>Punish</th>
+        </tr>
+    </thead>
+
+    <tbody>
     @for((player, count) <- players.zipWithIndex) {
         <tr>
             <td onclick="window.location='/user?id=@player.id';" class="pointer-cursor" >
-                <svg height="10" width="10">
-                    <circle cx="5" cy="5" r="3" stroke="black" stroke-width="0" fill="@player.team match {
-                        case Teams.blue => {blue}
-                        case Teams.red => {red}
-                        case Teams.spec | Teams.free => {gray}
-                        case _ => {green}
-                    }"></circle>
-                </svg>
+                <i class="material-icons @{Teams.apply(player.team).toString}-text">face</i>
+                @RankFormatter.adminStar(player.group)
             </td>
-            <td onclick="window.location='/user?id=@player.id';" class="pointer-cursor" >
-            @Color.colorize(player.name)
-            </td>
-            <td onclick="window.location='/user?id=@player.id';" class="pointer-cursor" >
-            @RankFormatter.labelForRank(player.group)
-            </td>
+            <td onclick="window.location='/user?id=@player.id';" class="pointer-cursor" > @Color.colorize(player.name)</td>
+            <td onclick="window.location='/user?id=@player.id';" class="pointer-cursor" > @RankFormatter.labelForRank(player.group)</td>
             <td onclick="window.location='/user?id=@player.id';" class="pointer-cursor" >@player.score</td>
             <td onclick="window.location='/user?id=@player.id';" class="pointer-cursor" >@player.ip</td>
+
             <td onclick="window.location='/user?id=@player.id';" class="pointer-cursor" >
-            @views.TimeFormatter.timePassedSince(player.joined)
+                <time class="timeago" datetime="@player.joined.toString"></time>
             </td>
+
             <td>
-                <span class="btn-simple" onclick="privateMessage(@player.serverId, '@escapeEcmaScript(player.name)', @player.id);"><i class="fa fa-envelope-o"></i></span>
-            </td>
-            <td width="30px">
-                <span class="dropdown-menu-container">
-                    <ul>
-                        ...
-                        <span class="dropdown-content">
-                        @defining(escapeEcmaScript(player.name).dropRight(2)) { name =>
-                            <li>
-                                <a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.slap(@player.serverId, '@name'),'Slapped @name' );" >
-                                    Slap</a>
-                            </li>
+                <a class="waves-effect waves-light btn-flat" onclick="privateMessage(@player.serverId, '@escapeEcmaScript(player.name)', @player.id);">
+                    <i class="material-icons">message</i>
+                </a>
+            <td>
+                <a class='waves-effect waves-light dropdown-button btn-flat' href='#' data-activates='dropdown@player.serverId'><i class="material-icons">settings</i></a>
 
-
+                <ul id='dropdown@player.serverId' class='dropdown-content'>
+                    @defining(escapeEcmaScript(player.name).dropRight(2)) { name =>
+                        <li>
+                            <a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.slap(@player.serverId, '@name'),'Slapped @name' );" >Slap</a>
+                        </li>
                         @if(loggedInUser.rank != Ranks.Mod) {
                             <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.nuke(@player.serverId, '@name'), 'Nuked @name');">Nuke</a></li>
-
-                            <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.kill(@player.serverId, '@name'),'Killed @name' );">
-                                Kill</a></li>
-                            <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.kick(@player.serverId, '@name'),'Kicked @name');">
-                                Kick</a></li>
-                            <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.forceRed(@player.serverId, '@name'),'Forced red @name');">
-                                Force Red</a></li>
-                            <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.forceBlue(@player.serverId, '@name'),'Forced blue @name');">
-                                Force Blue</a></li>
-                            <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.forceSpec(@player.serverId, '@name'),'Forced spec @name' );">
-                                Force Spec</a></li>
+                            <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.kill(@player.serverId, '@name'),'Killed @name' );">Kill</a></li>
+                            <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.kick(@player.serverId, '@name'),'Kicked @name');">Kick</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.forceRed(@player.serverId, '@name'),'Forced red @name');">Force Red</a></li>
+                            <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.forceBlue(@player.serverId, '@name'),'Forced blue @name');">Force Blue</a></li>
+                            <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.forceSpec(@player.serverId, '@name'),'Forced spec @name' );">Force Spec</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.startServerDemo(@player.serverId, '@name'),'Started serverdemo of @name' );">Start Serverdemo</a></li>
+                            <li><a href="#" onclick="punishOnline(jsRoutes.controllers.Rcon.stopServerDemo(@player.serverId, '@name'),'Stoped serverdemo of @name' );">Stop Serverdemo</a></li>
                         }
                         }
-
-                        </span>
-                    </ul>
-                </span>
+                </ul>
             </td>
         </tr>
 
     }
     <tr>
-        <td colspan="8" id="online-player-count">
-            <svg height="10" width="10">
-                <circle cx="5" cy="5" r="5" stroke="black" stroke-width="0" fill="blue"></circle>
-            </svg>
-            @players.count(_.team == Teams.blue)&nbsp;
-
-            <svg height="10" width="10">
-
-                <circle cx="5" cy="5" r="5" stroke="black" stroke-width="0" fill="red"></circle>
-            </svg>
-            @players.count(_.team == Teams.red)&nbsp;
-
-            <svg height="10" width="10">
-                <circle cx="5" cy="5" r="5" stroke="black" stroke-width="0" fill="gray"></circle>
-            </svg>
-            @players.count(_.team == Teams.spec)&nbsp;&nbsp;&sum; @players.length</td>
+        <td></td><td></td><td></td>
+       <!-- <td><i class="material-icons blue-text">face</i> @players.count(_.team == Teams.blue)&nbsp;</td>
+        <td><i class="material-icons red-text">face</i> @players.count(_.team == Teams.red)&nbsp;</td>
+        <td><i class="material-icons grey-text">face</i> @players.count(_.team == Teams.spec)&nbsp;</td>-->
+        <td>&nbsp;&sum; @players.length</td>
+        <td></td><td></td><td></td><td></td>
     </tr>
+    </tbody>
 </table>

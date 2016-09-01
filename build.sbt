@@ -22,6 +22,8 @@ resolvers += "Akka Snapshot Repository" at "http://repo.akka.io/snapshots/"
 
 resolvers += "JAnalyse Repository" at "http://www.janalyse.fr/repository/"
 
+resolvers += "Madoushi sbt-plugins" at "https://dl.bintray.com/madoushi/sbt-plugins/"
+
 libraryDependencies ++= Seq(
   jdbc,
   anorm,

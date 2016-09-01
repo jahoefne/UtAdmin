@@ -6,80 +6,78 @@
     <head>
         <title>@title</title>
         <link rel="icon" type="image/png" href="/assets/favicons.png">
-        <script src="@routes.Assets.at("javascripts/deps/jquery-2.1.3.min.js")"></script>
-            <!-- Latest compiled and minified CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-            <!-- Latest compiled and minified JavaScript -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-
-        <script src="@routes.Assets.at("javascripts/deps/bootbox.min.js")"></script>
-
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-        <link href="@routes.Assets.at("stylesheets/main.css")" rel="stylesheet">
-
-        <link href="@routes.Assets.at("stylesheets/status.css")" rel="stylesheet">
-        <link href="@routes.Assets.at("stylesheets/navbar.css")" rel="stylesheet">
-        <link href="@routes.Assets.at("javascripts/deps/flag-icon/css/flag-icon.min.css")" rel="stylesheet">
-
         <script type="text/javascript" src="@routes.Application.javascriptRoutes"></script>
+
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/main.css")">
+     <!--   <link type="text/css" rel="stylesheet" href="@routes.Assets.at("css/materialize.min.css")"  media="screen,projection"/>-->
+
 
     </head>
 
     <body>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/deps/materialize/js/materialize.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/Main.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.timeago.js")"></script>
 
-        <div class="navbar">
-            <ul>
-                <li><a href="/">Status</a></li>
-                <li>
-                    <span>Users</span>
-                    <ul>
-                        <li><a
-                        href="@routes.Application.userlist(count = 45,
-                            offset = 0,
-                            title = "Users",
-                            minLevel = 0,
-                            displaySearchField = true)">All</a></li>
-                        <li><a href="/admin-list">Admins</a></li>
-                        <li><a href="/clan-list">Clan Members</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <span>Penalties</span>
-                    <ul>
-                        <li><a href="/adminbans">Admin Bans</a></li>
-                        <li><a href="/notices">Notices</a></li>
-                        <li><a href ="/allbans">All Penalties</a></li>
-                        @if(loggedInUser.rank==0){
-                            <li><a href ="/permbanlist">Banlist.txt (Experimental)</a></li>
-                        }
-                    </ul>
-                </li>
-                <li class="right">
-                    <span><i class="fa fa-lock"></i> @loggedInUser.main.userId</span>
-                    <ul>
-                        <li><a href="/auth/logout"> <i class="fa fa-sign-out"></i> Logout</a></li>
-                        <li><a href="/password-change"><i class="fa fa-key"></i> Change Password</a></li>
-                        @if(loggedInUser.rank == 0) {
-                            <li>
-                                <a href="/accounts">
-                                    <i class="fa fa-user-plus"></i>
-                                    User Administration
-                                </a>
-                            </li>
-                        }
-                    </ul>
-                </li>
-            </ul>
-        </div>
+        <ul id="users-dropdown" class="dropdown-content">
+            <li><a href="@routes.Application.userlist(count = 45, offset = 0, title = "Users", minLevel = 0, displaySearchField = true)">All</a></li>
+            <li><a href="/admin-list">Admins</a></li>
+            <li><a href="/clan-list">Clan Members</a></li>
+        </ul>
 
-        <div class="content">
+        <ul id="penalties-dropdown" class="dropdown-content">
+            <li><a href="/adminbans">Admin Bans</a></li>
+            <li><a href="/notices">Notices</a></li>
+            <li><a href ="/allbans">All Penalties</a></li>
+            @if(loggedInUser.rank==0){
+                <li><a href ="/permbanlist">Banlist.txt (Experimental)</a></li>
+            }
+        </ul>
+
+        <ul id="account-dropdown" class="dropdown-content">
+            <li><a href="/auth/logout"> <i class="fa fa-sign-out"></i> Logout</a></li>
+            <li><a href="/password-change"><i class="fa fa-key"></i> Change Password</a></li>
+            @if(loggedInUser.rank == 0) {
+                <li>
+                    <a href="/accounts">
+                        <i class="fa fa-user-plus"></i>
+                        User Administration
+                    </a>
+                </li>
+            }
+        </ul>
+
+        <nav>
+            <div class="nav-wrapper">
+                <a href="@routes.Application.index()" class="brand-logo">DrunkNoobs</a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+
+                    <li><a class="dropdown-button" href="#!" data-activates="users-dropdown">Users<i class="material-icons right">arrow_drop_down</i></a></li>
+
+                    <li><a class="dropdown-button" href="#!" data-activates="penalties-dropdown">Penalties<i class="material-icons right">arrow_drop_down</i></a></li>
+
+                    <li><a class="dropdown-button" href="#!" data-activates="account-dropdown"><i class="material-icons">account_circle</i></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
         @content
-        </div>
 
-        <div class="footer">
-        @for(u <- MongoLogger.getLoggedInUsers) {
-            <span class="online-admin">@u</span>
-        }
-        </div>
+
+        <footer class="page-footer">
+            <div class="container">
+                <div class="valign-wrapper">
+                    <div class="valign">
+                        @for(u <- MongoLogger.getLoggedInUsers) {
+                            <span class="badge">@u</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </footer>
     </body>
 </html>
