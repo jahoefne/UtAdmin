@@ -1,12 +1,13 @@
-@(history:  List[(String, Long)])
+@(history: List[(String, Long)])
+
 <script src="@routes.Assets.at("javascripts/deps/Chart.min.js")"></script>
-<script src="@routes.Assets.at("javascripts/OnlineHistoryChart.js")"></script>
-<div class="text-center">Online History</div>
-<canvas id="myChart"
-width="510"
-height="400"></canvas>
+<script src="@routes.Assets.at("javascripts/online-history-chart.js")"></script>
+
+<div align="center">
+    <canvas id="myChart" width="725" height="400"></canvas>
+</div>
 <script>
-    var labels = [@for((k,_) <- history) {"@k" ,}];
-    var data = [@for((_,v) <- history) {@v , } ];
+        var labels = [@for((k,_) <- history) {"@k" ,}];
+        var data = [@for((_,v) <- history) {@v ,; } ]
 </script>
 

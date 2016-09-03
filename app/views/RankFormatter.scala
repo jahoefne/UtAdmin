@@ -6,7 +6,7 @@ import play.twirl.api.Html
 object RankFormatter {
   def labelForRank(rank: Group) = Html{
     rank match {
-      case x if x.level >= 90 => {
+     /* case x if x.level >= 90 => {
         """<span class="label label-god">"""  + rank.name + "</span>"
       }
       case x if x.level >= 80 => {
@@ -29,9 +29,9 @@ object RankFormatter {
       }
       case x if x.level >= 20 => {
         """<span class="label label-regular">"""  + rank.name + "</span>"
-      }
+      }*/
       case _ => {
-        """<span class="label label-guest">"""  + rank.name + "</span>"
+        """<span class="highlight">"""+rank.name+"""</span>"""
       }
     }
   }

@@ -1,7 +1,7 @@
 @(accounts: Seq[UtAdminUser], loggedInUser: UtAdminUser)(implicit lang: play.api.i18n.Lang)
 
     @baseTemplate("User Administration", loggedInUser) {
-        <script src="@routes.Assets.at("/javascripts/AdminAdder.js")"></script>
+        <script src="@routes.Assets.at("../../public/javascripts/admin-adder.js")"></script>
         <script src="@routes.Assets.at("/javascripts/sweet-alert.min.js")"></script>
         <link href="@routes.Assets.at("/stylesheets/sweet-alert.css")" rel="stylesheet">
     <link href="@routes.Assets.at("stylesheets/bootstrap.css")" rel="stylesheet">

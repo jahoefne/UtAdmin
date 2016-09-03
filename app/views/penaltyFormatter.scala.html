@@ -8,9 +8,9 @@
         showRemoveButton: Boolean)
 @import views.Color
 
-<script src="@routes.Assets.at("javascripts/PunishRemover.js")"></script>
+<script src="@routes.Assets.at("javascripts/punish-remover.js")"></script>
 
-<table class="online-table table-highlight std-margin">
+<table >
     <tr>
         @if(showPlayerName) {
             <th>Player</th>
@@ -96,7 +96,7 @@
                     <div class="btn-container">
                     <span class="btn-simple"
                     onclick="removePunishment(@penalty.penaltyId);">
-                        <i id="@penalty.penaltyId" title="Remove Punishment" class="fa fa-times"></i>
+                        <i class="material-icons red-text" id="@penalty.penaltyId">remove_circle_outline</i>
                     </span>
                     </div>
                 </td>
