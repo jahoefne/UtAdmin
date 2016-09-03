@@ -1,51 +1,70 @@
-@(messages: Seq[ChatMessage],
-        count: Int,
-        offset: Int,
-        relativeTime: Boolean = true,
-        smallView: Boolean = false,
-        showJumpToConv: Boolean = false,
-        highLightMsgId: Int = -1)(implicit lang: play.api.i18n.Lang)
+@import ChatModel._
+@(messages: Seq[Message])
+<!--
+<div class="center-align">
+    <ul class="pagination">
+        <li class="waves-effect btn-flat waves"><a href="#!" onclick="prevPage();"><i class="material-icons white-text">
+            chevron_left</i></a></li>
+        <li class="waves-effect btn-flat waves"><a href="#!" onclick="nextPage()"><i class="material-icons white-text">chevron_right</i></a></li>
+    </ul>
+</div>
+-->
+<script src="http://code.angularjs.org/1.1.5/angular.js"></script>
 
-@import views.Color
-
-<table>
-@if(messages.isEmpty) {
-    <tr>
-        <td>No older messages!</td>
-    </tr>
-} else {
-    @messages.map { msg =>
-        <tr @if(highLightMsgId == msg.msgId) { style="background: green;"}>
-        <td class="name">
-            <i class="material-icons @if(Teams.values.exists(_.id == msg.userTeam)){Html(msg.userTeam.toString)}">face</i>
-            <a href="@routes.Application.userById(msg.userId)">@msg.username @msg.msgId</a>
-
-        </td>
-        <td class="message-td">
-            <div class="bubble">
-                <div class="message-content">@Color.colorize(msg.msg)</div>
-                <div class="chat-detail">
-                    @msg.msgType
-
-                    @if(msg.targetId.isDefined) {
-                        <a href="@routes.Application.userById(msg.targetId.get)">to @msg.targetName.getOrElse("Unknown Name")</a>
-                    }
-
-                    @relativeTime match {
-                        case true => {
-                            @views.TimeFormatter.timePassedSince(msg.timestamp)
-                            ago}
-                        case false => {
-                            @msg.timestamp.toString("dd.MM.yy HH:mm:ss", lang.toLocale)
-                        }
-                    }
-                    @if(showJumpToConv) {
-                        <a class="jump-to-conv" href="/chatlogForId?msgId=@msg.msgId">Show Conversation</a>
-                    }
-        </div>
-        </div>
-        </td>
+<div class="chatlog">
+    <table>
+        <tr ng-repeat="msg in msgs" class="slide">
+            <td>
+                {{msg.msg}}
+            </td>
         </tr>
-    }
+    </table>
+
+
+
+        <!--  @for(msg <- messages) {
+    <div class="row row-chat">
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content white-text">
+
+                    <a class="msg-username @{
+                        Teams.apply(msg.userTeam).toString
+                    } darken-3" href="@routes.Application.userById(msg.userId)">@msg.userName</a>
+
+                    <span class="msg-msg"><quote>@msg.msg</quote></span>
+                </div>
+                <div class="card-action">
+                    <span class="msg-time"><time class="timeago" datetime="@msg.timeStamp.toString"></time></span>
+                    <span class="center-align">
+                        @msg.msgType
+                        @if(msg.targetId.isDefined) {
+                            <a href="@routes.Application.userById(msg.targetId.get)"> @msg.targetName.getOrElse("Unknown Name")</a>
+                        }
+                    </span>
+                    <span class="conversation-link right" data-msg-id="@msg.msgId">#@msg.msgId</span>
+                </div>
+            </div>
+        </div>
+    </div>
 }
-</table>
+@if(messages.isEmpty) {
+    <div class="row">
+        <div class="col s6 push-s3">
+            <div class="card">
+                <div class="card-content white-text">
+                    Couldn't find messages fitting your criteria
+                </div>
+            </div>
+        </div>
+    </div>
+}
+    -->
+</div>
+    <!--<div class="center-align">
+    <ul class="pagination">
+        <li class="waves-effect btn-flat waves"><a href="#!" onclick="prevPage();"><i class="material-icons white-text">
+            chevron_left</i></a></li>
+        <li class="waves-effect btn-flat waves"><a href="#!" onclick="nextPage()"><i class="material-icons white-text">chevron_right</i></a></li>
+    </ul>
+</div>-->
