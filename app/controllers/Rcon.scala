@@ -1,6 +1,7 @@
 package controllers
 
-import models.{Ranks, ChatMessage, MongoLogger, UtAdminUser}
+import models.{Ranks, MongoLogger, UtAdminUser}
+import models.ChatModel._
 import play.api.Logger
 import securesocial.core.RuntimeEnvironment
 
@@ -75,11 +76,10 @@ class Rcon(override implicit val env: RuntimeEnvironment[UtAdminUser])
   }
 
   def privateMessage(receiverSlot: Int, text: String, b3Id: Int, receiverName: String) = SecuredAction { request =>
-    println(b3Id+ "  "+receiverName)
     MongoLogger.logAction(request.user, s"PM TO : $receiverSlot text: $text")
     val toSend = "^2" + request.user.main.userId + "^7: " + text
     server.rcon.rcon(s"tell $receiverSlot $toSend")
-    ChatMessage.insertChatMessage(
+    ChatActions.insertMsg(
       adminName = request.user.main.userId,
       message = text,
       msgType = "PM",
@@ -93,7 +93,7 @@ class Rcon(override implicit val env: RuntimeEnvironment[UtAdminUser])
   def sendMsg(text: String, user: UtAdminUser): Unit = {
     val toSend = "^2" + user.main.userId + "^7: " + text
     server.rcon.rcon("say " + toSend)
-    ChatMessage.insertChatMessage(
+    ChatActions.insertMsg(
       adminName = user.main.userId,
       message = text,
       adminId = user.b3Id)

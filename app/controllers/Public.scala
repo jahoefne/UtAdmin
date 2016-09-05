@@ -1,6 +1,6 @@
 package controllers
 
-import models.{PenaltyController, B3UserController, UtAdminUser}
+import models.{PenaltyController, OnlineUser, UtAdminUser}
 import play.api.Logger
 import play.api.cache.Cached
 import play.api.mvc.Action
@@ -27,7 +27,7 @@ class Public(override implicit val env: RuntimeEnvironment[UtAdminUser])
 
   def publicStatus() = Cached.status(_ => "onlinePlayersPublic", status = 200,duration =  5) {
     Action {
-      Ok(views.html.publicStatus(B3UserController.listOnlineUsers.
+      Ok(views.html.publicStatus(UserController.listOnlineUsers.
         sortWith(_.score > _.score))).withHeaders(
           "Access-Control-Allow-Origin" -> "*",
           "Access-Control-Allow-Methods" -> "POST, GET, OPTIONS, PUT, DELETE",

@@ -24,6 +24,7 @@ resolvers += "JAnalyse Repository" at "http://www.janalyse.fr/repository/"
 
 resolvers += "Madoushi sbt-plugins" at "https://dl.bintray.com/madoushi/sbt-plugins/"
 
+/** Scala Deps */
 libraryDependencies ++= Seq(
   jdbc,
   anorm,

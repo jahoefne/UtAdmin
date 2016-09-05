@@ -1,3 +1,4 @@
+
 $(document).ready(function(){
     var graphData = {
 
@@ -16,7 +17,6 @@ $(document).ready(function(){
             }
         ]
     };
-  //  console.log(labels, data);
 
     Chart.defaults.global = {
         // Boolean - Whether to animate the chart
@@ -52,7 +52,7 @@ $(document).ready(function(){
         scaleShowLabels: true,
 
         // Interpolated JS string - can access value
-        scaleLabel:"<%=value%> Min",
+        scaleLabel:"<%='  ' + value%> Min",
 
         // Boolean - Whether the scale should stick to integers, not floats even if drawing space is there
         scaleIntegersOnly: true,
@@ -148,8 +148,7 @@ $(document).ready(function(){
         pointDotRadius: 3,
         pointHitDetectionRadius : 3
     });
-    $("#myChart").width = 400;
+    $("#myChart").width = 728;
     $("#myChart").height = 400;
 
-   // console.log(ctx, myLineChart);
 });

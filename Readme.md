@@ -20,6 +20,7 @@ Installation is quite simple, you just need Java/Scala, a MongoDB and the PlayFr
 3. Install a MongoDB (default config will do)
 4. `git clone` this repo
 5. Configure your Rcon Password, game server ip, ... in `UtAdmin/app/controllers/UtServer.scala`
+5. Apply the ip2nation.sql script to your b3bot database
 6. Start the UtAdmin Webserver with `activator run 80` in the UtAdmin Folder, this may take a few minutes at the first time. Default Login is `user:admin` `password:Administrator` - you should change that after you login for the first time ;)
 7. ????
 8. Profit.

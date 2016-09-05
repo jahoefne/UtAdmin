@@ -1,51 +1,49 @@
 @(accounts: Seq[UtAdminUser], loggedInUser: UtAdminUser)(implicit lang: play.api.i18n.Lang)
 
-    @baseTemplate("User Administration", loggedInUser) {
-        <script src="@routes.Assets.at("../../public/javascripts/admin-adder.js")"></script>
-        <script src="@routes.Assets.at("/javascripts/sweet-alert.min.js")"></script>
-        <link href="@routes.Assets.at("/stylesheets/sweet-alert.css")" rel="stylesheet">
-    <link href="@routes.Assets.at("stylesheets/bootstrap.css")" rel="stylesheet">
+<script src="@routes.Assets.at("../../public/javascripts/admin-adder.js")"></script>
+<script src="@routes.Assets.at("/javascripts/sweet-alert.min.js")"></script>
+<link href="@routes.Assets.at("/stylesheets/sweet-alert.css")" rel="stylesheet">
+<link href="@routes.Assets.at("stylesheets/bootstrap.css")" rel="stylesheet">
 
-        <div class="table-heading-container big-font"><span class="table-heading">User Administration</span></div>
-        <table class="online-table table-highlight std-margin big-font">
-            <tr>
-                <th>Name</th>
-                <th>Rank</th>
-                <th>B3Id</th>
-                <th>Last Online</th>
-                <th>Edit</th>
-                <th>Delete</th>
-            </tr>
-        @accounts.map { user: UtAdminUser =>
-            <tr>
-                <td onclick="window.location='/user?id=@user.b3Id';" class="pointer-cursor">
-                    @user.main.userId
-                </td>
-                <td onclick="window.location='/user?id=@user.b3Id';" class="pointer-cursor">
-                    Level:
-                    @user.rank match {
-                        case Ranks.God => { God }
-                        case Ranks.Admin => { Admin }
-                        case Ranks.Mod => { Mod }
-                }
-                </td>
-                <td onclick="window.location='/user?id=@user.b3Id';" class="pointer-cursor">
-                @user.b3Id
-                </td>
-                <td onclick="window.location='/user?id=@user.b3Id';" class="pointer-cursor">
-                    @MongoLogger.getLastOnlineInEchelonFor(user.main.userId).toString("dd.MM.yy HH:mm:ss", lang.toLocale)
-                </td>
-                <td>
-                    <div onclick="adminAdder.editAdmin('@user.main.userId', @user.rank, @user.b3Id);" class="btn btn-success btn-xs">Edit</div>
-                </td>
-                <td>
-                    <div onclick="adminAdder.deleteAdmin('@user.main.userId');"
-                    class="btn btn-danger btn-xs">Delete</div>
-                </td>
-            </tr>
-        }
-        </table>
-    <div align="center">
-            <a href="#" id="addUserBtn" class="btn btn-lg btn-primary">Add User</a><br><br>
-    </div>
+<div class="table-heading-container big-font"><span class="table-heading">User Administration</span></div>
+<table class="online-table table-highlight std-margin big-font">
+    <tr>
+        <th>Name</th>
+        <th>Rank</th>
+        <th>B3Id</th>
+        <th>Last Online</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    @accounts.map { user: UtAdminUser =>
+        <tr>
+            <td onclick="window.location='/user?id=@user.b3Id'; class="pointer-cursor">
+            @user.main.userId
+            </td>
+            <td onclick="window.location='/user?id=@user.b3Id';" class="pointer-cursor">
+                Level:
+                @user.rank match {
+                    case Ranks.God => { God }
+                    case Ranks.Admin => { Admin }
+                    case Ranks.Mod => { Mod }
+            }
+            </td>
+            <td onclick="window.location='/user?id=@user.b3Id';" class="pointer-cursor">
+            @user.b3Id
+            </td>
+            <td onclick="window.location='/user?id=@user.b3Id';" class="pointer-cursor">
+            @MongoLogger.getLastOnlineInEchelonFor(user.main.userId).toString("dd.MM.yy HH:mm:ss", lang.toLocale)
+            </td>
+            <td>
+                <div onclick="adminAdder.editAdmin('@user.main.userId', @user.rank, @user.b3Id);" class="btn btn-success btn-xs">Edit</div>
+            </td>
+            <td>
+                <div onclick="adminAdder.deleteAdmin('@user.main.userId');"
+                class="btn btn-danger btn-xs">Delete</div>
+            </td>
+        </tr>
     }
+</table>
+<div align="center">
+    <a href="#" id="addUserBtn" class="btn btn-lg btn-primary">Add User</a><br><br>
+</div>

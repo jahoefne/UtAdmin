@@ -1,0 +1,28 @@
+<script src="@routes.Assets.at("javascripts/users.js")"></script>
+
+<div class="container module" id="users-module" ng-module="UsersModule" ng-controller="UsersModuleCtrl">
+
+    <span id="search-form">
+        <div class="row search-row">
+            <span us-spinner="{radius:7, width:1, length:1, position:'relative',color:'white'}" spinner-on="updating"></span>
+        </div>
+
+        <div class="row search-row">
+            <div class="input-field col s6 push-s2">
+                <input id="user-search-field" type="text" ng-model="query" ng-enter="">
+                <label for="user-search-field">Find</label>
+            </div>
+
+        </div>
+
+        <div class="input-field col s4 push-s1">
+            <select>
+                @for(group <- B3GroupController.getGroups()) {
+                    <option value="@group.bits">@group.name</option>
+                }
+            </select>
+            <label>Min Group</label>
+        </div>
+
+    </span>
+</div>

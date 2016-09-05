@@ -1,0 +1,22 @@
+@import "main";
+@import "materialize";
+.clearfix{
+  width:220px;
+  margin:auto;
+}
+fieldset{
+  border:none;
+}
+.container{
+  vertical-align: middle;
+}
+.help-block, .clearfix > p > a, .page-header,.clearfix > p {
+  display:none;
+}
+
+.alert, .clearfix{
+  text-align: center;
+}
+.controls{
+  @extend .input-field
+}

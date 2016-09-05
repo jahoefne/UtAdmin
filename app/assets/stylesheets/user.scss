@@ -1,0 +1,53 @@
+@import "materialize";
+.italic {
+  font-weight: lighter;
+  font-style: italic;
+}
+
+.highlight {
+  text-decoration: underline;
+}
+
+.collection-item > .right {
+  font-weight: lighter;
+  font-style: italic;
+}
+
+.collection {
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  margin-right:24px;
+}
+
+.collapsible-body > .collection {
+  border-color: $primary-color-dark;
+
+  > li {
+    background-color: $primary-color-light;
+  };
+
+  &:hover {
+    background-color: $secondary-color;
+  };
+}
+
+.row{
+  margin-top:10px;
+}
+
+.penalty-form{
+  margin:20px;
+}
+
+#user-location-map-wrapper{
+  height:400px !important;
+
+}
+
+#user-location-map{
+  width:100%;
+  height:100%;
+  padding-top:0;
+  margin-top:0;
+}

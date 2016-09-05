@@ -27,4 +27,8 @@ case class B3DatabaseConnection(ip: String = "127.0.0.1",
 
   // all the connections are released, old connection pool will beabandoned
   ConnectionPool.add('foo, url, username, password, settings)
+
+  DB autoCommit { implicit session =>
+    sql"create table if NOT EXISTS countries (id integer primary key, checked_ip varchar(30),country_code varchar(15),country_name varchar(120))".execute.apply()
+  }
 }

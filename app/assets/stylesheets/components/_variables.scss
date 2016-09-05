@@ -33,14 +33,15 @@
 /* 1. Colors
    ========================================================================== */
 
-$primary-color: #0e1a40 !default;
-$primary-color-light: #222f5b !default;
+$primary-color: #13293b !default;
+$primary-color-light: lighten($primary-color, 10%) !default;
 $primary-color-dark: darken($primary-color, 15%) !default;
 
-$secondary-color: color("teal", "lighten-1") !default;
+$secondary-color: #9b0900 !default;
 $success-color: color("green", "base") !default;
 $error-color: color("red", "base") !default;
-$link-color: color("light-blue", "darken-1") !default;
+
+$link-color: #26a69a !default;
 
 
 /* 2. Badges
@@ -90,7 +91,8 @@ $button-floating-radius: 50% !default;
    ========================================================================== */
 
 $card-padding: 10px !default;
-$card-bg-color: #fff !default;
+$card-bg-color: $primary-color !default;
+
 $card-link-color: color("orange", "accent-2") !default;
 $card-link-color-light: lighten($card-link-color, 20%) !default;
 
@@ -99,8 +101,8 @@ $card-link-color-light: lighten($card-link-color, 20%) !default;
    ========================================================================== */
 
 $collapsible-height: 3rem !default;
-$collapsible-header-color: #fff !default;
-$collapsible-border-color: #ddd !default;
+$collapsible-header-color: $primary-color !default;
+$collapsible-border-color: $primary-color-dark !default;
 
 
 /* 6. Chips
@@ -126,9 +128,9 @@ $datepicker-selected-outfocus: desaturate(lighten($secondary-color, 35%), 15%) !
 /* 8. Dropdown
    ========================================================================== */
 
-$dropdown-bg-color: #fff !default;
-$dropdown-hover-bg-color: #eee !default;
-$dropdown-color: $secondary-color !default;
+$dropdown-bg-color: $primary-color-light !default;
+$dropdown-hover-bg-color: lighten($primary-color-light, 10%) !default;
+$dropdown-color: white !default;
 $dropdown-item-height: 50px !default;
 
 
@@ -143,12 +145,12 @@ $roboto-font-path: "../fonts/roboto/" !default;
 
 // Text Inputs + Textarea
 $input-height: 3rem !default;
-$input-border-color: color("grey", "base") !default;
+$input-border-color: white !default;
 $input-border: 1px solid $input-border-color !default;
 $input-background: #fff !default;
 $input-error-color: $error-color !default;
 $input-success-color: $success-color !default;
-$input-focus-color: $secondary-color !default;
+$input-focus-color: darken($input-border-color, 10%) !default;
 $input-font-size: 1rem !default;
 $input-margin: 0 0 20px 0 !default;
 $input-padding: 0 !default;
@@ -220,7 +222,7 @@ $navbar-height: 64px !default;
 $navbar-height-mobile: 56px !default;
 $navbar-font-size: 1rem !default;
 $navbar-font-color: #fff !default;
-$navbar-brand-font-size: 2.1rem !default;
+$navbar-brand-font-size: 1.9rem !default;
 
 /* 14. Side Navigation
    ========================================================================== */
@@ -257,8 +259,8 @@ $tabs-bg-color: #fff !default;
 /* 18. Tables
    ========================================================================== */
 
-$table-border-color: #d0d0d0 !default;
-$table-striped-color: #f2f2f2 !default;
+$table-border-color: $primary-color-dark !default;
+$table-striped-color: $primary-color !default;
 
 
 /* 19. Toasts
@@ -299,12 +301,12 @@ $interval-size: $range / $intervals !default;
 /* 23. Collections
    ========================================================================== */
 
-$collection-border-color: #e0e0e0 !default;
-$collection-bg-color: #fff !default;
+$collection-border-color: $primary-color-dark !default;
+$collection-bg-color: $primary-color !default;
 $collection-active-bg-color: $secondary-color !default;
 $collection-active-color: lighten($secondary-color, 55%) !default;
-$collection-hover-bg-color: #ddd !default;
-$collection-link-color: $secondary-color !default;
+$collection-hover-bg-color: lighten($primary-color-dark, 50%) !default;
+$collection-link-color: #26a69a !default;
 
 
 /* 24. Progress Bar

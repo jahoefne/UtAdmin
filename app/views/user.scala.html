@@ -1,258 +1,269 @@
-@import views.TimeFormatter
+@import org.joda.time.DateTime
+
 @import org.joda.time.format.PeriodFormatterBuilder
-@import org.joda.time._
-
-@import views.RankFormatter
 @(user: User, onlineHistoryChartData: List[(String, Long)], onlineHistory: List[(DateTime, DateTime)], loggedInUser: UtAdminUser)(implicit lang: play.api.i18n.Lang)
+<html>
+    <head>
+        <title>UtAdmin</title>
+        <link rel="icon" type="image/png" href="/assets/favicons.png">
+        <script type="text/javascript" src="@routes.Application.javascriptRoutes"></script>
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/materialize.css")">
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/main.css")">
 
-@baseTemplate("User " + user.currentName, loggedInUser) {
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
-    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-    <link rel="stylesheet" href="@routes.Assets.at("javascripts/deps/awesome-markers/leaflet.awesome-markers.css")">
-    <script src="@routes.Assets.at("javascripts/deps/awesome-markers/leaflet.awesome-markers.js")"></script>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 
-    <script>
-            var userIp = " @user.currentIp ";
-            var userName = " @user.currentName ";
-            window.userId = @user.b3Id ;
-            var userId = @user.b3Id ;
-    </script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/deps/materialize/js/materialize.min.js")"></script>
+    </head>
 
-    <script src="@routes.Assets.at("javascripts/user-info.js")"></script>
-    <script src="@routes.Assets.at("javascripts/punisher.js")"></script>
+    <body>
 
-    <link href="@routes.Assets.at("javascripts/deps/flag-icon-css/css/flag-icon.min.css")" rel="stylesheet">
+        <script src="@routes.Assets.at("javascripts/deps/vex/js/vex.combined.min.js")"></script>
+        <script>vex.defaultOptions.className = 'vex-theme-os'</script>
+        <main class="page-main">
 
-    <link type="text/css" rel="stylesheet" href="@routes.Assets.at("stylesheets/user.css")" media="screen,projection"/>
-    <link type="text/css" rel="stylesheet" href="@routes.Assets.at("stylesheets/chat.css")" media="screen,projection"/>
-    <script type="text/javascript" src="@routes.Assets.at("javascripts/chat-search.js")"></script>
+            <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+            <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+            <link rel="stylesheet" href="@routes.Assets.at("javascripts/deps/awesome-markers/leaflet.awesome-markers.css")">
+            <script src="@routes.Assets.at("javascripts/deps/awesome-markers/leaflet.awesome-markers.js")"></script>
 
-        <!-- User Location Map -->
-    <div id="user-location-map-wrapper">
-        <div id="user-location-map" class="black"></div>
-    </div>
+            <script>
+                    var userIp = " @user.currentIp ";
+                    var userName = " @user.currentName ";
+                    window.userId = @user.b3Id ;
+                    var userId = @user.b3Id ;
+            </script>
 
-    <div class="row">
-        <div class="col s7">
-            <ul class="collapsible popout" data-collapsible="expandable">
+            <script src="@routes.Assets.at("javascripts/user-info.js")"></script>
+            <script src="@routes.Assets.at("javascripts/punisher.js")"></script>
+            <link href="@routes.Assets.at("javascripts/deps/flag-icon-css/css/flag-icon.min.css")" rel="stylesheet">
+            <link type="text/css" rel="stylesheet" href="@routes.Assets.at("stylesheets/user.css")" media="screen,projection"/>
 
-                    <!-- Name and Aliases -->
-                <li>
-                    <div class="collapsible-header">
-                        <i class="material-icons">face</i>
-                        <span class="left">
-                            <span class="highlight">@user.currentName</span> from <span id="userCountryFlag"></span>
-                        </span>
-                        <span class="center-align">
-                                &nbsp;is a @RankFormatter.labelForRank(user.group)
-                        </span>
-                        <span class="right">
-                            and has <span class="highlight">@user.aliases.length @if(user.aliases.length == 1) {Alias} else {Aliases}</span>
-                        </span>
-                    </div>
 
-                    <div class="collapsible-body">
-                        <div class="penalty-form">
-                            <div class="input-field">
-                                <select>
-                                    <option value="" disabled selected>Choose penaltie type</option>
+                <!-- User Location Map -->
+            <div id="user-location-map-wrapper">
+                <div id="user-location-map" class="black"></div>
+            </div>
 
-                                    @for(group <- B3GroupController.getGroups()) {
-                                        <option href="@routes.Administrator.changeGroupOfUser(user.b3Id, group.bits)">
-                                            @group.name (@group.level)
-                                        </option>
-                                    }
-                                </select>
-                                <label>Type</label>
+            <div class="row">
+                <div class="col s7">
+                    <ul class="collapsible popout" data-collapsible="expandable">
+
+                            <!-- Name and Aliases -->
+                        <li>
+                            <div class="collapsible-header">
+                                <i class="material-icons">face</i>
+                                <span class="left">
+                                    <span class="highlight">@user.currentName</span> from <span id="userCountryFlag"></span>
+                                </span>
+                                <span class="center-align">
+                                        &nbsp;is a user.group.name
+                                </span>
+                                <span class="right">
+                                    and has <span class="highlight">@user.aliases.length @if(user.aliases.length == 1) {Alias} else {Aliases}</span>
+                                </span>
                             </div>
-                        </div>
-                        @user.aliases.length match {
-                            case 0 => {}
-                            case _ => {
-                                <ul class="collection">
 
-                                @for(alias: Username <- user.aliases.sortWith(_.lastUsed isAfter _.lastUsed)) {
-                                    <li class="collection-item">
-                                        @alias.name
-                                    <span class="right">used @{
-                                        alias.usedCount
-                                    }x last
-                                        <time class="timeago" datetime="@alias.lastUsed.toString"></time>
-                                    </span>
-                                    </li>
-                                }
-                                </ul>
-                            }
-                        }
-                    </div>
-
-                </li>
-
-                    <!-- IP and Aliases -->
-                <li>
-                    <div class="collapsible-header">
-                        <i class="material-icons">settings_ethernet</i>
-                        last connection via <span class="highlight">
-                        <a href="https://www.whoismyisp.org/ip/@user.currentIp" target="_blank">@user.currentIp</a></span>
-                        <span class="right"> and <span class="highlight">@user.ipAliases.length</span> other IPs in the past</span>
-                    </div>
-
-
-                    @user.ipAliases.length match {
-                        case 0 => {}
-                        case _ => {
                             <div class="collapsible-body">
-                                <ul class="collection">
-                                @for(ip: IpAlias <- user.ipAliases.sortWith(_.lastUsed isAfter _.lastUsed)) {
-                                    <li class="collection-item">
-                                      <a href="https://www.whoismyisp.org/ip/@ip.ip" target="_blank"> @ip.ip</a>
-                                    <span class="right">used @{
-                                        ip.usedCount
-                                    }x last
-                                        <time class="timeago" datetime="@ip.lastUsed.toString"></time>
-                                    </span>
-                                    </li>
-                                }
-                                </ul>
-                            </div>
-                        }
-                    }
-                </li>
+                                <div class="penalty-form">
+                                    <div class="input-field">
+                                        <select>
+                                            <option value="" disabled selected>Choose penaltie type</option>
 
-                    <!-- Xlrstats-->
-                <li>
-                    <div class="collapsible-header">
-                        <i class="material-icons">stars</i>XlrStats-Id <span class="highlight">@user.xlrId</span>
-                    </div>
-
-                    @if(loggedInUser.rank == Ranks.God || loggedInUser.rank == Ranks.Admin) {
-
-                        <div class="collapsible-body">
-                            <div class="center-align">
-                                <div class="row">
-                                    <div class="switch">
-                                        <label>
-                                            Hidden
-                                            <input id="xlrstats-visibility-switch" data-b3-id="@user.b3Id" type="checkbox" @if(!user.xlrVisible) {checked}>
-                                            <span class="lever"></span>
-                                            Visible
-                                        </label>
+                                            @for(group <- B3GroupController.getGroups()) {
+                                                <option href="@routes.Administrator.changeGroupOfUser(user.b3Id, group.bits)">
+                                                    @group.name (@group.level)
+                                                </option>
+                                            }
+                                        </select>
+                                        <label>Type</label>
                                     </div>
                                 </div>
+                                @user.aliases.length match {
+                                    case 0 => {}
+                                    case _ => {
+                                        <ul class="collection">
+
+                                        @for(alias: Username <- user.aliases.sortWith(_.lastUsed isAfter _.lastUsed)) {
+                                            <li class="collection-item">
+                                                @alias.name
+                                            <span class="right">used @{
+                                                alias.usedCount
+                                            }x last
+                                                <time class="timeago" datetime="@alias.lastUsed.toString"></time>
+                                            </span>
+                                            </li>
+                                        }
+                                        </ul>
+                                    }
+                                }
                             </div>
-                        </div>
-                    }
-                </li>
 
-                    <!-- Penalties -->
-                <li>
-                    <div class="collapsible-header"><i class="material-icons">pan_tool</i> collected <span class="highlight">@user.penalties.length</span> penalties</div>
-                    <div class="collapsible-body">
+                        </li>
 
-                        <div class="penalty-form">
-                            <div class="input-field">
-                                <input id="last_name" type="text">
-                                <label for="last_name">Reason</label>
+                            <!-- IP and Aliases -->
+                        <li>
+                            <div class="collapsible-header">
+                                <i class="material-icons">settings_ethernet</i>
+                                last connection via <span class="highlight">
+                                <a href="https://www.whoismyisp.org/ip/@user.currentIp" target="_blank">@user.currentIp</a></span>
+                                <span class="right"> and <span class="highlight">@user.ipAliases.length</span> other IPs in the past</span>
                             </div>
-                            <div class="input-field">
-                                <input type="date" id="date" class="datepicker">
-                                <label for="date">Expiry Date</label>
+
+
+                            @user.ipAliases.length match {
+                                case 0 => {}
+                                case _ => {
+                                    <div class="collapsible-body">
+                                        <ul class="collection">
+                                        @for(ip: IpAlias <- user.ipAliases.sortWith(_.lastUsed isAfter _.lastUsed)) {
+                                            <li class="collection-item">
+                                                <a href="https://www.whoismyisp.org/ip/@ip.ip" target="_blank"> @ip.ip</a>
+                                                <span class="right">used @{
+                                                    ip.usedCount
+                                                }x last
+                                                    <time class="timeago" datetime="@ip.lastUsed.toString"></time>
+                                                </span>
+                                            </li>
+                                        }
+                                        </ul>
+                                    </div>
+                                }
+                            }
+                        </li>
+
+                            <!-- Xlrstats-->
+                        <li>
+                            <div class="collapsible-header">
+                                <i class="material-icons">stars</i>XlrStats-Id <span class="highlight">@user.xlrId</span>
                             </div>
-                            <div class="input-field">
-                                <select>
-                                    <option value="" disabled selected>Choose penaltie type</option>
-                                    <option value="1">Notice</option>
-                                    <option value="2">Warning</option>
-                                    <option value="3">Tempban</option>
-                                </select>
-                                <label>Type</label>
+
+                            @if(loggedInUser.rank == Ranks.God || loggedInUser.rank == Ranks.Admin) {
+
+                                <div class="collapsible-body">
+                                    <div class="center-align">
+                                        <div class="row">
+                                            <div class="switch">
+                                                <label>
+                                                    Hidden
+                                                    <input id="xlrstats-visibility-switch" data-b3-id="@user.b3Id" type="checkbox" @if(!user.xlrVisible) {checked}>
+                                                    <span class="lever"></span>
+                                                    Visible
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </li>
+
+                            <!-- Penalties -->
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">pan_tool</i> collected <span class="highlight">@user.penalties.length</span> penalties</div>
+                            <div class="collapsible-body">
+
+                                <div class="penalty-form">
+                                    <div class="input-field">
+                                        <input id="last_name" type="text">
+                                        <label for="last_name">Reason</label>
+                                    </div>
+                                    <div class="input-field">
+                                        <input type="date" id="date" class="datepicker">
+                                        <label for="date">Expiry Date</label>
+                                    </div>
+                                    <div class="input-field">
+                                        <select>
+                                            <option value="" disabled selected>Choose penaltie type</option>
+                                            <option value="1">Notice</option>
+                                            <option value="2">Warning</option>
+                                            <option value="3">Tempban</option>
+                                        </select>
+                                        <label>Type</label>
+                                    </div>
+                                    <a class="waves-effect waves-light btn"><i class="material-icons left">pan_tool</i>Confirm</a>
+                                </div>
+
+                                @if(user.penalties.nonEmpty) {
+                                    penaltyFormatter(penalties = user.penalties,
+                                    showPlayerName = false,
+                                    showType = true,
+                                    showReason = true,
+                                    showExpires = true,
+                                    showCreatedOn = true,
+                                    showAdminName = true,
+                                    showRemoveButton = true)
+                                }
                             </div>
-                            <a class="waves-effect waves-light btn"><i class="material-icons left">pan_tool</i>Confirm</a>
-                        </div>
-
-                        @if(user.penalties.nonEmpty) {
-                            @penaltyFormatter(penalties = user.penalties,
-                                showPlayerName = false,
-                                showType = true,
-                                showReason = true,
-                                showExpires = true,
-                                showCreatedOn = true,
-                                showAdminName = true,
-                                showRemoveButton = true)
-                        }
-                    </div>
-                </li>
-            </ul>
-        </div>
+                        </li>
+                    </ul>
+                </div>
 
 
-        <div class="col s5">
-            <ul class="collection">
-                <li class="collection-item">
-                    connected a total of <span class="highlight">@user.numberOfConnections</span> times
-                    <span class="secondary-content"><i class="material-icons">reorder</i></span>
-                </li>
+                <div class="col s5">
+                    <ul class="collection">
+                        <li class="collection-item">
+                            connected a total of <span class="highlight">@user.numberOfConnections</span> times
+                            <span class="secondary-content"><i class="material-icons">reorder</i></span>
+                        </li>
 
-                <li class="collection-item">
-                    <span class="highlight">@user.guid</span>
-                    <span class="secondary-content"><i class="material-icons">fingerprint</i></span>
-                </li>
+                        <li class="collection-item">
+                            <span class="highlight">@user.guid</span>
+                            <span class="secondary-content"><i class="material-icons">fingerprint</i></span>
+                        </li>
 
-                <li class="collection-item">
-                    played <span class="highlight"> @{
-                    new PeriodFormatterBuilder().appendDays()
-                            .appendSuffix("day", "days")
-                            .appendSeparator(" ")
-                            .appendHours()
-                            .appendSuffix("h", "h")
-                            .appendSeparator(" ")
-                            .appendMinutes()
-                            .appendSuffix("min", "mins")
-                            .appendSeparator(" ")
-                            .appendSeconds()
-                            .appendSuffix("s", "s")
-                            .toFormatter().print(user.totalTimeOnServer)
-                }</span>
-                    <span class="secondary-content"><i class="material-icons">timer</i></span>
-                </li>
+                        <li class="collection-item">
+                            played <span class="highlight"> @{
+                            new PeriodFormatterBuilder().appendDays()
+                                    .appendSuffix("day", "days")
+                                    .appendSeparator(" ")
+                                    .appendHours()
+                                    .appendSuffix("h", "h")
+                                    .appendSeparator(" ")
+                                    .appendMinutes()
+                                    .appendSuffix("min", "mins")
+                                    .appendSeparator(" ")
+                                    .appendSeconds()
+                                    .appendSuffix("s", "s")
+                                    .toFormatter().print(user.totalTimeOnServer)
+                        }</span>
+                            <span class="secondary-content"><i class="material-icons">timer</i></span>
+                        </li>
+                        <li class="collection-item">
+                            first seen on <span class="hightlight">@user.firstSeen.toString("dd. MMM yy HH:mm:ss", lang.toLocale)</span>
+                            and last seen <time class="timeago" datetime="@user.lastSeen.toString"></time>
+                            <span class="secondary-content"><i class="material-icons">remove_red_eye</i></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
 
-                <li class="collection-item">
-                    first seen on <span class="hightlight">@user.firstSeen.toString("dd. MMM yy HH:mm:ss", lang.toLocale)</span>
-                    and last seen <time class="timeago" datetime="@user.lastSeen.toString"></time>
+            <div class="row">
+                <div class="col s12">
+                    <ul class="collapsible popout" data-collapsible="expandable">
 
-                    <span class="secondary-content"><i class="material-icons">remove_red_eye</i></span>
-                </li>
-            </ul>
+                            <!-- Chatlog -->
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">chat</i> Chatlog</div>
+                            <div class="collapsible-body online-history-body">
+                                <div id="chatlogPlain">
+                                </div>
+                            </div>
+                        </li>
 
-        </div>
-    </div>
+                            <!-- Online History Graph -->
+                        <li>
+                            <div class="collapsible-header active"><i class="material-icons">timeline</i>@{
+                                user.currentName
+                            }'s online history graph</div>
+                            <div class="collapsible-body online-history-body">
+                                <div id="onlineHistoryChart">@onlineHistoryChart(onlineHistoryChartData)</div>
+                            </div>
+                        </li>
 
-    <div class="row">
-        <div class="col s12">
-            <ul class="collapsible popout" data-collapsible="expandable">
-
-
-                    <!-- Chatlog -->
-                <li>
-                    <div class="collapsible-header"><i class="material-icons">chat</i> Chatlog</div>
-                    <div class="collapsible-body online-history-body">
-                        <div id="chatlog">
-                        </div>
-                    </div>
-                </li>
-
-
-                    <!-- Online History Graph -->
-                <li>
-                    <div class="collapsible-header active"><i class="material-icons">timeline</i>@{
-                        user.currentName
-                    }'s online history graph</div>
-                    <div class="collapsible-body online-history-body">
-                        <div id="onlineHistoryChart">@onlineHistoryChart(onlineHistoryChartData)</div>
-                    </div>
-                </li>
-
-            </ul>
-        </div>
-    </div>
-}
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

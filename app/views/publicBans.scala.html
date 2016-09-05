@@ -1,4 +1,3 @@
-@import views.Color
 
 @(penalties: Seq[Penalty])
 <div class="row banlist">
@@ -21,9 +20,9 @@
                 @for(penalty <- penalties) {
                     <tr>
                         <td>@penalty.penalty</td>
-                        <td>@Color.colorize(penalty.playerName)</td>
+                        <td>penalty.playerName</td>
                         <td>@@@penalty.playerId</td>
-                        <td>@Color.colorize(penalty.reason)</td>
+                        <td>penalty.reason</td>
                         <td>
                             @penalty.expires match{
                                 case None => { Permanent }

@@ -1,12 +1,30 @@
 /**
- * Created by jahoefne on 01/09/16.
+ * This is the main controller - responsible for switching between the different
+ * angular apps. By default all angular apps are running
  */
+var currentModule = "";
 
-$( document ).ready(function() {
+function handleHashChange() {
+    var hash = window.location.hash;
+    if (hash != currentModule) {
+        $(".module").hide();
+        $(window.location.hash + "-module").fadeIn(500);
+    }
+}
 
-    // enable navbar dropdowns
-    $(".dropdown-button").dropdown();
+$(document).ready(function () {
 
-    jQuery("time.timeago").timeago();
+    /** Display the corresponding module if the initial url already has a hash */
+    var initialHash = window.location.hash;
+    if (initialHash != undefined && initialHash != "") {
+        handleHashChange();
+    } else {
+        window.location.hash = "#status";
+        $("#status-module").fadeIn(500);
+    }
 
+    /** If user clicks a navbar item - fade out old module and fade in new module */
+    $(window).on('hashchange', function (e) {
+        handleHashChange();
+    });
 });

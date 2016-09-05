@@ -22,6 +22,6 @@ $(document).ready(function() {
             $("#durationSelect").hide();
         }else{
             $("#durationSelect").show();
-        }
-    });
+}
+});
 });
