@@ -1,0 +1,85 @@
+<script src="@routes.Assets.at("javascripts/penalties.js")"></script>
+
+<div class="container module" id="penalties-module" ng-module="PenaltiesModule" ng-controller="PenaltiesModuleCtrl">
+    <script>
+            PenaltiesModule.value("initialState",
+                    {
+                        count: 30,
+                        page: 0,
+                        userId: undefined,
+                        queryString: undefined,
+                        banOnly: false,
+                        adminOnly: false,
+                        activeOnly: false,
+                        noticeOnly: false,
+                        autoUpdate: true
+                    });
+    </script>
+
+    <div class="row">
+
+        <div class="row search-row">
+            <div class="input-field col s5 push-s3" id="chat-search-field">
+                <input id="chatlog-search" type="text" required="required" ng-model="state.queryString" mac-pause-typing="update()" >
+                <label for="chatlog-search">Search Reason</label>
+            </div>
+        </div>
+
+
+            <!-- Pagnination -->
+        <div class="center-align" >
+            <ul class="pagination">
+                <li class="waves-effect btn-flat waves" ng-show="state.page > 0">
+                    <a href="" ng-click="prev()"><i class="material-icons white-text">chevron_left</i></a>
+                </li>
+                <span ng-show="state.page != 0">Page {{state.page}}</span>
+                <li class="waves-effect btn-flat waves" ng-hide="penalties.length < state.count">
+                    <a href="" ng-click="next()"><i class="material-icons white-text">chevron_right</i></a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card-panel center">
+            <table class="bordered highlight responsive-table status-table">
+                <thead>
+                    <tr>
+                        <th><mac-spinner ng-show="updating" mac-spinner-color="white"/>Type</th>
+                        <th>User</th>
+                        <th>Reason</th>
+                        <th>Expires</th>
+                        <th>Duration</th>
+                        <th>Admin</th>
+                        <th>Added</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody ng:repeat="penalty in penalties" >
+                    <tr>
+                        <td>
+                            <i class="material-icons blue-text" ng-show="penalty.penalty == 'Notice'">warning</i>
+                            <i class="material-icons yellow-text" ng-show="penalty.penalty == 'Kick'">warning</i>
+                            <i class="material-icons orange-text" ng-show="penalty.penalty == 'Warning'">warning</i>
+                            <i class="material-icons red-text" ng-show="penalty.penalty == 'TempBan'">warning</i>
+                            <i class="material-icons red-text" ng-show="penalty.penalty == 'Ban'">warning</i>
+                            <i class="material-icons red-text" ng-show="penalty.penalty == 'Ban'">warning</i>
+                            {{penalty.penalty}}
+                            {{penalty.penaltyId}}
+                        </td>
+                        <td><a href="/user?id={{player.playerId}}" target="_blank">{{penalty.playerName | urtstring}}</a></td>
+                        <td>{{penalty.reason | urtstring}}</td>
+
+                        <td><span class="time-stamp" mac-tooltip="{{penalty.expires | date:'medium'}}" mac-tooltip-direction="top">{{penalty.expires/1000 | timestamp}}</span></td>
+
+                        <td>{{penalty.duration | date: 'H:mm:ss': 'UTC'}}</td>
+                        <td>{{penalty.adminName | urtstring}}</td>
+
+                        <td><span class="time-stamp" mac-tooltip="{{penalty.created | date:'medium'}}" mac-tooltip-direction="top">{{penalty.created/1000 | timestamp}}</span></td>
+                        <td>X</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

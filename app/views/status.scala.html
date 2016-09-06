@@ -2,7 +2,10 @@
 
 <script src="@routes.Assets.at("javascripts/online-players.js")"></script>
 
-<div class="container module" id="status-module" ng-module="OnlinePlayerModule" ng-controller="OnlinePlayerModuleCtrl">
+<div class="container module" id="status-module"
+ng-controller="OnlinePlayerCtrl"
+ng-init="init()"
+>
 
     <script src="@routes.Assets.at("javascripts/restart-handler.js")"></script>
     <link href="@routes.Assets.at("javascripts/deps/flag-icon-css/css/flag-icon.min.css")" rel="stylesheet">
@@ -16,7 +19,10 @@
                 <div class="card-stacked">
                     <div class="card-content">
                         <h6>@UtServer.name</h6>
-                        <p><span class="highlight" id="player-count-span"></span></p>
+
+                        <span>
+                            Right now there<ng-pluralize count="players.length" when="{'0': '\'s nobody online.', 'one': '\'s 1 player online.', 'other': '\'re {} players online.'}"></ng-pluralize>
+                        </span>
                     </div>
                     <div class="card-action">
                         <a id="restartServerButton">Restart Server</a>
@@ -32,7 +38,7 @@
             <table class="bordered highlight responsive-table status-table">
                 <thead>
                     <tr>
-                        <th><span us-spinner="{radius:7, width:1, length:1, position:'relative',color:'white'}" spinner-on="updating"></span></th>
+                        <th><mac-spinner ng-show="updating" mac-spinner-color="white"/></th>
                         <th>Name</th>
                         <th>Rank</th>
                         <th>Score</th>
@@ -47,17 +53,22 @@
                     <tr>
                         <td>
                             <i class="material-icons {{player.team}}-text">label</i>
-                            <span class="flag-icon flag-icon-{{player.countryCode | lowercase}} status-flag"></span>
-                            <i class="material-icons green-text" ng-show="{{player.group.level}}>=40">star</i>
-                            <i class="material-icons amber-text" ng-show="{{player.group.level}}>=55">star</i>
-                            <i class="material-icons amber-text" ng-show="{{player.group.level}}>=80">stars</i>
+                            <span class="flag-icon flag-icon-{{player.countryCode | lowercase}} status-flag" mac-tooltip="{{player.country}}" mac-tooltip-direction="top"></span>
                         </td>
-                        <td><a href="/user?id={{player.id}}" target="_blank">{{player.name | username}}</a></td>
-                        <td>{{player.group.name}}</td>
+                        <td><a href="/user?id={{player.id}}" target="_blank">{{player.name | urtstring}}</a></td>
+                        <td mac-tooltip="{{player.group.name}}" mac-tooltip-direction="left">
+                                <i class="material-icons grey-text" ng-show="{{player.group.level}}==0">face</i>
+                                <i class="material-icons grey-text text-lighten-2" ng-show="{{player.group.level}}==1">face</i>
+                                <i class="material-icons grey-text text-lighten-3" ng-show="{{player.group.level}}==20">face</i>
+                                <i class="material-icons grey-text" ng-show="{{player.group.level}}==30">star</i>
+                                <i class="material-icons green-text" ng-show="{{player.group.level}}==40">star</i>
+                                <i class="material-icons amber-text" ng-show="{{player.group.level}}==55">star</i>
+                                <i class="material-icons god-icon" ng-show="{{player.group.level}}>=80">stars</i>
+                        </td>
                         <td>{{player.score}}</td>
                         <td><a href="https://www.whoismyisp.org/ip/{{player.ip}}" target="_blank">{{player.ip}}</a></td>
                         <td>
-                            <span class="time-stamp">{{player.joined | timeAgo}}</span>
+                            <span class="time-stamp" mac-tooltip="{{player.joined | date:'medium'}}" mac-tooltip-direction="top">{{player.joined/1000 | timestamp}}</span>
                         </td>
                         <td>
                             <span class="waves-effect btn-flat white-text" ng-click="pm(player.serverId,player.name,player.id)">
@@ -65,7 +76,7 @@
                             </span>
                         </td>
                         <td>
-                            <a class="waves-effect waves-teal btn-flat"  ng-click="punishModal(player.serverId,player.name)">
+                            <a class="waves-effect waves-teal btn-flat" ng-click="punishModal(player.serverId,player.name)">
                                 <i class="material-icons">pan_tool</i>
                             </a>
                         </td>

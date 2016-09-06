@@ -86,6 +86,7 @@ object ChatActions {
         else
           sqls.gt(sqls"client_id", -1)
 
+
       fromMessageId match {
         case None =>
           queryString match {

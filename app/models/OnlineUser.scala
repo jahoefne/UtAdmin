@@ -40,7 +40,7 @@ object OnlineUser {
 
   object Formatters {
     implicit val groupFormat = Json.format[Group]
-    implicit val authorFormat = Json.format[OnlineUser]
+    implicit val userFormat = Json.format[OnlineUser]
   }
 
   def fromResultSet(set: WrappedResultSet): B3User =  B3User(

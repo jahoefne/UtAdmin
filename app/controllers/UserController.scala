@@ -28,21 +28,17 @@ object UserController {
 
   private case class Country(code: Option[String], name: Option[String])
 
-  private def findCountry(user: OnlineUser): OnlineUser = DB autoCommit { implicit session =>
-    user.country match {
-      case None => {
-        println("Country Table Cache Miss!")
-        val c =
-          sql"""SELECT * FROM ip2nationCountries c, ip2nation i WHERE i.ip < INET_ATON(${user.ip}) AND c.code = i.country ORDER BY i.ip DESC LIMIT 0,1"""
-            .map(rs => new Country(rs.stringOpt("iso_code_2"), rs.stringOpt("iso_country"))).single().apply()
-        sql"""INSERT INTO
+
+  private def updateCountry(user: OnlineUser): OnlineUser = DB autoCommit { implicit session =>
+    val c =
+      sql"""SELECT * FROM ip2nationCountries c, ip2nation i WHERE i.ip < INET_ATON(${user.ip}) AND c.code = i.country ORDER BY i.ip DESC LIMIT 0,1"""
+        .map(rs => new Country(rs.stringOpt("iso_code_2"), rs.stringOpt("iso_country"))).single().apply()
+    sql"""INSERT INTO
              countries (id, checked_ip, country_code, country_name)
              VALUES (${user.id}, ${user.ip}, ${c.get.code}, ${c.get.name})
              ON DUPLICATE KEY UPDATE checked_ip= ${user.ip} , country_code = ${c.get.code}, country_name = ${c.get.name}""".execute.apply()
-        user.copy(country = c.get.name, countryCode = c.get.code, countryCheckedIp = Some(user.ip))
-      }
-      case _ => user
-    }
+    user.copy(country = c.get.name, countryCode = c.get.code, countryCheckedIp = Some(user.ip))
+
   }
 
   def listOnlineUsers: Seq[OnlineUser] = DB readOnly {
@@ -75,6 +71,7 @@ object UserController {
         country = rs.stringOpt("country_name"),
         countryCode = rs.stringOpt("country_code"),
         countryCheckedIp = rs.stringOpt("checked_ip")
-      )).list().apply().toSeq.map(findCountry)
+      )).list().apply().toSeq
+        .map(x => if (x.country.isEmpty || x.ip != x.countryCheckedIp.getOrElse("")) updateCountry(x) else x)
   }
 }

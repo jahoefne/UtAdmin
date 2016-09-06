@@ -1,6 +1,5 @@
-var OnlinePlayerModule = angular.module('OnlinePlayerModule', ['yaru22.angular-timeago', 'ngAnimate', 'angularSpinner']);
 
-OnlinePlayerModule.controller('OnlinePlayerModuleCtrl',
+UtAdmin.controller('OnlinePlayerCtrl',
     function ($scope, $http, $interval, $timeout, $httpParamSerializer, timeAgoSettings) {
 
         $scope.autoUpdateInterval = 4000;
@@ -13,14 +12,15 @@ OnlinePlayerModule.controller('OnlinePlayerModuleCtrl',
 
 
         $scope.update = function () {
-            console.log("Update players");
-            $scope.updating = true;
-            $http.get("online-players.json").then(OnOnlinePlayersLoaded, OnError);
+            if($("#status-module").is(":visible")) {
+                console.log("Update players");
+                $scope.updating = true;
+                $http.get("online-players.json").then(OnOnlinePlayersLoaded, OnError);
+            }
         };
 
         var OnOnlinePlayersLoaded = function (response) {
             console.log("got ", response.data.length, "online players");
-            $("#player-count-span").html("right now there are <u>" + response.data.length + " players</u> online");
             $scope.players = response.data;
             $scope.updating = false;
         };
@@ -30,6 +30,7 @@ OnlinePlayerModule.controller('OnlinePlayerModuleCtrl',
         };
 
         $scope.update();
+
         $interval($scope.update, $scope.autoUpdateInterval, 0, true, true);
 
         $scope.pm = function (playerSlot, playerName, playerId) {
@@ -68,13 +69,13 @@ OnlinePlayerModule.controller('OnlinePlayerModuleCtrl',
                 input: [
                     '<p><input name="punish" type="radio" id="slap" value="slap" checked/><label for="slap">Slap</label></p>',
                     '<p><input name="punish" type="radio" id="kick" value="kick" /><label for="kick">Kick</label></p>',
-                    '<p><input name="punish" type="radio" id="kick" value="nuke" /><label for="nuke">Nuke</label></p>',
-                    '<p><input name="punish" type="radio" id="kick" value="kill" /><label for="kill">Kill</label></p>',
+                    '<p><input name="punish" type="radio" id="nuke" value="nuke" /><label for="nuke">Nuke</label></p>',
+                    '<p><input name="punish" type="radio" id="kill" value="kill" /><label for="kill">Kill</label></p>',
                     '<p><input name="punish" type="radio" id="forceRed" value="forceRed"/><label for="forceRed">Force Red</label></p>',
                     '<p><input name="punish" type="radio" id="forceBlue" value="forceBlue"/><label for="forceBlue">Force Blue</label></p>',
                     '<p><input name="punish" type="radio" id="forceSpec" value="forceSpec"/><label for="forceSpec">Force Spec</label></p>',
-                    '<p><input name="punish" type="radio" id="forceSpec" value="startServerDemo"/><label for="startServerDemo">Start Server Demo</label></p>',
-                    '<p><input name="punish" type="radio" id="forceSpec" value="stopServerDemo"/><label for="stopServerDemo">Stop Server Demo</label></p>'
+                    '<p><input name="punish" type="radio" id="startServerDemo" value="startServerDemo"/><label for="startServerDemo">Start Server Demo</label></p>',
+                    '<p><input name="punish" type="radio" id="stopServerDemo" value="stopServerDemo"/><label for="stopServerDemo">Stop Server Demo</label></p>'
                 ].join(''),
                 buttons: [
                     $.extend({}, vex.dialog.buttons.YES, { text: 'Punish' })
@@ -100,11 +101,3 @@ OnlinePlayerModule.controller('OnlinePlayerModuleCtrl',
         }
     }
 );
-
-OnlinePlayerModule.filter('username',function() {
-    return function(input) {
-        if (input) {
-            return input.replace(/\^\d/g, '');
-        }
-    }
-});

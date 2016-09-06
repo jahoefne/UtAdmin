@@ -49,7 +49,27 @@ a {
   color: white !important;
 }
 
+
 #status-module {
+
+  .god-icon{
+      animation-duration: 1s;
+      animation-name: changeglow;
+      animation-iteration-count: infinite;
+      animation-direction: alternate;
+  }
+
+  @keyframes changeglow {
+    from {
+      color:#ffd54f;
+    }
+
+    to {
+     color: #ff6f00;
+    }
+  }
+
+
   .player-status-name {
     width: 150px;
     text-align: center;
@@ -70,32 +90,6 @@ a {
     height: 1.5em; /* don't forget to set the height! */
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 .vex.vex-theme-os .vex-close:before {
   -moz-border-radius: 3px;

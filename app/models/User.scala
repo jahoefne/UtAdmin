@@ -2,11 +2,13 @@ package models
 
 import java.sql.{ResultSet, Connection}
 
+import controllers.PenaltyController
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.{Hours, Period, DateTime}
 import play.api.Logger
 import scalikejdbc._
 
+import scala.Int.MaxValue
 import scala.tools.nsc.doc.model.Visibility
 
 
@@ -146,11 +148,11 @@ object User {
       sql"SELECT id FROM xlr_playerstats WHERE xlr_playerstats.client_id = $b3Id".map(rs => rs.int("id")).first().apply()
     }
 
-    def getXlrStatsVisibility(b3Id:Int) : Boolean = DB readOnly{implicit session =>
+    def getXlrStatsVisibility(b3Id: Int): Boolean = DB readOnly { implicit session =>
       sql"SELECT * FROM xlr_playerstats WHERE client_id = $b3Id".map(_.boolean("hide")).first().apply().getOrElse(false)
     }
 
-    def setXlrStatsVisibility(b3Id:Int, visibility: Boolean ) : Boolean = DB localTx { implicit session =>
+    def setXlrStatsVisibility(b3Id: Int, visibility: Boolean): Boolean = DB localTx { implicit session =>
       sql"UPDATE xlr_playerstats SET hide = ${!visibility} WHERE client_id = $b3Id".execute().apply()
     }
 
@@ -164,29 +166,34 @@ object User {
             case x if x == group => None
             case x => Some(x)
           }
-            User(
-              currentName = rs.string("name"),
-              aliases = this.getAliases(b3Id = b3Id),
-              currentIp = rs.string("ip"),
-              ipAliases = this.getIpAliases(b3Id),
-              penalties = PenaltyController.getPenalties(
+          User(
+            currentName = rs.string("name"),
+            aliases = this.getAliases(b3Id = b3Id),
+            currentIp = rs.string("ip"),
+            ipAliases = this.getIpAliases(b3Id),
+            penalties =
+              PenaltyController.getPenalties(
                 userId = Some(b3Id),
-                banOnly = false,
-                adminOnly = false,
-                activeOnly = false,
-                noticeOnly = false),
-              guid = guid,
-              firstSeen = new DateTime(rs.long("time_add") * 1000L),
-              lastSeen = new DateTime(rs.long("time_edit") * 1000L),
-              numberOfConnections = rs.int("connections"),
-              b3Id = b3Id,
-              group = group,
-              maskedAs = maskedAs,
-              totalTimeOnServer = getTotalTimeOnServer(guid),
-              xlrId = getXlrStatsId(b3Id),
-              xlrVisible = getXlrStatsVisibility(b3Id)
-            )
+                banOnly = None,
+                adminOnly = None,
+                activeOnly = None,
+                noticeOnly = None,
+                count = MaxValue,
+                page= 0,
+                queryString = None),
+            guid = guid,
+            firstSeen = new DateTime(rs.long("time_add") * 1000L),
+            lastSeen = new DateTime(rs.long("time_edit") * 1000L),
+            numberOfConnections = rs.int("connections"),
+            b3Id = b3Id,
+            group = group,
+            maskedAs = maskedAs,
+            totalTimeOnServer = getTotalTimeOnServer(guid),
+            xlrId = getXlrStatsId(b3Id),
+            xlrVisible = getXlrStatsVisibility(b3Id)
+          )
         }).first().apply()
     }
   }
+
 }

@@ -1,30 +1,34 @@
-/**
- * This is the main controller - responsible for switching between the different
- * angular apps. By default all angular apps are running
- */
-var currentModule = "";
+var UtAdmin = angular.module('UtAdmin', ['yaru22.angular-timeago', 'ngAnimate', 'angularSpinner', 'Mac']);
 
-function handleHashChange() {
-    var hash = window.location.hash;
-    if (hash != currentModule) {
-        $(".module").hide();
-        $(window.location.hash + "-module").fadeIn(500);
+/** Enter pressed directive */
+UtAdmin.directive('ngEnter', function () {
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if (event.which === 13) {
+                scope.$apply(function () {
+                    scope.$eval(attrs.ngEnter);
+                });
+
+                event.preventDefault();
+            }
+        });
+    };
+});
+
+
+UtAdmin.directive('disableAnimation', function ($animate) {
+    return {
+        restrict: 'A',
+        link: function($scope, $element){
+            $animate.enabled($element,false);
+        }
+    };
+});
+
+UtAdmin.filter('urtstring', function () {
+    return function (input) {
+        if (input) {
+            return input.replace(/\^\d/g, '');
+        }
     }
-}
-
-$(document).ready(function () {
-
-    /** Display the corresponding module if the initial url already has a hash */
-    var initialHash = window.location.hash;
-    if (initialHash != undefined && initialHash != "") {
-        handleHashChange();
-    } else {
-        window.location.hash = "#status";
-        $("#status-module").fadeIn(500);
-    }
-
-    /** If user clicks a navbar item - fade out old module and fade in new module */
-    $(window).on('hashchange', function (e) {
-        handleHashChange();
-    });
 });

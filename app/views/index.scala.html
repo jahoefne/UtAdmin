@@ -18,12 +18,12 @@
         <link rel="stylesheet" type="text/css" href="@routes.Assets.at("javascripts/deps/sweet-alert.css")">
         <script src="@routes.Assets.at("javascripts/deps/sweet-prompt.min.js")"></script>
         <link rel="stylesheet" type="text/css" href="@routes.Assets.at("javascripts/deps/sweet-prompt.css")">
+        <link rel="stylesheet" type="text/css" href="@routes.Assets.at("javascripts/deps/macgyver/macgyver.css")">
 
         <script type="text/javascript" src="@routes.Assets.at("javascripts/deps/materialize/js/materialize.min.js")"></script>
-        <script type="text/javascript" src="@routes.Assets.at("javascripts/main.js")"></script>
     </head>
 
-    <body>
+    <body ng-app="UtAdmin">
         <header class="page-header">
             <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
             <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-animate.js"></script>
@@ -34,18 +34,26 @@
             <script type="text/javascript" src="@routes.Assets.at("javascripts/deps/spin.min.js")"></script>
             <script type="text/javascript" src="@routes.Assets.at("javascripts/deps/angular-spinner.min.js")"></script>
 
+
+            <script type="text/javascript" src="@routes.Assets.at("javascripts/deps/macgyver/macgyver.min.js")"></script>
+
+
             <script src="@routes.Assets.at("javascripts/deps/vex/js/vex.combined.min.js")"></script>
             <script>vex.defaultOptions.className = 'vex-theme-os'</script>
 
-            <nav>
+
+            <script type="text/javascript" src="@routes.Assets.at("javascripts/main.js")"></script>
+            <script type="text/javascript" src="@routes.Assets.at("javascripts/modules.js")"></script>
+
+            <nav ng-controller="ModulesCtrl" ng-init="init()">
                 <div class="nav-wrapper">
                     <a href="/#status" class="brand-logo hide-on-med-and-down">DrunkNoobs</a>
                     <ul id="nav-mobile" class="right">
-                        <li><a href="/#status">Status</a></li>
-                        <li><a href="/#chat">Chatlog</a></li>
-                        <li><a href="/#users" >Users</a></li>
-                        <li><a href="/#penalties" >Penalties</a></li>
-                        <li><a href="/#account"><i class="material-icons">account_circle</i></a></li>
+                        <li><a href="" ng-click="update('status')">Status</a></li>
+                        <li><a href="" ng-click="update('chat')">Chat</a></li>
+                        <li><a href="" ng-click="update('users')">Users</a></li>
+                        <li><a href="" ng-click="update('penalties')">Penalties</a></li>
+                        <li><a href="" ng-click="update('account')"><i class="material-icons">account_circle</i></a></li>
                     </ul>
                 </div>
             </nav>
@@ -56,7 +64,6 @@
             @chatlog()
             <span id="user-module">
             </span>
-            @users()
         </main>
     </body>
 </html>

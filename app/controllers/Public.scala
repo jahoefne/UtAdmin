@@ -1,6 +1,6 @@
 package controllers
 
-import models.{PenaltyController, OnlineUser, UtAdminUser}
+import models.{UtAdminUser}
 import play.api.Logger
 import play.api.cache.Cached
 import play.api.mvc.Action
@@ -38,7 +38,7 @@ class Public(override implicit val env: RuntimeEnvironment[UtAdminUser])
 
   def publicBans() = Cached.status(_ => "publicBans", 200, duration = 300){
     Action {
-      Ok(views.html.publicBans(PenaltyController.getPenalties(
+      Ok(/*views.html.publicBans(PenaltyController.getPenalties(
         userId = None,
         banOnly = true,
         adminOnly = false,
@@ -47,7 +47,7 @@ class Public(override implicit val env: RuntimeEnvironment[UtAdminUser])
           "Access-Control-Allow-Origin" -> "*",
           "Access-Control-Allow-Methods" -> "POST, GET, OPTIONS, PUT, DELETE",
           "Access-Control-Allow-Headers" -> "x-requested-with,content-type,Cache-Control,Pragma,Date"
-        )
+       */"" )
     }
   }
 

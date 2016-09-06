@@ -4,26 +4,19 @@
 
 <link rel="stylesheet" href="@routes.Assets.at("stylesheets/chat.css")">
 
-<div class="container chat-app module" id="chat-module" ng-module="ChatModule" ng-controller="ChatModuleCtrl">
-    <script>
-            ChatModule.value("initialState",
-                    {
-                        autoUpdate: true,
-                        count: 30,
-                        page: 0,
-                        latestId: 0,
-                        radio: false,
-                        userId: undefined
-                    });
-    </script>
+<div class="container chat-app module"
+id="chat-module"
+ng-controller="ChatCtrl"
+ng-init="init({autoUpdate: true, count: 30, page: 0, latestId: 0, radio: false, userId: undefined})">
 
     <span id="search-form">
-        <div class="row search-row">
-            <span us-spinner="{radius:7, width:1, length:1, position:'relative',color:'white'}" spinner-on="updating"></span>
-        </div>
+
             <!-- Talkback -->
         <div class="row search-row" ng-show="state.autoUpdate">
-            <div class="input-field col s5 push-s3" id="chat-search-field">
+            <div class="col s1 push-s2">
+                <mac-spinner ng-show="updating" mac-spinner-color="white" class="update-spinner" disable-animation/>
+            </div>
+            <div class="input-field col s5 push-s2" id="chat-search-field">
                 <input id="talkback-field" type="text" ng-model="talkbackTxt" ng-enter="talkback()">
                 <label for="talkback-field">Say</label>
             </div>
@@ -31,12 +24,15 @@
 
             <!-- User-Id/Querystring -->
         <div class="row search-row" ng-show="!state.autoUpdate">
-            <div class="input-field col s5 push-s2" id="chat-search-field">
-                <input id="chatlog-search" type="text" required="required" ng-model="state.queryString" ng-change="update();">
+            <div class="col s1 push-s1">
+                <mac-spinner ng-show="updating" mac-spinner-color="white" class="update-spinner" disable-animation/>
+            </div>
+            <div class="input-field col s5 push-s1" id="chat-search-field">
+                <input id="chatlog-search" type="text" required="required" ng-model="state.queryString" mac-pause-typing="cleanUpdate()" >
                 <label for="chatlog-search">Search Text</label>
             </div>
-            <div class="input-field col s3 push-s2" id="chat-search-field">
-                <input id="chatlog-user-id-search" type="number" ng-model="state.userId" ng-change="update()">
+            <div class="input-field col s3 push-s1" id="chat-search-field">
+                <input id="chatlog-user-id-search" type="number" ng-model="state.userId" mac-pause-typing="cleanUpdate()">
                 <label for="chatlog-user-id-search">User Id</label>
             </div>
         </div>
@@ -44,31 +40,42 @@
             <!-- Include Radio / Auto Update-->
         <div class="row search-row">
             <div class=" col s4 push-s2">
-                <input type="checkbox" id="radioCheckBox" class="filled-in red" ng-model="state.radio" ng-change="update()">
+                <input type="checkbox" id="radioCheckBox" class="filled-in red" ng-model="state.radio" ng-change="cleanUpdate()">
                 <label for="radioCheckBox" >Radio</label>
             </div>
             <div class="col s4 push-s3">
-                <input type="checkbox" id="autoUpdateCheckBox" class="filled-in" ng-model="state.autoUpdate" ng-change="update()" ng-checked="state.autoUpdate">
+                <input type="checkbox" id="autoUpdateCheckBox" class="filled-in" ng-model="state.autoUpdate" ng-change="cleanUpdate()" ng-checked="state.autoUpdate">
                 <label for="autoUpdateCheckBox">Talkback Mode</label>
             </div>
         </div>
 
     </span>
         <!-- Pagnination -->
-    <div class="center-align" ng-if="state.fromMessageId!=undefined" ng-click="state.fromMessageId=undefined;update();">
-        <a class="waves-effect waves-light btn">Back to Start!</a>
+    <div class="center-align" ng-if="state.fromMessageId!=undefined" ng-click="cleanUpdate();">
+        <a class="waves-effect waves-light btn btn-flat">Back to Start!</a>
     </div>
 
         <!-- Pagnination -->
-    <div class="center-align">
+    <div class="center-align" >
         <ul class="pagination">
-            <li class="waves-effect btn-flat waves" ng-show="msgs.length>0">
-                <a href="" ng-click="prev();"><i class="material-icons white-text">chevron_left</i></a>
+            <li class="waves-effect btn-flat waves" ng-show="!state.autoUpdate && state.page > 0  || state.fromMessageId">
+                <a href="" ng-click="prev()"><i class="material-icons white-text">chevron_left</i></a>
             </li>
-            <li class="waves-effect btn-flat waves" ng-show="msgs.length==30">
+            <span ng-show="state.page != 0 && !state.fromMessageId">Page {{state.page}}</span>
+            <li class="waves-effect btn-flat waves" ng-show="!state.autoUpdate || msgs.length< state.count">
                 <a href="" ng-click="next()"><i class="material-icons white-text">chevron_right</i></a>
             </li>
         </ul>
+    </div>
+
+    <div class="center-align" ng-show="!updating && msgs.length == 0 && updated">
+        <div class="row">
+            <div class="col s12 m5">
+                <div class="card-panel">
+                    There ware no messages matching your query!
+                </div>
+            </div>
+        </div>
     </div>
 
         <!-- Messages -->
@@ -81,36 +88,31 @@
                         <i class="material-icons {{msg.userTeam}}-text">label</i>
                     </span>
                     <span class="name">
-                        <a href="/user?id={{msg.userId}}" target="_blank">{{msg.userName}}</a>
+                        <a href="/user?id={{msg.userId}}" target="_blank">{{msg.userName | urtstring}}</a>
                     </span>
-                    <span class="txt">{{msg.txt}}</span>
+                    <span class="txt">{{msg.txt | urtstring}}</span>
                 </div>
 
                 <div class="card-action">
                     sent to {{msg.scope}}
                     <span ng-if="msg.targetId!=undefined">
-                        <a href="/user?id={{msg.targetId}}" target="_blank">{{msg.targetName}}</a>
+                        <a href="/user?id={{msg.targetId}}" target="_blank">{{msg.targetName | urtstring}}</a>
                     </span>
 
-                    <span class="time-stamp">{{msg.timeStamp | timeAgo}}</span>
-                    <span class="right">
-                        #{{msg.id}} <a ng-if="state.userId!=undefined || state.queryString != ''" ng-click="state.fromMessageId=msg.id;update();">Show Conversation</a>
+                    <span>
+                        <span ng-if="!state.updating && (state.userId || state.queryString)" class="time-stamp" mac-tooltip="Jump to Conversation" mac-tooltip-direction="top">
+                            <a ng-if="state.userId || state.queryString" class="show-conv-link" ng-click="showConv(msg.id)"><i class="tiny material-icons">redo</i></a>
+                        </span>
+                        <span ng-if="state.updating && !(state.userId || state.queryString)" class="time-stamp" mac-tooltip="Jump to Conversation" mac-tooltip-direction="top">
+                                #{{msg.id}}
+                        </span>
                     </span>
+                      <span class="right">
+                    <span  mac-tooltip="{{msg.timeStamp | date:'medium'}}" mac-tooltip-direction="top">{{msg.timeStamp/1000 | timestamp}}</span>
+                      </span>
                 </div>
 
             </div>
         </div>
-    </div>
-
-        <!-- Pagnination -->
-    <div class="center-align">
-        <ul class="pagination">
-            <li class="waves-effect btn-flat waves" ng-show="msgs.length>0">
-                <a href="" ng-click="prev();"><i class="material-icons white-text">chevron_left</i></a>
-            </li>
-            <li class="waves-effect btn-flat waves" ng-show="msgs.length==30">
-                <a href="" ng-click="next()"><i class="material-icons white-text">chevron_right</i></a>
-            </li>
-        </ul>
     </div>
 </div>
