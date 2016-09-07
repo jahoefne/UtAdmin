@@ -1,5 +1,10 @@
 var UtAdmin = angular.module('UtAdmin', ['yaru22.angular-timeago', 'ngAnimate', 'angularSpinner', 'Mac']);
 
+
+$(document).ready(function(){
+    $('select').material_select();
+});
+
 /** Enter pressed directive */
 UtAdmin.directive('ngEnter', function () {
     return function (scope, element, attrs) {
@@ -14,7 +19,6 @@ UtAdmin.directive('ngEnter', function () {
         });
     };
 });
-
 
 UtAdmin.directive('disableAnimation', function ($animate) {
     return {

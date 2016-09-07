@@ -26,6 +26,17 @@ class Administrator(override implicit val env: RuntimeEnvironment[UtAdminUser]) 
       Ok("Done.")
   }
 
+  def restartB3() = SecuredAction {
+    request =>
+    MongoLogger.logAction(request.user, "Restarting Urt B3!")
+
+      jassh.SSH.once(UtServer.sshIp, UtServer.sshUser, UtServer.sshPass) {
+        ssh =>
+          print(ssh.execute(UtServer.restartB3Cmd))
+      }
+      Ok("Done.")
+  }
+
 
   def accounts() = SecuredAction { request =>
     MongoLogger.logAction(request.user, "Admin Accounts")
@@ -133,16 +144,6 @@ class Administrator(override implicit val env: RuntimeEnvironment[UtAdminUser]) 
       Ok(views.html.passwordChange(request.user))
   }
 
-  def restartB3() = SecuredAction {
-    request =>
-      MongoLogger.logAction(request.user, "Restarting Urt B3!")
-
-      jassh.SSH.once(UtServer.sshIp, UtServer.sshUser, UtServer.sshPass) {
-        ssh =>
-          print(ssh.execute(UtServer.restartB3Cmd))
-      }
-      Ok("Done.")
-  }
 
   def setXlrVisibility(b3Id: Int, visibility: Boolean) = SecuredAction { request =>
     if (request.user.rank == Ranks.Admin || request.user.rank == Ranks.God) {

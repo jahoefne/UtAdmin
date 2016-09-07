@@ -1,30 +1,34 @@
 <script src="@routes.Assets.at("javascripts/penalties.js")"></script>
 
-<div class="container module" id="penalties-module" ng-module="PenaltiesModule" ng-controller="PenaltiesModuleCtrl">
-    <script>
-            PenaltiesModule.value("initialState",
-                    {
-                        count: 30,
-                        page: 0,
-                        userId: undefined,
-                        queryString: undefined,
-                        banOnly: false,
-                        adminOnly: false,
-                        activeOnly: false,
-                        noticeOnly: false,
-                        autoUpdate: true
-                    });
-    </script>
+<div class="container module"
+id="penalties-module"
+ng-controller="PenaltiesCtrl"
+ng-init="init({ count: 30,  page: 0, userId: undefined, queryString: undefined, filterType: undefined, activeOnly: false })">
 
     <div class="row">
 
         <div class="row search-row">
-            <div class="input-field col s5 push-s3" id="chat-search-field">
-                <input id="chatlog-search" type="text" required="required" ng-model="state.queryString" mac-pause-typing="update()" >
-                <label for="chatlog-search">Search Reason</label>
+
+            <div class="input-field col s5 push-s1" id="chat-search-field">
+                <input id="penalties-search" type="text" ng-model="state.queryString" mac-pause-typing="cleanUpdate()" >
+                <label for="penalties-search">Search Reason</label>
+            </div>
+            <div class="input-field col s3 push-s1" id="chat-search-field">
+                <input id="penalties-user-id-search" type="number" ng-model="state.userId" mac-pause-typing="cleanUpdate()">
+                <label for="penalties-user-id-search" id="penalties-user-id-search-label">User Id</label>
+            </div>
+            <div class="input-field col s2 push-s1">
+                <select ng-model="state.filterType" ng-change="cleanUpdate()">
+                    <option selected value>Any</option>
+                    <option value="Notice">Notice</option>
+                    <option value="Kick">Kick</option>
+                    <option value="Warning">Warning</option>
+                    <option value="TempBan">TempBan</option>
+                    <option value="Ban">Ban</option>
+                </select>
+                <label>Penalty Type</label>
             </div>
         </div>
-
 
             <!-- Pagnination -->
         <div class="center-align" >
@@ -39,8 +43,19 @@
             </ul>
         </div>
 
-        <div class="card-panel center">
-            <table class="bordered highlight responsive-table status-table">
+        <div ng-show="penalties.length==0">
+            <div class="row">
+                <div class="col s4 push-s4">
+                    <div class="card-panel">
+                    <span ng-if="!state.userId">There ware no penalties matching your query!</span>
+                    <span ng-if="state.userId">No penalties for user #{{state.userId}}! <i class="material-icons green-text">sentiment_very_satisfied</i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-panel center"  ng-hide="penalties.length==0">
+            <table class="bordered highlight responsive-table status-table" ng-cloak>
                 <thead>
                     <tr>
                         <th><mac-spinner ng-show="updating" mac-spinner-color="white"/>Type</th>
@@ -54,28 +69,32 @@
                     </tr>
                 </thead>
 
-                <tbody ng:repeat="penalty in penalties" >
+                <tbody ng:repeat="penalty in penalties">
                     <tr>
-                        <td>
-                            <i class="material-icons blue-text" ng-show="penalty.penalty == 'Notice'">warning</i>
-                            <i class="material-icons yellow-text" ng-show="penalty.penalty == 'Kick'">warning</i>
-                            <i class="material-icons orange-text" ng-show="penalty.penalty == 'Warning'">warning</i>
-                            <i class="material-icons red-text" ng-show="penalty.penalty == 'TempBan'">warning</i>
-                            <i class="material-icons red-text" ng-show="penalty.penalty == 'Ban'">warning</i>
-                            <i class="material-icons red-text" ng-show="penalty.penalty == 'Ban'">warning</i>
-                            {{penalty.penalty}}
-                            {{penalty.penaltyId}}
+                        <td  mac-tooltip="{{penalty.penalty}} Id:{{penalty.penaltyId}}" mac-tooltip-direction="right">
+                            <i class="material-icons" ng-if="penalty.penalty == 'Notice'">note</i>
+                            <i class="material-icons" ng-if="penalty.penalty == 'Kick'">block</i>
+                            <i class="material-icons" ng-if="penalty.penalty == 'Warning'">error</i>
+                            <span ng-if="penalty.penalty == 'TempBan'">
+                            <i class="material-icons amber-text" >hourglass_empty</i>
+                            <i class="material-icons amber-text" >sentiment_very_dissatisfied</i>
+                            </span>
+                            <i class="material-icons red-text" ng-if="penalty.penalty == 'Ban'">sentiment_very_dissatisfied</i>
                         </td>
-                        <td><a href="/user?id={{player.playerId}}" target="_blank">{{penalty.playerName | urtstring}}</a></td>
+                        <td><a href="/user?id={{penalty.playerId}}" target="_blank">{{penalty.playerName | urtstring}}</a></td>
                         <td>{{penalty.reason | urtstring}}</td>
 
-                        <td><span class="time-stamp" mac-tooltip="{{penalty.expires | date:'medium'}}" mac-tooltip-direction="top">{{penalty.expires/1000 | timestamp}}</span></td>
+                        <td>
 
-                        <td>{{penalty.duration | date: 'H:mm:ss': 'UTC'}}</td>
+                            <span class="time-stamp" mac-tooltip="{{penalty.expires | date:'medium'}}" mac-tooltip-direction="top">
+                            </span>
+                        </td>
+
+                        <td><span ng-if="penalty.duration">{{penalty.duration}}</span></td>
                         <td>{{penalty.adminName | urtstring}}</td>
 
                         <td><span class="time-stamp" mac-tooltip="{{penalty.created | date:'medium'}}" mac-tooltip-direction="top">{{penalty.created/1000 | timestamp}}</span></td>
-                        <td>X</td>
+                        <td class="btn btn-flat white-text" ng-click="delete(penalty.penaltyId)"><i class="material-icons">delete_forever</i></td>
                     </tr>
 
                 </tbody>

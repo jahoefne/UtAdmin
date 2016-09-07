@@ -1,13 +1,13 @@
 @(loggedInUser: UtAdminUser)(implicit lang: play.api.i18n.Lang)
 
-<script src="@routes.Assets.at("javascripts/online-players.js")"></script>
+<script src="@routes.Assets.at("javascripts/status.js")"></script>
 
 <div class="container module" id="status-module"
 ng-controller="OnlinePlayerCtrl"
 ng-init="init()"
+ng-cloak
 >
 
-    <script src="@routes.Assets.at("javascripts/restart-handler.js")"></script>
     <link href="@routes.Assets.at("javascripts/deps/flag-icon-css/css/flag-icon.min.css")" rel="stylesheet">
 
     <div class="row">
@@ -25,8 +25,8 @@ ng-init="init()"
                         </span>
                     </div>
                     <div class="card-action">
-                        <a id="restartServerButton">Restart Server</a>
-                        <a id="restartB3Button">Restart B3</a>
+                        <a id="restartServerButton" class="btn btn-flat waves-effect" ng-click="restartServer()">Restart Server</a>
+                        <a id="restartB3Button" class="btn btn-flat waves-effect" ng-click="restartB3()">Restart B3</a>
                     </div>
                 </div>
             </div>
@@ -35,7 +35,7 @@ ng-init="init()"
 
     <div id="statusPanel">
         <div class="card-panel center">
-            <table class="bordered highlight responsive-table status-table">
+            <table class="bordered highlight status-table">
                 <thead>
                     <tr>
                         <th><mac-spinner ng-show="updating" mac-spinner-color="white"/></th>
@@ -45,7 +45,9 @@ ng-init="init()"
                         <th>Ip</th>
                         <th>Online</th>
                         <th>PM</th>
+                        <th>Chatlog</th>
                         <th>Punish</th>
+                        <th>Penalties</th>
                     </tr>
                 </thead>
 
@@ -57,13 +59,15 @@ ng-init="init()"
                         </td>
                         <td><a href="/user?id={{player.id}}" target="_blank">{{player.name | urtstring}}</a></td>
                         <td mac-tooltip="{{player.group.name}}" mac-tooltip-direction="left">
-                                <i class="material-icons grey-text" ng-show="{{player.group.level}}==0">face</i>
-                                <i class="material-icons grey-text text-lighten-2" ng-show="{{player.group.level}}==1">face</i>
-                                <i class="material-icons grey-text text-lighten-3" ng-show="{{player.group.level}}==20">face</i>
-                                <i class="material-icons grey-text" ng-show="{{player.group.level}}==30">star</i>
-                                <i class="material-icons green-text" ng-show="{{player.group.level}}==40">star</i>
-                                <i class="material-icons amber-text" ng-show="{{player.group.level}}==55">star</i>
-                                <i class="material-icons god-icon" ng-show="{{player.group.level}}>=80">stars</i>
+                            <i class="material-icons grey-text" ng-show="{{player.group.level}}==0">face</i>
+                            <i class="material-icons grey-text text-lighten-2" ng-show="{{player.group.level}}==1">face</i>
+                            <i class="material-icons grey-text text-lighten-3" ng-show="{{player.group.level}}==20">face</i>
+                            <i class="material-icons grey-text" ng-show="{{player.group.level}}==30">face</i>
+                            <i class="material-icons green-text" ng-show="{{player.group.level}}==40">face</i>
+                            <i class="material-icons green-text" ng-show="{{player.group.level}}==50">star</i>
+                            <i class="material-icons amber-text" ng-show="{{player.group.level}}==55">star</i>
+                            <i class="material-icons amber-text text-lighten-4" ng-show="{{player.group.level}}==60">star</i>
+                            <i class="material-icons god-icon" ng-show="{{player.group.level}}>=80">stars</i>
                         </td>
                         <td>{{player.score}}</td>
                         <td><a href="https://www.whoismyisp.org/ip/{{player.ip}}" target="_blank">{{player.ip}}</a></td>
@@ -75,9 +79,19 @@ ng-init="init()"
                                 <i class="material-icons">message</i>
                             </span>
                         </td>
+                        <td mac-tooltip="Show chatlog of {{player.name}}" mac-tooltip-direction="top">
+                            <a class="waves-effect btn-flat" ng-click="showChatForUser(player.id)">
+                                <i class="material-icons">redo</i>
+                            </a>
+                        </td>
                         <td>
-                            <a class="waves-effect waves-teal btn-flat" ng-click="punishModal(player.serverId,player.name)">
+                            <a class="waves-effect btn-flat" ng-click="punishModal(player.serverId,player.name)">
                                 <i class="material-icons">pan_tool</i>
+                            </a>
+                        </td>
+                        <td mac-tooltip="Show penalties of {{player.name}}" mac-tooltip-direction="top">
+                            <a class="waves-effect btn-flat" ng-click="showPenaltiesForUser(player.id)">
+                                <i class="material-icons">redo</i>
                             </a>
                         </td>
                     </tr>

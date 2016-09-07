@@ -85,15 +85,18 @@
                                     case _ => {
                                         <ul class="collection">
 
-                                        @for(alias: Username <- user.aliases.sortWith(_.lastUsed isAfter _.lastUsed)) {
-                                            <li class="collection-item">
-                                                @alias.name
-                                            <span class="right">used @{
-                                                alias.usedCount
-                                            }x last
-                                                <time class="timeago" datetime="@alias.lastUsed.toString"></time>
-                                            </span>
-                                            </li>
+                                        @{
+                                           /* @for(alias: Username <- user.aliases.sortWith(_.lastUsed isAfter _.lastUsed)) {
+                                                    <li class="collection-item">
+                                                    @alias.name
+                                                    <span class="right">
+                                                    used @
+                                                    {alias.usedCount}
+                                                    x last
+                                                    <time class="timeago" datetime="@alias.lastUsed.toString"></time>
+                                                    </span>
+                                                    </li>
+                                            }*/
                                         }
                                         </ul>
                                     }
@@ -117,7 +120,8 @@
                                 case _ => {
                                     <div class="collapsible-body">
                                         <ul class="collection">
-                                        @for(ip: IpAlias <- user.ipAliases.sortWith(_.lastUsed isAfter _.lastUsed)) {
+                                            @{/*
+                                        @for(ip: IpAlias <- iPAlias) {
                                             <li class="collection-item">
                                                 <a href="https://www.whoismyisp.org/ip/@ip.ip" target="_blank"> @ip.ip</a>
                                                 <span class="right">used @{
@@ -127,6 +131,7 @@
                                                 </span>
                                             </li>
                                         }
+                                            */}
                                         </ul>
                                     </div>
                                 }
@@ -160,7 +165,7 @@
 
                             <!-- Penalties -->
                         <li>
-                            <div class="collapsible-header"><i class="material-icons">pan_tool</i> collected <span class="highlight">@user.penalties.length</span> penalties</div>
+                            <div class="collapsible-header"><i class="material-icons">pan_tool</i> collected <span class="highlight">@user.penaltyCount</span> penalties</div>
                             <div class="collapsible-body">
 
                                 <div class="penalty-form">
@@ -184,16 +189,6 @@
                                     <a class="waves-effect waves-light btn"><i class="material-icons left">pan_tool</i>Confirm</a>
                                 </div>
 
-                                @if(user.penalties.nonEmpty) {
-                                    penaltyFormatter(penalties = user.penalties,
-                                    showPlayerName = false,
-                                    showType = true,
-                                    showReason = true,
-                                    showExpires = true,
-                                    showCreatedOn = true,
-                                    showAdminName = true,
-                                    showRemoveButton = true)
-                                }
                             </div>
                         </li>
                     </ul>
@@ -214,23 +209,12 @@
 
                         <li class="collection-item">
                             played <span class="highlight"> @{
-                            new PeriodFormatterBuilder().appendDays()
-                                    .appendSuffix("day", "days")
-                                    .appendSeparator(" ")
-                                    .appendHours()
-                                    .appendSuffix("h", "h")
-                                    .appendSeparator(" ")
-                                    .appendMinutes()
-                                    .appendSuffix("min", "mins")
-                                    .appendSeparator(" ")
-                                    .appendSeconds()
-                                    .appendSuffix("s", "s")
-                                    .toFormatter().print(user.totalTimeOnServer)
+                            user.totalTimeOnServer
                         }</span>
                             <span class="secondary-content"><i class="material-icons">timer</i></span>
                         </li>
                         <li class="collection-item">
-                            first seen on <span class="hightlight">@user.firstSeen.toString("dd. MMM yy HH:mm:ss", lang.toLocale)</span>
+                            first seen on <span class="hightlight">@user.firstSeen</span>
                             and last seen <time class="timeago" datetime="@user.lastSeen.toString"></time>
                             <span class="secondary-content"><i class="material-icons">remove_red_eye</i></span>
                         </li>

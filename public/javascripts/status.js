@@ -1,15 +1,6 @@
-
 UtAdmin.controller('OnlinePlayerCtrl',
-    function ($scope, $http, $interval, $timeout, $httpParamSerializer, timeAgoSettings) {
-
-        $scope.autoUpdateInterval = 4000;
-
-        $scope.players = [];
-
-        $scope.updating = false;
-
+    function ($scope, $http, $interval, $timeout, $httpParamSerializer,$rootScope, timeAgoSettings) {
         timeAgoSettings.fullDateAfterSeconds = 60 * 60 * 24;
-
 
         $scope.update = function () {
             if($("#status-module").is(":visible")) {
@@ -29,9 +20,14 @@ UtAdmin.controller('OnlinePlayerCtrl',
             console.log("Error");
         };
 
-        $scope.update();
+        $scope.init = function(){
+            $scope.autoUpdateInterval = 4000;
+            $scope.players = [];
+            $scope.updating = false;
+            $scope.update();
+            $interval($scope.update, $scope.autoUpdateInterval, 0, true, true);
 
-        $interval($scope.update, $scope.autoUpdateInterval, 0, true, true);
+        };
 
         $scope.pm = function (playerSlot, playerName, playerId) {
             vex.dialog.prompt({
@@ -98,6 +94,48 @@ UtAdmin.controller('OnlinePlayerCtrl',
                 }
             })
 
-        }
+        };
+
+
+        $scope.restartServer = function(){
+            vex.dialog.confirm({
+                message: 'Resart server? This will kick all online players!',
+                callback: function (value) {
+                    if (value) {
+                        $scope.updating = true;
+                        $.get("/restart-server").done(function () {
+                            $scope.update();
+                            Materialize.toast('Resarted Server!', 1500);
+                        });
+                    }
+                }
+            });
+        };
+
+        $scope.restartB3 = function(){
+            vex.dialog.confirm({
+                message: 'Resart b3? It can take up to 2 minutes before UtAdmin is completely functional afterwards.',
+                callback: function (value) {
+                    if (value) {
+                        $scope.updating = true;
+                        $.get("/restart-b3").done(function () {
+                            $scope.update();
+                            Materialize.toast('Resarted B3!', 1500);
+                        });
+                    }
+                }
+            });
+        };
+
+        /***
+         * Events Sending
+         */
+        $scope.showChatForUser = function(id) {
+            $rootScope.$broadcast('show-chat-for-user',id);
+        };
+
+        $scope.showPenaltiesForUser = function(id) {
+            $rootScope.$broadcast('show-penalties-for-user',id);
+        };
     }
 );

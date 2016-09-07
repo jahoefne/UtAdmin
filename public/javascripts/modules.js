@@ -1,9 +1,9 @@
 UtAdmin.controller('ModulesCtrl',
-    function ($scope, $http, $interval, $location, $timeout, $httpParamSerializer) {
+    function ($scope) {
         $scope.init = function () {
             $(".module").hide();
             $scope.current = "";
-            $scope.update("status")
+            $scope.update("status");
         };
 
         $scope.update = function (module) {
@@ -14,6 +14,11 @@ UtAdmin.controller('ModulesCtrl',
                 $scope.current = module;
             }
         };
+
+        $scope.$on('show-module', function (event, module) {
+            console.log("show-module",module);
+            $scope.update(module);
+        });
     }
 );
 

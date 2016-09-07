@@ -7,7 +7,7 @@
 <div class="container chat-app module"
 id="chat-module"
 ng-controller="ChatCtrl"
-ng-init="init({autoUpdate: true, count: 30, page: 0, latestId: 0, radio: false, userId: undefined})">
+ng-init="init({autoUpdate: true, count: 30, page: 0, latestId: 0, radio: false, userId: undefined})" ng-cloak>
 
     <span id="search-form">
 
@@ -33,7 +33,7 @@ ng-init="init({autoUpdate: true, count: 30, page: 0, latestId: 0, radio: false, 
             </div>
             <div class="input-field col s3 push-s1" id="chat-search-field">
                 <input id="chatlog-user-id-search" type="number" ng-model="state.userId" mac-pause-typing="cleanUpdate()">
-                <label for="chatlog-user-id-search">User Id</label>
+                <label for="chatlog-user-id-search" id="chatlog-user-id-search-label">User Id</label>
             </div>
         </div>
 
@@ -68,7 +68,7 @@ ng-init="init({autoUpdate: true, count: 30, page: 0, latestId: 0, radio: false, 
         </ul>
     </div>
 
-    <div class="center-align" ng-show="!updating && msgs.length == 0 && updated">
+    <div class="center-align" ng-show="!updating && msgs.length == 0">
         <div class="row">
             <div class="col s12 m5">
                 <div class="card-panel">

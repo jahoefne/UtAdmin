@@ -65,7 +65,7 @@ class Application(override implicit val env: RuntimeEnvironment[UtAdminUser]) ex
       MongoLogger.logAction(request.user, "index")
       Ok(views.html.index(request.user))
   }
-
+/*
   def userById(id: Int) = SecuredAction { request =>
     User.UserInfo.getUserByB3Id(id) match {
       case Some(user) =>
@@ -76,6 +76,6 @@ class Application(override implicit val env: RuntimeEnvironment[UtAdminUser]) ex
       case None =>
         Ok(views.html.styledError(Html("The User you are looking for could not be found!"), Some(request.user)))
     }
-  }
+  }*/
 
 }

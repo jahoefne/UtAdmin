@@ -1,9 +1,11 @@
 package controllers
 
 import org.joda.time.DateTime
+import play.twirl.api.Html
 import scalikejdbc._
 
 import models.OnlineUser.Formatters._
+import models.User.Formatters._
 import models._
 import securesocial.core.RuntimeEnvironment
 import play.api.libs.json._
@@ -20,14 +22,17 @@ class UserController(override implicit val env: RuntimeEnvironment[UtAdminUser])
       }))
       Ok(onlinePlayers)
   }
+
+  def userJsonById(id: Int) = SecuredAction { request =>
+    Ok(Json.toJson(User.UserInfo.getUserByB3Id(id)))
+  }
+
 }
 
 
 object UserController {
 
-
   private case class Country(code: Option[String], name: Option[String])
-
 
   private def updateCountry(user: OnlineUser): OnlineUser = DB autoCommit { implicit session =>
     val c =

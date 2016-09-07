@@ -1,7 +1,9 @@
-var UsersModule = angular.module('UsersModule', ['yaru22.angular-timeago', 'ngAnimate', 'angularSpinner']);
 
-UsersModule.controller('UsersModuleCtrl',
+UtAdmin.controller('UsersCtrl',
     function ($scope, $http, $interval, $timeout, timeAgoSettings) {
+        $scope.init = function init(){
+            console.log("Init User Module");
 
+        }
     }
 );

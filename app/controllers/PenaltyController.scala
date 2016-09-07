@@ -15,47 +15,68 @@ class PenaltyController(override implicit val env: RuntimeEnvironment[UtAdminUse
 
   val log = Logger(this getClass() getName())
 
+  def removePunishment(penaltyId: Int) = SecuredAction {
+    implicit request =>
+      MongoLogger.logAction(request.user, "Removing Punishment!")
+      PenaltyController.deletePenalty(penaltyId)
+      Ok("Removed")
+  }
+
 
   def getPenaltiesJson(count: Int,
                        page: Int,
                        userId: Option[Int],
                        queryString: Option[String],
-                       banOnly: Option[Boolean],
-                       adminOnly: Option[Boolean],
-                       activeOnly: Option[Boolean],
-                       noticeOnly: Option[Boolean]) = SecuredAction {
+                       filterType: Option[String],
+                       activeOnly: Option[Boolean]) = SecuredAction {
     implicit request =>
-      Ok(Json.toJson(PenaltyController.getPenalties(count, page, userId,  queryString, banOnly,  adminOnly, activeOnly, noticeOnly)))
+      Ok(Json.toJson(
+        PenaltyController.getPenalties(count,
+          page,
+          userId,
+          queryString,
+          filterType,
+          activeOnly)))
   }
 }
 
 object PenaltyController {
+
+  def deletePenalty(penaltyId: Int) = DB autoCommit { implicit session =>
+    sql"DELETE FROM penalties WHERE penalties.id = $penaltyId".execute().apply()
+  }
+
+
+  def getPenaltyCountFor(userId: Int) : Int = DB autoCommit { implicit session =>
+    sql"select count(*) from penalties where penalties.client_id = ${userId}".map(rs => rs.int(1)).single().apply().getOrElse(0)
+  }
+
   def getPenalties(count: Int,
                    page: Int,
                    userId: Option[Int],
                    queryString: Option[String],
-                   banOnly: Option[Boolean],
-                   adminOnly: Option[Boolean],
-                   activeOnly: Option[Boolean],
-                   noticeOnly: Option[Boolean]) =
+                   filterType: Option[String],
+                   activeOnly: Option[Boolean]) =
     DB readOnly { implicit session =>
       val offset = count * page
 
 
-      val userIdCheck = if (userId.isDefined) sqls" AND penalties.client_id = $userId " else sqls""
-      val adminOnlyCheck = if (adminOnly.isDefined && adminOnly.get) sqls" AND penalties.admin_id != 0 " else sqls""
-      val banOnlyCheck = if (banOnly.isDefined && banOnly.get) sqls" AND ( penalties.type LIKE 'Ban' OR penalties.type LIKE 'TempBan') " else sqls""
-      val noticeOnlyCheck = if (noticeOnly.isDefined && noticeOnly.get) sqls" AND (penalties.type LIKE 'Notice' ) " else sqls""
-      val activeOnlyCheck = if (activeOnly.isDefined && activeOnly.get) sqls" AND penalties.inactive = 0 " else sqls""
-      val queryStringCheck = if (queryString.isDefined) sqls.and.like(sqls"penalties.reason", s"%${queryString.get}") else sqls""
+      val userIdCheck = if (userId.isDefined) sqls.and.eq(sqls"penalties.client_id", userId) else sqls.empty
 
+      val ft = filterType.getOrElse("foo")
 
-      println(queryStringCheck.toString())
+      val typeCheck = if (ft == "Warning" || ft == "Kick" || ft == "Ban" || ft == "Notice" || ft == "TempBan")
+        sqls.and.like(sqls"penalties.type", ft)
+      else sqls.empty
+
+      val activeOnlyCheck = if (activeOnly.isDefined && activeOnly.get) sqls" AND penalties.inactive = 0 " else sqls.empty
+      val queryStringCheck = if (queryString.isDefined) sqls.and.like(sqls"penalties.reason", s"%${queryString.get}") else sqls.empty
+
       sql"""SELECT penalties.*, clients.name AS admin_name, c2.name AS client_name
           FROM ( penalties
-          INNER JOIN clients ON clients.id = penalties.admin_id $userIdCheck $adminOnlyCheck $banOnlyCheck $noticeOnlyCheck $activeOnlyCheck $queryStringCheck )
+          INNER JOIN clients ON clients.id = penalties.admin_id $userIdCheck $typeCheck $activeOnlyCheck $queryStringCheck )
           INNER JOIN clients AS c2 ON c2.id = penalties.client_id
-          ORDER BY penalties.id DESC LIMIT $count OFFSET $offset """
+          ORDER BY penalties.time_add DESC LIMIT $count OFFSET $offset """
         .map(rs => Penalty(
           penalty = rs.string("type"),
           penaltyId = rs.int("id"),
@@ -81,11 +102,5 @@ object PenaltyController {
           keyword = rs.string("keyword"),
           lastEdit = new DateTime(rs.long("time_edit") * 1000L)
         )).list().apply()
-        .filter(x => if (activeOnly.isDefined && activeOnly.get && x.expires.isDefined && x.expires.get.isBefore(DateTime.now())) false else true)
-        .toSeq
-        .sortWith((x: Penalty, y: Penalty) => {
-          x.expires.isEmpty && y.expires.isDefined ||
-            x.expires.isDefined && y.expires.isDefined && x.expires.get.isAfter(y.expires.get)
-        })
     }
 }

@@ -8,13 +8,15 @@ GET            /                         @controllers.Application.index
 GET            /chat.json                @controllers.ChatController.getJsonChat(count: Int, page: Int, radio: Boolean, userId: Option[Int], fromMessageId: Option[Int], queryString: Option[String],latestId: Int ?= -1)
 GET            /chat.json/latestId       @controllers.ChatController.latestMessageId
 GET            /chatlog                  @controllers.ChatController.chatlog()
-GET            /user                     @controllers.Application.userById(id:Int)
 
+
+GET            /user.json                @controllers.UserController.userJsonById(id:Int)
 
 GET            /online-players.json      @controllers.UserController.getJsonOnlinePlayers()
 
 
-GET            /penalties.json           @controllers.PenaltyController.getPenaltiesJson(count: Int, page: Int, userId: Option[Int], queryString: Option[String], banOnly: Option[Boolean], adminOnly: Option[Boolean], activeOnly: Option[Boolean], noticeOnly: Option[Boolean])
+GET            /penalties.json           @controllers.PenaltyController.getPenaltiesJson(count: Int,page: Int, userId: Option[Int], queryString: Option[String], filterType: Option[String], activeOnly: Option[Boolean])
+GET            /remove-punishment        @controllers.PenaltyController.removePunishment(penaltyId:Int)
 
 ## XLRSTATS STUFF
 POST            /set-xlr-visibility       @controllers.Administrator.setXlrVisibility(id:Int, value:Boolean)
@@ -28,7 +30,6 @@ GET            /jsRoutes                 @controllers.Application.javascriptRout
 #########################
 # Penalty related routes
 #GET            /add-punishment           @controllers.PenaltyController.punishPlayer(userId: Int, reason: String, penalty:String, duration:Option[String])
-#GET            /remove-punishment        @controllers.PenaltyController.removePunishment(penaltyId:Int)
 
 #########################
 # Administrator routes
