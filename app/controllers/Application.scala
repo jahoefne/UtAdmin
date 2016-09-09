@@ -53,8 +53,8 @@ class Application(override implicit val env: RuntimeEnvironment[UtAdminUser]) ex
         routes.javascript.Rcon.forceSpec,
         routes.javascript.Rcon.privateMessage,
         routes.javascript.Administrator.addUser,
-        routes.javascript.Administrator.setXlrVisibility,
-        routes.javascript.Administrator.resetXlrstats
+        routes.javascript.Administrator.changeGroupOfUser,
+        routes.javascript.Administrator.setXlrVisibility
       )
     ).as("text/javascript")
   }
@@ -65,17 +65,4 @@ class Application(override implicit val env: RuntimeEnvironment[UtAdminUser]) ex
       MongoLogger.logAction(request.user, "index")
       Ok(views.html.index(request.user))
   }
-/*
-  def userById(id: Int) = SecuredAction { request =>
-    User.UserInfo.getUserByB3Id(id) match {
-      case Some(user) =>
-        val onlineHistoryChartData = User.UserInfo.getOnlineHistoryChartData(user.guid)
-        val onlineHistory = User.UserInfo.getOnlineHistory(user.guid)
-        MongoLogger.logAction(request.user, "Userinfo for" + user.currentName + " " + user.guid)
-        Ok(views.html.user(user, onlineHistoryChartData, onlineHistory, request.user))
-      case None =>
-        Ok(views.html.styledError(Html("The User you are looking for could not be found!"), Some(request.user)))
-    }
-  }*/
-
 }

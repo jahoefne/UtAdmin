@@ -1,38 +1,32 @@
-<!-- Angular based UtAdmin Chat Module -->
-
-<script src="@routes.Assets.at("javascripts/chat.js")"></script>
+<!-- Angular based UtAdmin Chat Component -->
 
 <link rel="stylesheet" href="@routes.Assets.at("stylesheets/chat.css")">
 
-<div class="container chat-app module"
-id="chat-module"
-ng-controller="ChatCtrl"
-ng-init="init({autoUpdate: true, count: 30, page: 0, latestId: 0, radio: false, userId: undefined})" ng-cloak>
+<div class="container chat-component" ng-cloak>
 
     <span id="search-form">
 
             <!-- Talkback -->
-        <div class="row search-row" ng-show="state.autoUpdate">
+        <div class="row search-row" ng-show="$ctrl.state.autoUpdate">
             <div class="col s1 push-s2">
-                <mac-spinner ng-show="updating" mac-spinner-color="white" class="update-spinner" disable-animation/>
             </div>
             <div class="input-field col s5 push-s2" id="chat-search-field">
-                <input id="talkback-field" type="text" ng-model="talkbackTxt" ng-enter="talkback()">
+                <input id="talkback-field" type="text" ng-model="$ctrl.talkbackTxt" ng-enter="$ctrl.talkback()">
                 <label for="talkback-field">Say</label>
             </div>
         </div>
 
             <!-- User-Id/Querystring -->
-        <div class="row search-row" ng-show="!state.autoUpdate">
+        <div class="row search-row" ng-show="!$ctrl.state.autoUpdate">
             <div class="col s1 push-s1">
-                <mac-spinner ng-show="updating" mac-spinner-color="white" class="update-spinner" disable-animation/>
+                <mac-spinner ng-show="$ctrl.updating" mac-spinner-color="white" class="update-spinner" disable-animation/>
             </div>
             <div class="input-field col s5 push-s1" id="chat-search-field">
-                <input id="chatlog-search" type="text" required="required" ng-model="state.queryString" mac-pause-typing="cleanUpdate()" >
+                <input id="chatlog-search" type="text" required="required" ng-model="$ctrl.state.queryString" mac-pause-typing="$ctrl.cleanUpdate()" >
                 <label for="chatlog-search">Search Text</label>
             </div>
             <div class="input-field col s3 push-s1" id="chat-search-field">
-                <input id="chatlog-user-id-search" type="number" ng-model="state.userId" mac-pause-typing="cleanUpdate()">
+                <input id="chatlog-user-id-search" type="number" ng-model="$ctrl.state.userId" ng-change="$ctrl.cleanUpdate()">
                 <label for="chatlog-user-id-search" id="chatlog-user-id-search-label">User Id</label>
             </div>
         </div>
@@ -40,35 +34,35 @@ ng-init="init({autoUpdate: true, count: 30, page: 0, latestId: 0, radio: false, 
             <!-- Include Radio / Auto Update-->
         <div class="row search-row">
             <div class=" col s4 push-s2">
-                <input type="checkbox" id="radioCheckBox" class="filled-in red" ng-model="state.radio" ng-change="cleanUpdate()">
+                <input type="checkbox" id="radioCheckBox" class="filled-in red" ng-model="$ctrl.state.radio" ng-change="$ctrl.cleanUpdate()">
                 <label for="radioCheckBox" >Radio</label>
             </div>
             <div class="col s4 push-s3">
-                <input type="checkbox" id="autoUpdateCheckBox" class="filled-in" ng-model="state.autoUpdate" ng-change="cleanUpdate()" ng-checked="state.autoUpdate">
+                <input type="checkbox" id="autoUpdateCheckBox" class="filled-in" ng-model="$ctrl.state.autoUpdate" ng-change="$ctrl.cleanUpdate()" ng-checked="$ctrl.state.autoUpdate">
                 <label for="autoUpdateCheckBox">Talkback Mode</label>
             </div>
         </div>
 
     </span>
         <!-- Pagnination -->
-    <div class="center-align" ng-if="state.fromMessageId!=undefined" ng-click="cleanUpdate();">
+    <div class="center-align" ng-if="$ctrl.state.fromMessageId!=undefined" ng-click="$ctrl.cleanUpdate();">
         <a class="waves-effect waves-light btn btn-flat">Back to Start!</a>
     </div>
 
         <!-- Pagnination -->
-    <div class="center-align" >
+    <div class="center-align" ng-show="!$ctrl.updating">
         <ul class="pagination">
-            <li class="waves-effect btn-flat waves" ng-show="!state.autoUpdate && state.page > 0  || state.fromMessageId">
-                <a href="" ng-click="prev()"><i class="material-icons white-text">chevron_left</i></a>
+            <li class="waves-effect btn-flat waves" ng-show="!$ctrl.state.autoUpdate && $ctrl.state.page > 0  || $ctrl.state.fromMessageId">
+                <a href="" ng-click="$ctrl.prev()"><i class="material-icons white-text">chevron_left</i></a>
             </li>
-            <span ng-show="state.page != 0 && !state.fromMessageId">Page {{state.page}}</span>
-            <li class="waves-effect btn-flat waves" ng-show="!state.autoUpdate || msgs.length< state.count">
-                <a href="" ng-click="next()"><i class="material-icons white-text">chevron_right</i></a>
+            <span ng-show="$ctrl.state.page != 0 && !$ctrl.state.fromMessageId">Page {{$ctrl.state.page}}</span>
+            <li class="waves-effect btn-flat waves" ng-show="!$ctrl.state.autoUpdate || $ctrl.msgs.length < $ctrl.state.count">
+                <a href="" ng-click="$ctrl.next()"><i class="material-icons white-text">chevron_right</i></a>
             </li>
         </ul>
     </div>
 
-    <div class="center-align" ng-show="!updating && msgs.length == 0">
+    <div class="center-align" ng-show="!$ctrl.updating && $ctrl.msgs.length == 0">
         <div class="row">
             <div class="col s12 m5">
                 <div class="card-panel">
@@ -79,7 +73,7 @@ ng-init="init({autoUpdate: true, count: 30, page: 0, latestId: 0, radio: false, 
     </div>
 
         <!-- Messages -->
-    <div ng:repeat="msg in msgs" class="repeated-message">
+    <div ng:repeat="msg in $ctrl.msgs" class="repeated-message">
         <div class="row">
             <div class="card">
 
@@ -88,7 +82,7 @@ ng-init="init({autoUpdate: true, count: 30, page: 0, latestId: 0, radio: false, 
                         <i class="material-icons {{msg.userTeam}}-text">label</i>
                     </span>
                     <span class="name">
-                        <a href="/user?id={{msg.userId}}" target="_blank">{{msg.userName | urtstring}}</a>
+                        <a  ui-sref="user({b3id:{{msg.userId}}})">{{msg.userName | urtstring}}</a>
                     </span>
                     <span class="txt">{{msg.txt | urtstring}}</span>
                 </div>
@@ -96,14 +90,15 @@ ng-init="init({autoUpdate: true, count: 30, page: 0, latestId: 0, radio: false, 
                 <div class="card-action">
                     sent to {{msg.scope}}
                     <span ng-if="msg.targetId!=undefined">
-                        <a href="/user?id={{msg.targetId}}" target="_blank">{{msg.targetName | urtstring}}</a>
+                        <a   ui-sref="user({b3id:{{msg.targetId}}})">{{msg.targetName | urtstring}}</a>
                     </span>
 
                     <span>
-                        <span ng-if="!state.updating && (state.userId || state.queryString)" class="time-stamp" mac-tooltip="Jump to Conversation" mac-tooltip-direction="top">
-                            <a ng-if="state.userId || state.queryString" class="show-conv-link" ng-click="showConv(msg.id)"><i class="tiny material-icons">redo</i></a>
+                        <span ng-show="!$ctrl.state.updating && ($ctrl.state.userId || $ctrl.state.queryString)" class="time-stamp" mac-tooltip="Jump to Conversation" mac-tooltip-direction="top">
+                            <a ng-if="$ctrl.state.userId || $ctrl.state.queryString" class="show-conv-link" ng-click="$ctrl.showConv(msg.id)"><i class="tiny material-icons">redo</i></a>
                         </span>
-                        <span ng-if="state.updating && !(state.userId || state.queryString)" class="time-stamp" mac-tooltip="Jump to Conversation" mac-tooltip-direction="top">
+                        &nbsp;&nbsp;<online-actions b3id="msg.userId" name="{{msg.userName}}" size="tiny"></online-actions>
+                        <span ng-if="$ctrl.state.updating && !($ctrl.state.userId || $ctrl.state.queryString)" class="time-stamp" mac-tooltip="Jump to Conversation" mac-tooltip-direction="top">
                                 #{{msg.id}}
                         </span>
                     </span>

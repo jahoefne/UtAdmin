@@ -4,6 +4,8 @@
 <html>
     <head>
         <title>UtAdmin</title>
+        <base href="/">
+
         <link rel="icon" type="image/png" href="/assets/favicons.png">
         <script type="text/javascript" src="@routes.Application.javascriptRoutes"></script>
         <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -14,57 +16,76 @@
 
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 
-        <script src="@routes.Assets.at("javascripts/deps/sweet-alert.min.js")"></script>
-        <link rel="stylesheet" type="text/css" href="@routes.Assets.at("javascripts/deps/sweet-alert.css")">
-        <script src="@routes.Assets.at("javascripts/deps/sweet-prompt.min.js")"></script>
-        <link rel="stylesheet" type="text/css" href="@routes.Assets.at("javascripts/deps/sweet-prompt.css")">
         <link rel="stylesheet" type="text/css" href="@routes.Assets.at("javascripts/deps/macgyver/macgyver.css")">
 
         <script type="text/javascript" src="@routes.Assets.at("javascripts/deps/materialize/js/materialize.min.js")"></script>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.js"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/deps/angular-timeago/angular-timeago-core.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/deps/angular-timeago/time-ago-language-en_US.js")"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.0-beta.1/angular-ui-router.min.js"></script>
+
+
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/deps/spin.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/deps/angular-spinner.min.js")"></script>
+
+        <link href="@routes.Assets.at("javascripts/deps/flag-icon-css/css/flag-icon.min.css")" rel="stylesheet">
+
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/deps/macgyver/macgyver.min.js")"></script>
+
+
+        <script src="@routes.Assets.at("javascripts/deps/vex/js/vex.combined.min.js")"></script>
+        <script>vex.defaultOptions.className = 'vex-theme-os'</script>
+
+
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-materialize/0.2.1/angular-materialize.min.js"></script>
+
+
+
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+        <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+        <link rel="stylesheet" href="@routes.Assets.at("javascripts/deps/awesome-markers/leaflet.awesome-markers.css")">
+        <script src="@routes.Assets.at("javascripts/deps/awesome-markers/leaflet.awesome-markers.js")"></script>
+
+        <link type="text/css" rel="stylesheet" href="@routes.Assets.at("stylesheets/user.css")" media="screen,projection"/>
+
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/init.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/main.controller.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/status.service.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/status.component.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/chat.component.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/user.component.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/users.component.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/penalties.component.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/online-actions.component.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/router.js")"></script>
     </head>
 
-    <body ng-app="UtAdmin">
+    <body ng-app="UtAdmin" ng-controller="MainCtrl">
         <header class="page-header">
-            <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
-            <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-animate.js"></script>
-            <script type="text/javascript" src="@routes.Assets.at("javascripts/deps/angular-timeago/angular-timeago-core.min.js")"></script>
-            <script type="text/javascript" src="@routes.Assets.at("javascripts/deps/angular-timeago/time-ago-language-en_US.js")"></script>
-            <script type="text/javascript" src="@routes.Assets.at("javascripts/deps/angular.ng-modules.js")"></script>
 
-            <script type="text/javascript" src="@routes.Assets.at("javascripts/deps/spin.min.js")"></script>
-            <script type="text/javascript" src="@routes.Assets.at("javascripts/deps/angular-spinner.min.js")"></script>
-
-
-            <script type="text/javascript" src="@routes.Assets.at("javascripts/deps/macgyver/macgyver.min.js")"></script>
-
-
-            <script src="@routes.Assets.at("javascripts/deps/vex/js/vex.combined.min.js")"></script>
-            <script>vex.defaultOptions.className = 'vex-theme-os'</script>
-
-
-            <script type="text/javascript" src="@routes.Assets.at("javascripts/main.js")"></script>
-            <script type="text/javascript" src="@routes.Assets.at("javascripts/modules.js")"></script>
-
-            <nav ng-controller="ModulesCtrl" ng-init="init()">
+            <nav>
                 <div class="nav-wrapper">
-                    <a href="/#status" class="brand-logo hide-on-med-and-down">DrunkNoobs</a>
+                    <a  ui-sref="status"class="brand-logo hide-on-med-and-down">DrunkNoobs
+                        <mac-spinner ng-show="showSpinner" mac-spinner-color="white" class="update-spinner" disable-animation/>
+                    </a>
                     <ul id="nav-mobile" class="right">
-                        <li><a href="" ng-click="update('status')">Status</a></li>
-                        <li><a href="" ng-click="update('chat')">Chat</a></li>
-                        <li><a href="" ng-click="update('users')">Users</a></li>
-                        <li><a href="" ng-click="update('penalties')">Penalties</a></li>
-                        <li><a href="" ng-click="update('account')"><i class="material-icons">account_circle</i></a></li>
+                        <li><a ui-sref="status">Status</a></li>
+                        <li><a ui-sref="chat">Chat</a></li>
+                        <li><a ui-sref="users">Users</a></li>
+                        <li><a ui-sref="penalties">Penalties</a></li>
+                        <li><a href=""><i class="material-icons">account_circle</i></a></li>
+                        <li><a href="/auth/logout"><i class="material-icons">exit_to_app</i></a></li>
                     </ul>
                 </div>
             </nav>
         </header>
 
         <main class="page-main">
-            @status(loggedInUser)
-            @chatlog()
-            @users()
-            @penalties()
-            @user2()
+            <div class="ui-view-container">
+                <ui-view></ui-view>
+            </div>
         </main>
     </body>
 </html>

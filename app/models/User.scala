@@ -55,7 +55,7 @@ object User {
     val log = Logger(this getClass() getName())
 
 
-    def setXlrStatsVisibility(b3Id: Int, visibility: Boolean): Boolean = DB readOnly { implicit session =>
+    def setXlrStatsVisibility(b3Id: Int, visibility: Boolean): Boolean = DB autoCommit  { implicit session =>
       sql"UPDATE xlr_playerstats SET hide = ${!visibility} WHERE client_id = $b3Id".execute().apply()
     }
 

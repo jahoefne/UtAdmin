@@ -39,6 +39,11 @@ class ChatController(override implicit val env: RuntimeEnvironment[UtAdminUser])
   def latestMessageId = SecuredAction {
     request => Ok(Json.toJson(ChatActions.latestId))
   }
+
+  def chatComponentHtml() = SecuredAction {
+    request =>
+      Ok(views.html.chatlog.render())
+  }
 }
 
 /**

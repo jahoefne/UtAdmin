@@ -1,24 +1,19 @@
-<script src="@routes.Assets.at("javascripts/penalties.js")"></script>
-
-<div class="container module"
-id="penalties-module"
-ng-controller="PenaltiesCtrl"
-ng-init="init({ count: 30,  page: 0, userId: undefined, queryString: undefined, filterType: undefined, activeOnly: false })">
+<div class="container module">
 
     <div class="row">
 
         <div class="row search-row">
 
             <div class="input-field col s5 push-s1" id="chat-search-field">
-                <input id="penalties-search" type="text" ng-model="state.queryString" mac-pause-typing="cleanUpdate()" >
+                <input id="penalties-search" type="text" ng-model="$ctrl.state.queryString" mac-pause-typing="$ctrl.cleanUpdate()" >
                 <label for="penalties-search">Search Reason</label>
             </div>
             <div class="input-field col s3 push-s1" id="chat-search-field">
-                <input id="penalties-user-id-search" type="number" ng-model="state.userId" mac-pause-typing="cleanUpdate()">
+                <input id="penalties-user-id-search" type="number" ng-model="$ctrl.state.userId" mac-pause-typing="$ctrl.cleanUpdate()">
                 <label for="penalties-user-id-search" id="penalties-user-id-search-label">User Id</label>
             </div>
             <div class="input-field col s2 push-s1">
-                <select ng-model="state.filterType" ng-change="cleanUpdate()">
+                <select ng-model="$ctrl.state.filterType" ng-change="$ctrl.cleanUpdate()" material-select>
                     <option selected value>Any</option>
                     <option value="Notice">Notice</option>
                     <option value="Kick">Kick</option>
@@ -33,32 +28,32 @@ ng-init="init({ count: 30,  page: 0, userId: undefined, queryString: undefined, 
             <!-- Pagnination -->
         <div class="center-align" >
             <ul class="pagination">
-                <li class="waves-effect btn-flat waves" ng-show="state.page > 0">
-                    <a href="" ng-click="prev()"><i class="material-icons white-text">chevron_left</i></a>
+                <li class="waves-effect btn-flat waves" ng-show="$ctrl.state.page > 0">
+                    <a href="" ng-click="$ctrl.prev()"><i class="material-icons white-text">chevron_left</i></a>
                 </li>
-                <span ng-show="state.page != 0">Page {{state.page}}</span>
-                <li class="waves-effect btn-flat waves" ng-hide="penalties.length < state.count">
-                    <a href="" ng-click="next()"><i class="material-icons white-text">chevron_right</i></a>
+                <span ng-show="$ctrl.state.page != 0">Page {{$ctrl.state.page}}</span>
+                <li class="waves-effect btn-flat waves" ng-hide="$ctrl.penalties.length < state.count">
+                    <a href="" ng-click="$ctrl.next()"><i class="material-icons white-text">chevron_right</i></a>
                 </li>
             </ul>
         </div>
 
-        <div ng-show="penalties.length==0">
+        <div ng-show="!$ctrl.updating && $ctrl.penalties.length==0">
             <div class="row">
                 <div class="col s4 push-s4">
-                    <div class="card-panel">
-                    <span ng-if="!state.userId">There ware no penalties matching your query!</span>
-                    <span ng-if="state.userId">No penalties for user #{{state.userId}}! <i class="material-icons green-text">sentiment_very_satisfied</i></span>
+                    <div class="card-panel center center-align">
+                        <span ng-if="!$ctrl.state.userId">There ware no penalties matching your query!</span>
+                        <span ng-if="$ctrl.state.userId">No penalties for user #{{$ctrl.state.userId}}! <i class="material-icons green-text">sentiment_very_satisfied</i></span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="card-panel center"  ng-hide="penalties.length==0">
+        <div class="card-panel center" ng-show="$ctrl.penalties.length!=0">
             <table class="bordered highlight responsive-table status-table" ng-cloak>
                 <thead>
                     <tr>
-                        <th><mac-spinner ng-show="updating" mac-spinner-color="white"/>Type</th>
+                        <th><mac-spinner ng-show="$ctrl.updating" mac-spinner-color="white"/>Type</th>
                         <th>User</th>
                         <th>Reason</th>
                         <th>Expires</th>
@@ -69,32 +64,34 @@ ng-init="init({ count: 30,  page: 0, userId: undefined, queryString: undefined, 
                     </tr>
                 </thead>
 
-                <tbody ng:repeat="penalty in penalties">
+                <tbody ng:repeat="penalty in $ctrl.penalties">
                     <tr>
-                        <td  mac-tooltip="{{penalty.penalty}} Id:{{penalty.penaltyId}}" mac-tooltip-direction="right">
+                        <td mac-tooltip="{{penalty.penalty}} Id:{{penalty.penaltyId}}" mac-tooltip-direction="right">
                             <i class="material-icons" ng-if="penalty.penalty == 'Notice'">note</i>
                             <i class="material-icons" ng-if="penalty.penalty == 'Kick'">block</i>
                             <i class="material-icons" ng-if="penalty.penalty == 'Warning'">error</i>
                             <span ng-if="penalty.penalty == 'TempBan'">
-                            <i class="material-icons amber-text" >hourglass_empty</i>
-                            <i class="material-icons amber-text" >sentiment_very_dissatisfied</i>
+                                <i class="material-icons amber-text" >hourglass_empty</i>
+                                <i class="material-icons amber-text" >sentiment_very_dissatisfied</i>
                             </span>
                             <i class="material-icons red-text" ng-if="penalty.penalty == 'Ban'">sentiment_very_dissatisfied</i>
                         </td>
-                        <td><a href="/user?id={{penalty.playerId}}" target="_blank">{{penalty.playerName | urtstring}}</a></td>
+                        <td><a ui-sref="user({b3id:{{penalty.playerId}}})">{{penalty.playerName | urtstring}}</a></td>
                         <td>{{penalty.reason | urtstring}}</td>
 
                         <td>
-
-                            <span class="time-stamp" mac-tooltip="{{penalty.expires | date:'medium'}}" mac-tooltip-direction="top">
-                            </span>
+                            <span ng-show="penalty.expires!=0">{{penalty.expires | date:'short'}}</span>
                         </td>
 
-                        <td><span ng-if="penalty.duration">{{penalty.duration}}</span></td>
-                        <td>{{penalty.adminName | urtstring}}</td>
+                        <td>
+                            <span ng-if="penalty.duration">{{ penalty.duration | secondsToDateTime | date:"HH'h' mm'm' ss's'"}}</span>
+                        </td>
+                        <td>
+                            <a ui-sref="user({b3id:{{penalty.adminId}}})">{{penalty.adminName | urtstring}}</a>
+                        </td>
 
                         <td><span class="time-stamp" mac-tooltip="{{penalty.created | date:'medium'}}" mac-tooltip-direction="top">{{penalty.created/1000 | timestamp}}</span></td>
-                        <td class="btn btn-flat white-text" ng-click="delete(penalty.penaltyId)"><i class="material-icons">delete_forever</i></td>
+                        <td class="btn btn-flat white-text" ng-click="$ctrl.delete(penalty.penaltyId)"><i class="material-icons">delete_forever</i></td>
                     </tr>
 
                 </tbody>

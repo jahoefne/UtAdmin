@@ -16,6 +16,9 @@
     transform: translate(0, -50%);
   }
 }
+.cursor{
+  cursor: pointer;
+}
 
 body {
   background-color: $primary-color-light;
@@ -31,7 +34,9 @@ html {
 }
 
 .card-image {
-  opacity: 0.6;
+  opacity: 0.9;
+  vertical-align: middle;
+  margin:auto !important;
 }
 
 .card-action {
@@ -51,7 +56,33 @@ a {
   display: none !important;
 }
 
-#status-module {
+.glow-blue{
+  animation-duration: 1s;
+  animation-name: glowblue;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes glowblue {
+  from {
+    color: #3100ff;
+  }
+
+  to {
+    color: #0086ff;
+  }
+}
+
+.penalty-form{
+  select, input{
+    width:60%;
+    margin:auto;
+  }
+}
+
+
+
+.status-component {
 
   .god-icon {
     animation-duration: 1s;
@@ -60,8 +91,9 @@ a {
     animation-direction: alternate;
   }
 
+
   tr:hover{
-    background-color: $primary-color-light;
+    background-color: $primary-color-light !important;
   }
 
   @keyframes changeglow {
@@ -155,4 +187,48 @@ a {
 
 
 
+/* Have to set height explicity on ui-view
+to prevent collapsing during animation*/
+/*.ui-view-container {
+  position: relative;
+  height: 65px;
+}
 
+[ui-view].ng-enter, [ui-view].ng-leave {
+  position: absolute;
+  left: 0;
+  right: 0;
+  -webkit-transition:all .5s ease-in-out;
+  -moz-transition:all .5s ease-in-out;
+  -o-transition:all .5s ease-in-out;
+  transition:all .5s ease-in-out;
+}
+
+[ui-view].ng-enter {
+  opacity: 0;
+  -webkit-transform:scale3d(0.5, 0.5, 0.5);
+  -moz-transform:scale3d(0.5, 0.5, 0.5);
+  transform:scale3d(0.5, 0.5, 0.5);
+}
+
+[ui-view].ng-enter-active {
+  opacity: 1;
+  -webkit-transform:scale3d(1, 1, 1);
+  -moz-transform:scale3d(1, 1, 1);
+  transform:scale3d(1, 1, 1);
+}
+
+[ui-view].ng-leave {
+  opacity: 1;
+  -webkit-transform:translate3d(0, 0, 0);
+  -moz-transform:translate3d(0, 0, 0);
+  transform:translate3d(0, 0, 0);
+}
+
+[ui-view].ng-leave-active {
+  opacity: 0;
+  -webkit-transform:translate3d(100px, 0, 0);
+  -moz-transform:translate3d(100px, 0, 0);
+  transform:translate3d(100px, 0, 0);
+}
+*/

@@ -1,24 +1,76 @@
-<script src="@routes.Assets.at("javascripts/users.js")"></script>
-
-<div class="container module" id="users-module" ng-controller="UsersCtrl" ng-cloak>
+<div class="container module users-component" ng-cloak>
 
     <span id="search-form">
         <div class="row search-row">
-            <div class="input-field col s6 push-s2">
-                <input id="user-search-field" type="text" ng-model="query" ng-enter="">
-                <label for="user-search-field">Find</label>
+            <div class="input-field col s5 push-s2">
+                <input id="user-search-field" type="text" ng-model="$ctrl.state.q" mac-pause-typing="$ctrl.cleanUpdate()" >
+                <label for="user-search-field">Find by {{$ctrl.searchBy}}</label>
             </div>
 
+            <div class="input-field col s2 push-s2">
+                <select ng-model="$ctrl.groupBits" ng-change="$ctrl.cleanUpdate();">
+                    <option selected>Any</option>
+                    @for(group <- B3GroupController.getGroups()) {
+                        <option value="@group.bits">@group.name</option>
+                    }
+                </select>
+                <label>Filter Group</label>
+            </div>
         </div>
-
-        <div class="input-field col s4 push-s1">
-            <select>
-                @for(group <- B3GroupController.getGroups()) {
-                    <option value="@group.bits">@group.name</option>
-                }
-            </select>
-            <label>Min Group</label>
-        </div>
-
     </span>
+
+    <div class="row">
+        <div class="col s4 push-s4">
+            <div class="switch">
+                <label>
+                    Search by - Ip
+                    <input type="checkbox" ng-model="$ctrl.byName" ng-change="$ctrl.cleanUpdate()">
+                    <span class="lever"></span>
+                    Name & Alias
+                </label>
+            </div>
+        </div>
+    </div>
+
+
+        <!-- Pagnination -->
+    <div class="center-align" ng-show="!$ctrl.updating">
+        <ul class="pagination">
+            <li class="waves-effect btn-flat waves" ng-show="$ctrl.state.page > 0">
+                <a href="" ng-click="$ctrl.prev()"><i class="material-icons white-text">chevron_left</i></a>
+            </li>
+            <span ng-show="$ctrl.state.page != 0">Page {{$ctrl.state.page}}</span>
+            <li class="waves-effect btn-flat waves" ng-show="$ctrl.users.length < $ctrl.state.count">
+                <a href="" ng-click="$ctrl.next()"><i class="material-icons white-text">chevron_right</i></a>
+            </li>
+        </ul>
+    </div>
+
+
+    <div id="usersPanel">
+        <div class="card-panel center">
+            <table class="bordered highlight status-table">
+                <thead>
+                    <tr>
+                        <th><mac-spinner ng-show="$ctrl.updating" mac-spinner-color="white"/> Id
+                        </th>
+                        <th>Name</th>
+                        <th>Last Seen</th>
+                    </tr>
+                </thead>
+
+                <tbody ng:repeat="user in $ctrl.users" >
+                    <tr>
+                        <td>@@{{user.id}}</td>
+                        <td><a ui-sref="user({b3id:{{user.id}}})">{{user.name | urtstring}}</a></td>
+                        <td><span mac-tooltip="{{user.lastSeen | date:'long'}}" mac-tooltip-direction="top">{{user.lastSeen | timestamp}}</span></td>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <script>
+            $('select').material_select();
+    </script>
 </div>

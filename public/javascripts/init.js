@@ -1,9 +1,15 @@
-var UtAdmin = angular.module('UtAdmin', ['yaru22.angular-timeago', 'ngAnimate', 'angularSpinner', 'Mac']);
+var UtAdmin = angular.module('UtAdmin',
+    ['yaru22.angular-timeago', 'ngAnimate', 'angularSpinner', 'Mac','ui.router','ui.materialize']);
 
 
 $(document).ready(function(){
     $('select').material_select();
 });
+
+UtAdmin.config(["$locationProvider", function($locationProvider) {
+    //$locationProvider.html5Mode(true);
+}]);
+
 
 /** Enter pressed directive */
 UtAdmin.directive('ngEnter', function () {
@@ -13,7 +19,6 @@ UtAdmin.directive('ngEnter', function () {
                 scope.$apply(function () {
                     scope.$eval(attrs.ngEnter);
                 });
-
                 event.preventDefault();
             }
         });
@@ -36,3 +41,10 @@ UtAdmin.filter('urtstring', function () {
         }
     }
 });
+
+UtAdmin.filter('secondsToDateTime', [function() {
+    return function(seconds) {
+        console.log(seconds);
+        return new Date(1970, 0, 1).setSeconds(seconds);
+    };
+}]);

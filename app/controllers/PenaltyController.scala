@@ -23,6 +23,33 @@ class PenaltyController(override implicit val env: RuntimeEnvironment[UtAdminUse
   }
 
 
+    def punishPlayer(userId: Int, reason: String, penalty: String, duration: Option[String]) = SecuredAction {
+      implicit request =>
+        MongoLogger.logAction(request.user, "PUNISHING:" + userId + " " + reason)
+        duration match {
+          case None => PenaltyController.addPenalty(
+            userId,
+            PenaltyHandler.withName(penalty),
+            request.user.main.userId + ": " + reason,
+            None,
+            request.user.b3Id
+          )
+          case Some(d) => PenaltyController.addPenalty(
+            userId,
+            PenaltyHandler.withName(penalty),
+            reason,
+            Some(PenaltyDuration.withName(duration.get)),
+            request.user.b3Id)
+        }
+        Ok("Added")
+    }
+
+
+  def penaltiesTemplatHtml() = SecuredAction {
+    implicit request =>
+      Ok(views.html.penalties.render())
+  }
+
   def getPenaltiesJson(count: Int,
                        page: Int,
                        userId: Option[Int],
@@ -42,13 +69,43 @@ class PenaltyController(override implicit val env: RuntimeEnvironment[UtAdminUse
 
 object PenaltyController {
 
+  /** TODO: Change */
+  def addPenalty(userId: Int,
+                 penalty: PenaltyHandler.Value,
+                 reason: String,
+                 duration: Option[PenaltyDuration.Value],
+                 adminId: Int) = DB localTx { implicit session =>
+    val secondsOfOneDay = 86400L
+    val (exp: Long, d: Long) = duration match {
+      case None => (0L, 0L)
+      case Some(PenaltyDuration.One_day) =>
+        (DateTime.now().plusDays(1).getMillis / 1000L, secondsOfOneDay)
+      case Some(PenaltyDuration.Two_days) =>
+        (DateTime.now().plusDays(2).getMillis / 1000L, secondsOfOneDay * 2L)
+      case Some(PenaltyDuration.One_week) =>
+        (DateTime.now().plusWeeks(1).getMillis / 1000L, secondsOfOneDay * 7L)
+      case Some(PenaltyDuration.Two_weeks) =>
+        (DateTime.now().plusWeeks(2).getMillis / 1000L, secondsOfOneDay * 14L)
+      case Some(PenaltyDuration.One_month) =>
+        (DateTime.now().plusMonths(1).getMillis / 1000L, secondsOfOneDay * 30L)
+      case _ => throw new IllegalArgumentException()
+    }
+
+    val expires = if (penalty == PenaltyHandler.Ban) sqls"-1" else sqls"$exp"
+
+    sql"""INSERT INTO penalties
+          VALUES(NULL, ${penalty.toString}, $userId, $adminId, $d, 0,
+       'echelon', $reason,'', ${DateTime.now().getMillis / 1000},  ${DateTime.now().getMillis / 1000},$expires)""".execute().apply()
+  }
+
+
   def deletePenalty(penaltyId: Int) = DB autoCommit { implicit session =>
     sql"DELETE FROM penalties WHERE penalties.id = $penaltyId".execute().apply()
   }
 
 
-  def getPenaltyCountFor(userId: Int) : Int = DB autoCommit { implicit session =>
-    sql"select count(*) from penalties where penalties.client_id = ${userId}".map(rs => rs.int(1)).single().apply().getOrElse(0)
+  def getPenaltyCountFor(userId: Int): Int = DB autoCommit { implicit session =>
+    sql"SELECT count(*) FROM penalties WHERE penalties.client_id = ${userId}".map(rs => rs.int(1)).single().apply().getOrElse(0)
   }
 
   def getPenalties(count: Int,
@@ -70,7 +127,7 @@ object PenaltyController {
       else sqls.empty
 
       val activeOnlyCheck = if (activeOnly.isDefined && activeOnly.get) sqls" AND penalties.inactive = 0 " else sqls.empty
-      val queryStringCheck = if (queryString.isDefined) sqls.and.like(sqls"penalties.reason", s"%${queryString.get}") else sqls.empty
+      val queryStringCheck = if (queryString.isDefined) sqls.and.like(sqls"penalties.reason", s"%${queryString.get}%") else sqls.empty
 
       sql"""SELECT penalties.*, clients.name AS admin_name, c2.name AS client_name
           FROM ( penalties

@@ -8,28 +8,35 @@ GET            /                         @controllers.Application.index
 GET            /chat.json                @controllers.ChatController.getJsonChat(count: Int, page: Int, radio: Boolean, userId: Option[Int], fromMessageId: Option[Int], queryString: Option[String],latestId: Int ?= -1)
 GET            /chat.json/latestId       @controllers.ChatController.latestMessageId
 GET            /chatlog                  @controllers.ChatController.chatlog()
-
+GET            /chat-template.html       @controllers.ChatController.chatComponentHtml()
 
 GET            /user.json                @controllers.UserController.userJsonById(id:Int)
+GET            /user-template.html       @controllers.UserController.getUserTemplatetHtml()
+
+GET            /users.json/ip            @controllers.UserController.usersJsonByIp(q: Option[String], groupBits:Option[Int], count: Int, page: Int)
+GET            /users.json/name          @controllers.UserController.usersJsonByName(q: Option[String], groupBits: Option[Int], count: Int, page: Int)
+GET            /users-template.html      @controllers.UserController.getUsersTemplateHtml()
 
 GET            /online-players.json      @controllers.UserController.getJsonOnlinePlayers()
-
-
-GET            /penalties.json           @controllers.PenaltyController.getPenaltiesJson(count: Int,page: Int, userId: Option[Int], queryString: Option[String], filterType: Option[String], activeOnly: Option[Boolean])
+GET            /status-template.html     @controllers.UserController.getStatusTemplateHtml()
 GET            /remove-punishment        @controllers.PenaltyController.removePunishment(penaltyId:Int)
 
+GET            /penalties.json           @controllers.PenaltyController.getPenaltiesJson(count: Int,page: Int, userId: Option[Int], queryString: Option[String], filterType: Option[String], activeOnly: Option[Boolean])
+GET            /penalties-template.html  @controllers.PenaltyController.penaltiesTemplatHtml()
+
+
 ## XLRSTATS STUFF
-POST            /set-xlr-visibility       @controllers.Administrator.setXlrVisibility(id:Int, value:Boolean)
-POST            /reset-xlrstats           @controllers.Administrator.resetXlrstats(id:Int)
+GET            /set-xlr-visibility       @controllers.Administrator.setXlrVisibility(id:Int, value:Boolean)
 
 
 ####
 # JS Routes, generated javascript for acessing REST-Services
 GET            /jsRoutes                 @controllers.Application.javascriptRoutes
 
+
 #########################
 # Penalty related routes
-#GET            /add-punishment           @controllers.PenaltyController.punishPlayer(userId: Int, reason: String, penalty:String, duration:Option[String])
+GET            /add-punishment           @controllers.PenaltyController.punishPlayer(userId: Int, reason: String, penalty:String, duration:Option[String])
 
 #########################
 # Administrator routes

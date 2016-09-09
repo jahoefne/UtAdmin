@@ -20,9 +20,9 @@
                 @for(penalty <- penalties) {
                     <tr>
                         <td>@penalty.penalty</td>
-                        <td>penalty.playerName</td>
+                        <td>@penalty.playerName</td>
                         <td>@@@penalty.playerId</td>
-                        <td>penalty.reason</td>
+                        <td>@penalty.reason</td>
                         <td>
                             @penalty.expires match{
                                 case None => { Permanent }

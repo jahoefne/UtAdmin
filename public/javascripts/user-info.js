@@ -6,9 +6,6 @@ function setXlrStatsVisibility(b3Id, visibility) {
 $(document).ready(function () {
 
     console.log(window.userId);
-    $.get("/chatlog").done(function(data){
-        $("#chatlog").html(data);
-    });
 
     $("#xlrstats-visibility-switch").change(function () {
             var el = document.getElementById('xlrstats-visibility-switch');
