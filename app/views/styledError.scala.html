@@ -1,26 +1,13 @@
 @(message: Html, loggedInUser: Option[UtAdminUser])
 
-@loggedInUser match {
-    case Some(user) => {
-            <div class="row">
-                <div class="col-md-6 col-md-offset-3">
-                    <div class="alert alert-danger text-center" role="alert">
-                        <i class="fa fa-exclamation-triangle f-5x errorIcon"></i>
-                        @message
-                    </div>
-                </div>
-            </div>
-    }
-    case _ => {
-        <html>
-            <head>
-                <title>Error!</title>
-                <link rel="icon" type="image/png" href="/assets/favicons.png">
-                <link href="@routes.Assets.at("stylesheets/main.css")" rel="stylesheet">
-            </head>
-            <body>
-                @message
-            </body>
-        </html>
-    }
-}
+
+<html>
+    <head>
+        <title>Error!</title>
+        <link rel="icon" type="image/png" href="/assets/favicons.png">
+        <link href="@routes.Assets.at("stylesheets/main.css")" rel="stylesheet">
+    </head>
+    <body>
+    @message
+    </body>
+</html>
