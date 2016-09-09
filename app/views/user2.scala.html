@@ -18,7 +18,7 @@
                     <!-- Name and Aliases -->
                 <li>
                     <div class="collapsible-header">
-                        <i class="material-icons">face</i>
+                        <i class="material-icons accent">face</i>
                         <span class="left">
                             <span class="highlight">{{$ctrl.user.currentName}}</span> from {{$ctrl.countryName}}
                         </span>
@@ -69,7 +69,7 @@
                     <!-- IP and Aliases -->
                 <li>
                     <div class="collapsible-header">
-                        <i class="material-icons">settings_ethernet</i>
+                        <i class="material-icons accent">settings_ethernet</i>
                         last connection via <span class="highlight">
                         <a href="https://www.whoismyisp.org/ip/{{$ctrl.user.currentIp}}" target="_blank">{{$ctrl.user.currentIp}}</a></span>
                         <span class="right"> and <span class="highlight">{{$ctrl.user.ipAliases.length}}</span> other IPs in the past</span>
@@ -95,11 +95,11 @@
                 <li>
                     <div class="collapsible-header">
                         <span class="left">
-                            <i class="material-icons">stars</i>XlrStats-Id <span class="highlight">{{$ctrl.user.xlrId}}</span>
+                            <i class="material-icons accent">stars</i>XlrStats-Id <span class="highlight">{{$ctrl.user.xlrId}}</span>
                         </span>
                         <span class="right">
-                            <a href="http://xlrstats.drunknoobs.com/index.php?func=player&playerdbid={{$ctrl.user.id}}&config=1" target="_blank"><i class="material-icons">
-                                redo</i></a>
+                            <a href="http://xlrstats.drunknoobs.com/index.php?func=player&playerdbid={{$ctrl.user.id}}&config=1" target="_blank">
+                                <i class="material-icons accent">redo</i></a>
                         </span>
                     </div>
 
@@ -126,11 +126,11 @@
                 <li>
                     <div class="collapsible-header">
                         <span class="left">
-                            <i class="material-icons">pan_tool</i> collected
+                            <i class="material-icons accent">pan_tool</i> collected
                             <span class="highlight">{{$ctrl.user.penaltyCount}}</span> penalties
                         </span>
                         <span class="right">
-                            <a ui-sref="penalties.user({b3id:$ctrl.user.b3Id})"><i class="material-icons">redo</i></a>
+                            <a ui-sref="penalties.user({b3id:$ctrl.user.b3Id})"><i class="material-icons accent">redo</i></a>
                         </span>
                     </div>
                     <div class="collapsible-body">
@@ -157,7 +157,7 @@
                             </span>
                             <label for="reasonTf">Reason:</label>
                             <input type="text" id="reasonTf" class="form-control" ng-model="$ctrl.ban.reason" placeholder="Tk, Sk, etc.">
-                            <span class="btn white-text" ng-click="$ctrl.punishPlayer()"><i class="material-icons left">pan_tool</i>Confir</span>
+                            <span class="btn white-text" ng-click="$ctrl.punishPlayer()"><i class="material-icons left accent">pan_tool</i>Confirm</span>
                             <br>
                         </div>
                     </div>
@@ -170,17 +170,17 @@
             <ul class="collection">
                 <li class="collection-item">
                     connected a total of <span class="highlight">{{$ctrl.user.numberOfConnections}}</span> times
-                    <span class="secondary-content"><i class="material-icons">reorder</i></span>
+                    <span class="secondary-content"><i class="material-icons accent">reorder</i></span>
                 </li>
 
                 <li class="collection-item">
                     <span class="highlight">{{$ctrl.user.guid}}</span>
-                    <span class="secondary-content"><i class="material-icons">fingerprint</i></span>
+                    <span class="secondary-content"><i class="material-icons accent">fingerprint</i></span>
                 </li>
 
                 <li class="collection-item">
                     played <span class="highlight">{{ $ctrl.user.totalTimeOnServer | secondsToDateTime | date:"HH'h' mm'm' ss's'"}}</span>
-                    <span class="secondary-content"><i class="material-icons">timer</i></span>
+                    <span class="secondary-content"><i class="material-icons accent">timer</i></span>
                 </li>
                 <li class="collection-item">
                     first seen on <span class="highlight">{{$ctrl.user.firstSeen*1000 | date:'medium'}}</span>
@@ -188,12 +188,12 @@
                     <span class="highlight"><span class="time-stamp" mac-tooltip="{{$ctrl.user.lastSeen | date:'medium'}}"
                     mac-tooltip-direction="top">{{$ctrl.user.lastSeen | timestamp}}</span>
                     </span>
-                    <span class="secondary-content"><i class="material-icons">remove_red_eye</i></span>
+                    <span class="secondary-content"><i class="material-icons accent">remove_red_eye</i></span>
                 </li>
                 <li class="collection-item">
                     <a ui-sref="chat.user({b3id: $ctrl.user.b3Id})">Check {{$ctrl.user.currentName}}'s chatlog…</a>
                     <span class="secondary-content">
-                        <a ui-sref="chat.user({b3id: $ctrl.user.b3Id})"><i class="material-icons">redo</i></a>
+                        <a ui-sref="chat.user({b3id: $ctrl.user.b3Id})"><i class="material-icons accent">redo</i></a>
                     </span>
                 </li>
             </ul>

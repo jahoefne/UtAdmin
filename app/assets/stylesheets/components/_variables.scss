@@ -33,11 +33,11 @@
 /* 1. Colors
    ========================================================================== */
 
-$primary-color: #001741 !default;
-$primary-color-light: lighten($primary-color, 5%) !default;
+$primary-color: #021a2e !default;
+$primary-color-light: lighten($primary-color, 10%) !default;
 $primary-color-dark: darken($primary-color, 15%) !default;
 
-$secondary-color: #b50900 !default;
+$secondary-color: #cb0900 !default;
 $success-color: color("green", "base") !default;
 $error-color: color("red", "base") !default;
 

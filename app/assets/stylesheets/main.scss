@@ -20,9 +20,14 @@
   cursor: pointer;
 }
 
+
 body {
   background-color: $primary-color-light;
   color: white;
+}
+
+.accent{
+  color:$secondary-color;
 }
 
 html {
@@ -34,7 +39,7 @@ html {
 }
 
 .card-image {
-  opacity: 0.9;
+  opacity: 1;
   vertical-align: middle;
   margin:auto !important;
 }

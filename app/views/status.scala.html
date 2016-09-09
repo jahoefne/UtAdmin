@@ -15,6 +15,8 @@
                         <span>
                             {{$ctrl.count}}
                             Right now there<ng-pluralize count="$ctrl.players.length" when="{'0': '\'s nobody online.', 'one': '\'s 1 player online.', 'other': '\'re {} players online.'}"></ng-pluralize>
+                            <br>
+                            As well as @MongoLogger.getLoggedInUsers.length admins in UtAdmin.
                         </span>
                     </div>
                     <div class="card-action">
@@ -76,7 +78,7 @@
                         </td>
                         <td mac-tooltip="Show chatlog of {{player.n}}" mac-tooltip-direction="top">
                             <a class="waves-effect btn-flat" ui-sref="chat.user({b3id:{{player.id}}})">
-                                <i class="material-icons">redo</i>
+                                <i class="material-icons accent">redo</i>
                             </a>
                         </td>
                         <td>
@@ -86,7 +88,7 @@
                         </td>
                         <td mac-tooltip="Show penalties of {{player.n}}" mac-tooltip-direction="top">
                             <a class="waves-effect btn-flat" ui-sref="penalties.user({b3id:{{player.id}}})">
-                                <i class="material-icons">redo</i>
+                                <i class="material-icons accent">redo</i>
                             </a>
                         </td>
                     </tr>
