@@ -44,7 +44,7 @@ UtAdmin.filter('urtstring', function () {
 
 UtAdmin.filter('secondsToDateTime', [function() {
     return function(seconds) {
-        console.log(seconds);
+        //console.log(seconds);
         return new Date(1970, 0, 1).setSeconds(seconds);
     };
 }]);

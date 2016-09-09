@@ -7,7 +7,7 @@ angular.module('UtAdmin').factory('StatusService', function ($http, $interval) {
     var updateInterval = 4500;
 
     this.update = function () {
-        console.log("Updating Status Service");
+       // console.log("Updating Status Service");
         $http.get("online-players.json").success(function (result) {
             this.players.length = 0;
             [].push.apply(this.players, result);
