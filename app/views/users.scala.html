@@ -8,7 +8,7 @@
             </div>
 
             <div class="input-field col s2 push-s2">
-                <select ng-model="$ctrl.groupBits" ng-change="$ctrl.cleanUpdate();">
+                <select ng-model="$ctrl.groupBits" ng-change="$ctrl.cleanUpdate();" material-select>
                     <option selected>Any</option>
                     @for(group <- B3GroupController.getGroups()) {
                         <option value="@group.bits">@group.name</option>
@@ -69,8 +69,4 @@
         </div>
     </div>
 
-
-    <script>
-            $('select').material_select();
-    </script>
 </div>
