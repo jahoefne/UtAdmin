@@ -2,6 +2,7 @@
 
 angular.module('UtAdmin').factory('StatusService', function ($http, $interval) {
 
+    var ctrl = this;
     this.players = [];
     var updateInterval = 4500;
 
