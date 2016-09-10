@@ -16,7 +16,7 @@
                             {{$ctrl.count}}
                             Right now there<ng-pluralize count="$ctrl.players.length" when="{'0': '\'s nobody online.', 'one': '\'s 1 player online.', 'other': '\'re {} players online.'}"></ng-pluralize>
                             <br>
-                            As well as @MongoLogger.getLoggedInUsers.length admins in UtAdmin.
+                            As well as @MongoLogger.getLoggedInUsers.mkString(", ") in UtAdmin.
                         </span>
                     </div>
                     <div class="card-action">

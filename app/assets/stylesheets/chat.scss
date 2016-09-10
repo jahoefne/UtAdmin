@@ -23,7 +23,7 @@
 
   .card-content {
     padding-top: 10px;
-    padding-bottom: 5px;
+    margin-bottom: 5px;
     .txt {
       @include center(true, false);
       color: white;
@@ -36,7 +36,7 @@
       left: +15px;
       bottom: +8px;
     }
-    height: 40px;
+   // height: 40px;
   }
   /** Search/Control Components */
   .search-row{

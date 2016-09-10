@@ -82,7 +82,7 @@
                         <i class="material-icons {{msg.userTeam}}-text">label</i>
                     </span>
                     <span class="name">
-                        <a  ui-sref="user({b3id:{{msg.userId}}})">{{msg.userName | urtstring}}</a>
+                        <a ui-sref="user({b3id:{{msg.userId}}})">{{msg.userName | urtstring}}</a>
                     </span>
                     <span class="txt">{{msg.txt | urtstring}}</span>
                 </div>
@@ -90,21 +90,22 @@
                 <div class="card-action">
                     sent to {{msg.scope}}
                     <span ng-if="msg.targetId!=undefined">
-                        <a   ui-sref="user({b3id:{{msg.targetId}}})">{{msg.targetName | urtstring}}</a>
+                        <a ui-sref="user({b3id:{{msg.targetId}}})">{{msg.targetName | urtstring}}</a>
                     </span>
 
                     <span>
                         <span ng-show="!$ctrl.state.updating && ($ctrl.state.userId || $ctrl.state.queryString)" class="time-stamp" mac-tooltip="Jump to Conversation" mac-tooltip-direction="top">
                             <a ng-if="$ctrl.state.userId || $ctrl.state.queryString" class="show-conv-link" ng-click="$ctrl.showConv(msg.id)"><i class="tiny material-icons">redo</i></a>
                         </span>
-                        &nbsp;&nbsp;<online-actions b3id="msg.userId" name="{{msg.userName}}" size="tiny"></online-actions>
+                            &nbsp;&nbsp; <online-actions b3id="msg.userId" name="{{msg.userName}}" size="tiny"></online-actions>
                         <span ng-if="$ctrl.state.updating && !($ctrl.state.userId || $ctrl.state.queryString)" class="time-stamp" mac-tooltip="Jump to Conversation" mac-tooltip-direction="top">
                                 #{{msg.id}}
                         </span>
                     </span>
-                      <span class="right">
-                    <span  mac-tooltip="{{msg.timeStamp | date:'medium'}}" mac-tooltip-direction="top">{{msg.timeStamp/1000 | timestamp}}</span>
-                      </span>
+                    <span class="right">
+                        <span ng-show="$ctrl.state.autoUpdate" mac-tooltip="{{msg.timeStamp | date:'medium'}}" mac-tooltip-direction="top">{{msg.timeStamp/1000 | timestamp}}</span>
+                        <span ng-show="!$ctrl.state.autoUpdate" mac-tooltip="{{msg.timeStamp/1000 | timestamp}}" mac-tooltip-direction="top">{{msg.timeStamp | date:'dd. MM. yyyy HH:mm:ss'}}</span>
+                    </span>
                 </div>
 
             </div>
