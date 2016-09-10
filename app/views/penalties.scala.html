@@ -55,6 +55,7 @@
                     <tr>
                         <th><mac-spinner ng-show="$ctrl.updating" mac-spinner-color="white"/>Type</th>
                         <th>User</th>
+                        <th>Info</th>
                         <th>Reason</th>
                         <th>Expires</th>
                         <th>Duration</th>
@@ -76,7 +77,12 @@
                             </span>
                             <i class="material-icons red-text" ng-if="penalty.penalty == 'Ban'">sentiment_very_dissatisfied</i>
                         </td>
-                        <td><a ui-sref="user({b3id:{{penalty.playerId}}})">{{penalty.playerName | urtstring}}</a></td>
+                        <td>
+                            <a ui-sref="user({b3id:{{penalty.playerId}}})">{{penalty.playerName | urtstring}}</a>
+                        </td>
+                        <td>
+                            <a ui-sref="user({b3id:{{penalty.playerId}}})" class="btn btn-flat"><i class="material-icons accent">search</i></a>
+                        </td>
                         <td>{{penalty.reason | urtstring}}</td>
 
                         <td>
