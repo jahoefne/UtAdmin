@@ -43,13 +43,33 @@ class UserController(override implicit val env: RuntimeEnvironment[UtAdminUser])
   }
 
   def getUserTemplatetHtml() = SecuredAction { request =>
-    Ok(views.html.user2.render(request.user))
+    Ok(views.html.user.render(request.user))
   }
 
   def getUsersTemplateHtml() = SecuredAction { request =>
     Ok(views.html.users.render())
   }
 
+  def changeGroupOfUser(userId: Int, groupBits: Int) = SecuredAction {
+    request =>
+      MongoLogger.logAction(request.user, "Changing group for user " + userId + " to bits: " + groupBits)
+      request.user.rank match {
+        case Ranks.God =>
+          B3GroupController.setGroupForUser(userId, groupBits)
+          Redirect(request.request.headers.get("referer").getOrElse("/"))
+        case _ =>
+          Unauthorized("You have no power here")
+      }
+  }
+
+  def setXlrVisibility(b3Id: Int, visibility: Boolean) = SecuredAction { request =>
+    if (request.user.rank == Ranks.Admin || request.user.rank == Ranks.God) {
+      User.UserInfo.setXlrStatsVisibility(b3Id, visibility)
+      Ok("Done")
+    }else{
+      BadRequest("")
+    }
+  }
 }
 
 object UserController {

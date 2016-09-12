@@ -52,9 +52,9 @@ class Application(override implicit val env: RuntimeEnvironment[UtAdminUser]) ex
         routes.javascript.Rcon.forceBlue,
         routes.javascript.Rcon.forceSpec,
         routes.javascript.Rcon.privateMessage,
-        routes.javascript.Administrator.addUser,
-        routes.javascript.Administrator.changeGroupOfUser,
-        routes.javascript.Administrator.setXlrVisibility
+        routes.javascript.AccountsController.addUser,
+        routes.javascript.UserController.changeGroupOfUser,
+        routes.javascript.UserController.setXlrVisibility
       )
     ).as("text/javascript")
   }

@@ -55,6 +55,7 @@
         <script type="text/javascript" src="@routes.Assets.at("javascripts/chat.component.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/user.component.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/users.component.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/accounts.component.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/penalties.component.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/online-actions.component.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/router.js")"></script>
@@ -69,11 +70,11 @@
                         <mac-spinner ng-show="showSpinner" mac-spinner-color="white" class="update-spinner" disable-animation/>
                     </a>
                     <ul id="nav-mobile" class="right">
-                        <li><a ui-sref="status">Status</a></li>
-                        <li><a ui-sref="chat">Chat</a></li>
-                        <li><a ui-sref="users">Users</a></li>
-                        <li><a ui-sref="penalties">Penalties</a></li>
-                        <li><a href=""><i class="material-icons">account_circle</i></a></li>
+                        <li ui-sref-active="active"><a ui-sref="status">Status</a></li>
+                        <li ui-sref-active="active"><a ui-sref="chat">Chat</a></li>
+                        <li ui-sref-active="active"><a ui-sref="users">Users</a></li>
+                        <li ui-sref-active="active"><a ui-sref="penalties">Penalties</a></li>
+                        <li ui-sref-active="active"><a ui-sref="accounts"><i class="material-icons">account_circle</i></a></li>
                         <li><a href="/auth/logout"><i class="material-icons accent">exit_to_app</i></a></li>
                     </ul>
                 </div>

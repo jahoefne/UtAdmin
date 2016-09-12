@@ -20,13 +20,14 @@ GET            /users-template.html      @controllers.UserController.getUsersTem
 GET            /online-players.json      @controllers.UserController.getJsonOnlinePlayers()
 GET            /status-template.html     @controllers.UserController.getStatusTemplateHtml()
 GET            /remove-punishment        @controllers.PenaltyController.removePunishment(penaltyId:Int)
+GET            /changeGroup              @controllers.UserController.changeGroupOfUser(userId: Int, groupBits: Int)
+GET            /set-xlr-visibility       @controllers.UserController.setXlrVisibility(id:Int, value:Boolean)
 
+
+GET            /add-punishment           @controllers.PenaltyController.punishPlayer(userId: Int, reason: String, penalty:String, duration:Option[String])
 GET            /penalties.json           @controllers.PenaltyController.getPenaltiesJson(count: Int,page: Int, userId: Option[Int], queryString: Option[String], filterType: Option[String], activeOnly: Option[Boolean])
 GET            /penalties-template.html  @controllers.PenaltyController.penaltiesTemplatHtml()
 
-
-## XLRSTATS STUFF
-GET            /set-xlr-visibility       @controllers.Administrator.setXlrVisibility(id:Int, value:Boolean)
 
 
 ####
@@ -34,22 +35,15 @@ GET            /set-xlr-visibility       @controllers.Administrator.setXlrVisibi
 GET            /jsRoutes                 @controllers.Application.javascriptRoutes
 
 
-#########################
-# Penalty related routes
-GET            /add-punishment           @controllers.PenaltyController.punishPlayer(userId: Int, reason: String, penalty:String, duration:Option[String])
 
-#########################
-# Administrator routes
-GET            /accounts                 @controllers.Administrator.accounts()
-POST           /addUser                  @controllers.Administrator.addUser(user:String,password: String , rank:Int, b3Id:Int)
-GET            /accountDelete            @controllers.Administrator.deleteUser(user:String)
-GET            /restart-server           @controllers.Administrator.restartServer()
-GET            /restart-b3               @controllers.Administrator.restartB3()
+#############################
+# UtAdmin User Administration
+POST           /addUser                  @controllers.AccountsController.addUser(user:String, password: String , rank:Int, b3Id:Int)
+GET            /accounts-template.html   @controllers.AccountsController.accountsTemplateHtml()
+GET            /accounts.json            @controllers.AccountsController.accountsJson()
+POST           /accountDelete            @controllers.AccountsController.deleteUser(user:String)
+POST           /changePassword           @controllers.AccountsController.changePassword(password: String)
 
-GET            /allLogs                  @controllers.Administrator.allLogs()
-GET            /password-change          @controllers.Administrator.passwordChange()
-GET            /changePassword           @controllers.Administrator.changePassword(password: String)
-GET            /changeGroup              @controllers.Administrator.changeGroupOfUser(userId: Int, groupBits: Int)
 
 ##############
 # RCON SERVICE
@@ -64,6 +58,10 @@ POST            /kill                     @controllers.Rcon.kill(player: Int, na
 POST            /forceRed                 @controllers.Rcon.forceRed(player: Int, name: String)
 POST            /forceBlue                @controllers.Rcon.forceBlue(player: Int, name: String)
 POST            /forceSpec                @controllers.Rcon.forceSpec(player: Int, name: String)
+GET             /restart-server           @controllers.Rcon.restartServer()
+GET             /restart-b3               @controllers.Rcon.restartB3()
+
+
 
 
 ########################################################################

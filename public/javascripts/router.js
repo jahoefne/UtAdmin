@@ -40,6 +40,12 @@ UtAdmin.config(function ($stateProvider, $urlRouterProvider) {
         component: 'users'
     });
 
+    $stateProvider.state('accounts', {
+        url: '/accounts',
+        component: 'accounts'
+    });
+
+
     $stateProvider.state('user', {
         url: '/user?user=:b3id',
         component: 'user',

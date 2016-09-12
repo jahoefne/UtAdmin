@@ -6,13 +6,17 @@ import com.mongodb.casbah.MongoClient
 import com.mongodb.casbah.commons.conversions.scala.RegisterJodaTimeConversionHelpers
 import com.novus.salat.Context
 import com.novus.salat._
+import org.joda.time.DateTime
+import play.api.libs.json.Json
 import play.api.{Logger, Play}
 import securesocial.core.{PasswordInfo, BasicProfile}
 import securesocial.core.providers.MailToken
 import securesocial.core.services.{SaveMode, UserService}
 import scala.concurrent.Future
 
-case class UtAdminUser(rank: Int, main: BasicProfile,  b3Id:Int = 0)
+case class UtAdminUser(rank: Int, main: BasicProfile, b3Id: Int = 0)
+
+case class UtAdminUserJson(rank: Int, name: String, b3Id: Int, lastOnline: DateTime)
 
 object Ranks extends Enumeration {
   val God = 0
@@ -25,6 +29,10 @@ object Ranks extends Enumeration {
   */
 object UtAdminUserService extends UserService[UtAdminUser] {
 
+  object Formatters {
+    implicit val utAdminUser = Json.format[UtAdminUserJson]
+  }
+
   import com.mongodb.casbah.commons.conversions.scala._
 
   RegisterJodaTimeConversionHelpers()
@@ -36,20 +44,20 @@ object UtAdminUserService extends UserService[UtAdminUser] {
 
   val log = Logger(this getClass() getName())
 
-  def getAllUsers: Seq[UtAdminUser] = {
+  def getAllUsers: Seq[UtAdminUserJson] = {
     log.info("Querying all admin accounts")
     var allUsers = Seq.empty[UtAdminUser]
     users.find(MongoDBObject("_id" -> MongoDBObject("$exists" -> true))).foreach((u: DBObject)
     => allUsers :+= fromMongoDbObject(u)
     )
     log.info("Done querying all admin accounts!")
-    allUsers
+    allUsers.map(u => UtAdminUserJson(u.rank, u.main.userId, u.b3Id, MongoLogger.getLastOnlineInEchelonFor(u.main.userId)))
   }
 
   def deleteUser(id: String): Boolean = {
     log.info("Trying to delete user with id - " + id)
     users.find((obj: DBObject) => {
-      log.debug("Checking - " + obj.main.userId + " against id " + id + "  is " + (obj.main.userId == id));
+      log.debug("Checking - " + obj.main.userId + " against id " + id + "  is " + (obj.main.userId == id))
       obj.main.userId == id
     }) match {
       case Some(u) =>
@@ -116,7 +124,7 @@ object UtAdminUserService extends UserService[UtAdminUser] {
     mode match {
 
       case SaveMode.SignUp =>
-        val newUser = UtAdminUser(3, profile,0)
+        val newUser = UtAdminUser(3, profile, 0)
         users.save(newUser)
         Future.successful(newUser)
 

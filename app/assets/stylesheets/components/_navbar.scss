@@ -97,7 +97,7 @@ nav {
       padding: 0;
 
       &.active {
-        background-color: rgba(0,0,0,.1);
+        background-color: darken($secondary-color,5%);
       }
     }
     a {

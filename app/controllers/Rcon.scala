@@ -14,6 +14,29 @@ class Rcon(override implicit val env: RuntimeEnvironment[UtAdminUser])
   val log = Logger(this getClass() getName())
   val server = UtServer
 
+  /** Restart the server by sending a command using ssh */
+  def restartServer = SecuredAction {
+    request =>
+      MongoLogger.logAction(request.user, "Restarting Urt Server!")
+
+      jassh.SSH.once(UtServer.sshIp, UtServer.sshUser, UtServer.sshPass) {
+        ssh =>
+          print(ssh.execute(UtServer.restartServerCmd))
+      }
+      Ok("Done.")
+  }
+
+  def restartB3() = SecuredAction {
+    request =>
+      MongoLogger.logAction(request.user, "Restarting Urt B3!")
+
+      jassh.SSH.once(UtServer.sshIp, UtServer.sshUser, UtServer.sshPass) {
+        ssh =>
+          print(ssh.execute(UtServer.restartB3Cmd))
+      }
+      Ok("Done.")
+  }
+
   def startServerDemo(player: Int, name: String) = SecuredAction {
     request =>
       MongoLogger.logAction(request.user, "Starting server demo for player " + player)
