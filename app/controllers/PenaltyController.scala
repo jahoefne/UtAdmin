@@ -131,9 +131,9 @@ object PenaltyController {
 
       sql"""SELECT penalties.*, clients.name AS admin_name, c2.name AS client_name
           FROM ( penalties
-          INNER JOIN clients ON clients.id = penalties.admin_id $userIdCheck $typeCheck $activeOnlyCheck $queryStringCheck )
-          INNER JOIN clients AS c2 ON c2.id = penalties.client_id
-          ORDER BY penalties.time_add DESC LIMIT $count OFFSET $offset """
+          LEFT OUTER JOIN clients ON clients.id = penalties.admin_id)
+          INNER JOIN clients AS c2 ON c2.id = penalties.client_id  $userIdCheck $typeCheck $activeOnlyCheck $queryStringCheck
+          ORDER BY penalties.time_add DESC LIMIT $count OFFSET $offset"""
         .map(rs => Penalty(
           penalty = rs.string("type"),
           penaltyId = rs.int("id"),

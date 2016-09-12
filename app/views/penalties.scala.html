@@ -93,7 +93,9 @@
                             <span ng-if="penalty.duration">{{ penalty.duration | secondsToDateTime | date:"HH'h' mm'm' ss's'"}}</span>
                         </td>
                         <td>
-                            <a ui-sref="user({b3id:{{penalty.adminId}}})">{{penalty.adminName | urtstring}}</a>
+
+                            <a ng-show="penalty.adminId!=0" ui-sref="user({b3id:{{penalty.adminId}}})">{{penalty.adminName | urtstring}}</a>
+                            <span ng-show="penalty.adminId==0" class="text-blue">B3</span>
                         </td>
 
                         <td><span class="time-stamp" mac-tooltip="{{penalty.created | date:'medium'}}" mac-tooltip-direction="top">{{penalty.created/1000 | timestamp}}</span></td>
