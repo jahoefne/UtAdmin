@@ -78,7 +78,7 @@
                             <i class="material-icons red-text" ng-if="penalty.penalty == 'Ban'">sentiment_very_dissatisfied</i>
                         </td>
                         <td>
-                            <a ui-sref="user({b3id:{{penalty.playerId}}})">{{penalty.playerName | urtstring}}</a>
+                            <user-name b3id="penalty.playerId" name="penalty.playerName"></user-name>
                         </td>
                         <td>
                             <a ui-sref="user({b3id:{{penalty.playerId}}})" class="btn btn-flat"><i class="material-icons accent">search</i></a>
