@@ -45,9 +45,14 @@ UtAdmin.config(function ($stateProvider, $urlRouterProvider) {
         component: 'accounts'
     });
 
+    $stateProvider.state('serverStats', {
+        url: '/serverStats',
+        component: 'serverStats'
+    });
+
 
     $stateProvider.state('user', {
-        url: '/user?user=:b3id',
+        url: '/user/:b3id',
         component: 'user',
         resolve: {
             user:  function($http, $stateParams){

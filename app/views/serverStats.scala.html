@@ -1,0 +1,42 @@
+<style>
+svg text {
+fill: white !important ;
+font-size:24px !important ;
+}
+.nvd3.nv-pie path {
+stroke-width: 0px !important ;
+}
+
+#historicalBarChart svg {
+overflow: visible !important ;
+width:70% !important ;
+display: block !important ;
+margin:auto !important ;
+}
+
+#historicalBarChart .tick line {
+display:none !important ;
+}
+</style>
+
+<div class="row">
+    <div class="col s12">
+        <div class="card">
+            <div class="card-content white-text">
+                <top-online-graph></top-online-graph>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col s4">
+        <div class="card">
+            <div class="card-content white-text">
+                <span class="card-title">Total Deaths</span>
+                <nvd3 options="$ctrl.pieChartOptions" data="$ctrl.pieChartData"></nvd3>
+            </div>
+        </div>
+    </div>
+</div>
+

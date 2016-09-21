@@ -22,32 +22,36 @@
 
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.js"></script>
+
         <script type="text/javascript" src="@routes.Assets.at("javascripts/deps/angular-timeago/angular-timeago-core.min.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/deps/angular-timeago/time-ago-language-en_US.js")"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.0-beta.1/angular-ui-router.min.js"></script>
+
+        <script type="text/javascript" src="https://d3js.org/d3.v3.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.4/nv.d3.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-nvd3/1.0.9/angular-nvd3.min.js"></script>
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/deps/nv.d3.css")">
+        <link rel="stylesheet" href="https://raw.githack.com/ManifestWebDesign/angular-gridster/v0.13.5/dist/angular-gridster.min.css"/>
+        <script src="https://raw.githack.com/ManifestWebDesign/angular-gridster/v0.13.5/dist/angular-gridster.min.js"></script>
+
 
 
         <script type="text/javascript" src="@routes.Assets.at("javascripts/deps/spin.min.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/deps/angular-spinner.min.js")"></script>
 
         <link href="@routes.Assets.at("javascripts/deps/flag-icon-css/css/flag-icon.min.css")" rel="stylesheet">
-
         <script type="text/javascript" src="@routes.Assets.at("javascripts/deps/macgyver/macgyver.min.js")"></script>
-
-
         <script src="@routes.Assets.at("javascripts/deps/vex/js/vex.combined.min.js")"></script>
         <script>vex.defaultOptions.className = 'vex-theme-os'</script>
-
-
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-materialize/0.2.1/angular-materialize.min.js"></script>
-
         <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
         <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
         <link rel="stylesheet" href="@routes.Assets.at("javascripts/deps/awesome-markers/leaflet.awesome-markers.css")">
         <script src="@routes.Assets.at("javascripts/deps/awesome-markers/leaflet.awesome-markers.js")"></script>
+        <script src="@routes.Assets.at("javascripts/deps/moment.min.js")"></script>
+        <script src="@routes.Assets.at("javascripts/deps/moment-duration-format.js")"></script>
 
         <link type="text/css" rel="stylesheet" href="@routes.Assets.at("stylesheets/user.css")" media="screen,projection"/>
-
         <script type="text/javascript" src="@routes.Assets.at("javascripts/init.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/main.controller.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/status.service.js")"></script>
@@ -58,6 +62,10 @@
         <script type="text/javascript" src="@routes.Assets.at("javascripts/accounts.component.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/penalties.component.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/online-actions.component.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/user-name.component.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/serverStats.component.js")"></script>
+
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/topOnlineGraph.component.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/router.js")"></script>
     </head>
 
@@ -74,6 +82,7 @@
                         <li ui-sref-active="active"><a ui-sref="chat">Chat</a></li>
                         <li ui-sref-active="active"><a ui-sref="users">Users</a></li>
                         <li ui-sref-active="active"><a ui-sref="penalties">Penalties</a></li>
+                        <li ui-sref-active="active"><a ui-sref="serverStats">Server Stats (Under Dev)</a></li>
                         <li ui-sref-active="active"><a ui-sref="accounts"><i class="material-icons">account_circle</i></a></li>
                         <li><a href="/auth/logout"><i class="material-icons accent">exit_to_app</i></a></li>
                     </ul>

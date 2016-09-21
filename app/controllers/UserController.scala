@@ -28,6 +28,12 @@ class UserController(override implicit val env: RuntimeEnvironment[UtAdminUser])
     Ok(Json.toJson(User.UserInfo.getUserByB3Id(id)))
   }
 
+  def userAliasesById(id: Int) = SecuredAction { request =>
+    DB readOnly { implicit session =>
+      Ok(Json.toJson(sql"""SELECT alias from aliases WHERE client_id = $id""".map(rs => rs.string(1)).list().apply()))
+    }
+  }
+
   def usersJsonByIp(ip: Option[String], groupBits: Option[Int], count: Int, page: Int) = SecuredAction { request =>
     implicit val queryUserFormat = Json.format[QueryUser]
     Ok(Json.toJson(UserController.getUsersByIp(ip, groupBits, count, page)))
@@ -66,7 +72,7 @@ class UserController(override implicit val env: RuntimeEnvironment[UtAdminUser])
     if (request.user.rank == Ranks.Admin || request.user.rank == Ranks.God) {
       User.UserInfo.setXlrStatsVisibility(b3Id, visibility)
       Ok("Done")
-    }else{
+    } else {
       BadRequest("")
     }
   }
@@ -107,7 +113,6 @@ object UserController {
           GROUP BY id ORDER BY clients.time_edit DESC LIMIT $count OFFSET $offset"""
       .map(rs => QueryUser(name = rs.string("name"), id = rs.int("id"), lastSeen = rs.long("time_edit"))).list.apply().toSeq
   }
-
 
   private def getUsersByIp(ipOpt: Option[String], groupBits: Option[Int], count: Int, page: Int): Seq[QueryUser] = DB readOnly { implicit session =>
     val offset = count * page

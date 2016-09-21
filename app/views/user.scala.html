@@ -179,7 +179,7 @@
                 </li>
 
                 <li class="collection-item">
-                    played <span class="highlight">{{ $ctrl.user.totalTimeOnServer | secondsToDateTime | date:"HH'h' mm'm' ss's'"}}</span>
+                    played <span class="highlight">{{ $ctrl.user.totalTimeOnServer | secondsToDuration}}</span>
                     <span class="secondary-content"><i class="material-icons accent">timer</i></span>
                 </li>
                 <li class="collection-item">

@@ -1,5 +1,5 @@
 var UtAdmin = angular.module('UtAdmin',
-    ['yaru22.angular-timeago', 'ngAnimate', 'angularSpinner', 'Mac','ui.router','ui.materialize']);
+    ['yaru22.angular-timeago', 'ngAnimate', 'angularSpinner', 'Mac','ui.router','ui.materialize', 'nvd3']);
 
 
 $(document).ready(function(){
@@ -42,9 +42,8 @@ UtAdmin.filter('urtstring', function () {
     }
 });
 
-UtAdmin.filter('secondsToDateTime', [function() {
+UtAdmin.filter('secondsToDuration', [function() {
     return function(seconds) {
-        //console.log(seconds);
-        return new Date(1970, 0, 1).setSeconds(seconds);
+        return moment.duration(seconds, "seconds").format("D[d] H[h] m[m] s[s]");
     };
 }]);

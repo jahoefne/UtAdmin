@@ -11,6 +11,7 @@ GET            /chatlog                  @controllers.ChatController.chatlog()
 GET            /chat-template.html       @controllers.ChatController.chatComponentHtml()
 
 GET            /user.json                @controllers.UserController.userJsonById(id:Int)
+GET            /user-aliases.json        @controllers.UserController.userAliasesById(id:Int)
 GET            /user-template.html       @controllers.UserController.getUserTemplatetHtml()
 
 GET            /users.json/ip            @controllers.UserController.usersJsonByIp(q: Option[String], groupBits:Option[Int], count: Int, page: Int)
@@ -28,6 +29,12 @@ GET            /add-punishment           @controllers.PenaltyController.punishPl
 GET            /penalties.json           @controllers.PenaltyController.getPenaltiesJson(count: Int,page: Int, userId: Option[Int], queryString: Option[String], filterType: Option[String], activeOnly: Option[Boolean])
 GET            /penalties-template.html  @controllers.PenaltyController.penaltiesTemplatHtml()
 
+
+
+GET            /server-stats.html       @controllers.ServerStats.serverStats()
+GET            /totalTime.json          @controllers.ServerStats.totalOnlineTime()
+GET            /topTotalTime.json       @controllers.ServerStats.topTotalTimePlayers(count:Int ?= 10)
+GET            /totalDeaths.json        @controllers.ServerStats.totalDeaths()
 
 
 ####

@@ -63,7 +63,7 @@
                 <tbody ng:repeat="user in $ctrl.users" >
                     <tr>
                         <td>@@{{user.id}}</td>
-                        <td><a ui-sref="user({b3id:{{user.id}}})">{{user.name | urtstring}}</a></td>
+                        <td><user-name name="user.name" b3id="user.id"></user-name></td>
                         <td><span mac-tooltip="{{user.lastSeen | date:'long'}}" mac-tooltip-direction="top">{{user.lastSeen | timestamp}}</span></td>
                         <td><a ui-sref="user({b3id:{{user.id}}})"><i class="material-icons accent">search</i></a></td>
                 </tbody>
