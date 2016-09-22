@@ -5,6 +5,7 @@ UtAdmin.component('chat', {
         ctrl.updating = true;
         ctrl.autoUpdateInterval = 3000;
 
+        ctrl.copyMode = false;
 
         ctrl.isPlayerOnline = function (id) {
            // console.log("OnlineCheck");

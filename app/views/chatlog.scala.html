@@ -33,13 +33,17 @@
 
             <!-- Include Radio / Auto Update-->
         <div class="row search-row">
-            <div class=" col s4 push-s2">
+            <div class=" col s4">
                 <input type="checkbox" id="radioCheckBox" class="filled-in red" ng-model="$ctrl.state.radio" ng-change="$ctrl.cleanUpdate()">
                 <label for="radioCheckBox" >Radio</label>
             </div>
-            <div class="col s4 push-s3">
+            <div class="col s4">
                 <input type="checkbox" id="autoUpdateCheckBox" class="filled-in" ng-model="$ctrl.state.autoUpdate" ng-change="$ctrl.cleanUpdate()" ng-checked="$ctrl.state.autoUpdate">
                 <label for="autoUpdateCheckBox">Talkback Mode</label>
+            </div>
+            <div class="col s4">
+                <input type="checkbox" id="copyModeCheckBox" class="filled-in" ng-model="$ctrl.copyMode" ng-checked="$ctrl.autoUpdate">
+                <label for="copyModeCheckBox">Copy Mode</label>
             </div>
         </div>
 
@@ -73,7 +77,7 @@
     </div>
 
         <!-- Messages -->
-    <div ng:repeat="msg in $ctrl.msgs" class="repeated-message">
+    <div ng:repeat="msg in $ctrl.msgs" class="repeated-message" ng-if="!$ctrl.copyMode">
         <div class="row">
             <div class="card">
 
@@ -110,5 +114,12 @@
 
             </div>
         </div>
+    </div>
+
+
+    <div class="row">
+            <ul ng:repeat="msg in $ctrl.msgs | orderBy:'-'" ng-if="$ctrl.copyMode" class="copy-mode-ul">
+                <li>{{msg.timeStamp | date:'dd.MM.yy HH:mm:ss'}}&nbsp;&nbsp;{{msg.userName | urtstring}}:&nbsp;&nbsp;{{msg.txt | urtstring}}</li>
+            </ul>
     </div>
 </div>
