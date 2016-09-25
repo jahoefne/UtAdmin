@@ -8,21 +8,29 @@ UtAdmin.component('penalties', {
         controller: function ($http, $interval, $timeout, $httpParamSerializer, $stateParams, $location, timeAgoSettings) {
             ctrl = this;
             ctrl.updating = true;
-
-            /** Previous Chat Log Page */
-            ctrl.prev = function () {
-                ctrl.state.page -= 1;
-                ctrl.update();
-            };
+            ctrl.infiniteScroll = true;
 
             /** Next Chat Log Page */
-            ctrl.next = function () {
+            ctrl.nextPage = function () {
                 ctrl.state.page += 1;
-                ctrl.update();
+                if (ctrl.busy) return;
+
+                ctrl.busy = true;
+                $http.get("/penalties.json?" + $httpParamSerializer(ctrl.state)).then(function (response) {
+                    if (response.data.length < ctrl.state.count) {
+                        ctrl.infiniteScroll = false;
+                    }
+                    for (var i = 0; i < response.data.length; i++) {
+                        ctrl.penalties.push(response.data[i]);
+                    }
+                    ctrl.updating = false;
+                    ctrl.busy = false;
+                });
             };
 
             ctrl.cleanUpdate = function () {
                 ctrl.state.page = 0;
+                ctrl.infiniteScroll = false;
                 console.log(ctrl.state);
                 ctrl.update();
             };
@@ -53,7 +61,7 @@ UtAdmin.component('penalties', {
             };
 
             ctrl.init = function () {
-                console.log("Init PenaltiesCtrl ", $stateParams, ctrl.b3id,$location.search().b3id);
+                console.log("Init PenaltiesCtrl ", $stateParams, ctrl.b3id, $location.search().b3id);
                 ctrl.penalties = [];
 
                 /** Build up initial state from url */
@@ -63,8 +71,7 @@ UtAdmin.component('penalties', {
                     $("#penalties-user-id-search-label").addClass("active"); // 'touch' input field
                 }
 
-                ctrl.state = {count: 30, page: 0, userId: user, filterType: undefined, activeOnly: false};
-                ctrl.update();
+                ctrl.state = {count: 30, page: -1, userId: user, filterType: undefined, activeOnly: false};
             };
             ctrl.init();
         }

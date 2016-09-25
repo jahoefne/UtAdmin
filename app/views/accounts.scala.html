@@ -1,103 +1,105 @@
-<br>
-<div align="center" ng-click="$ctrl.changeYourPassword()">
-    <span class="btn waves-effect">Change your password!</span>
-</div>
-
-<br> <br> <br>
-
-<div id="accountModal" class="modal">
-    <div class="modal-content">
-        <h4 ng-show="$ctrl.edit">Edit {{$ctrl.new.user}}'s Account</h4>
-        <h4 ng-show="!$ctrl.edit">Add new Account</h4>
-            <!-- user:String, password: String , rank:Int, b3Id:Int -->
-        <div input-field>
-            <input type="text" ng-model="$ctrl.new.user" ng-readonly="$ctrl.edit">
-            <label >Name</label>
-        </div>
-        <div input-field>
-            <input type="number" ng-model="$ctrl.new.b3Id">
-            <label id="penalties-user-id-search-label">B3 Id</label>
-        </div>
-        <div input-field>
-            <input type="text" ng-model="$ctrl.new.password" ng-readonly="$ctrl.edit">
-            <label id="penalties-user-id-search-label">Password</label>
-        </div>
-        <div input-field>
-            <select ng-model="$ctrl.new.rank" ng-change="$ctrl.cleanUpdate()" material-select>
-                <option value="2">Mod</option>
-                <option value="1">Admin</option>
-                <option value="0">God</option>
-            </select>
-            <label>Rank</label>
-        </div>
+<div>
+    <br>
+    <div align="center" ng-click="$ctrl.changeYourPassword()">
+        <span class="btn waves-effect">Change your password!</span>
     </div>
-    <div class="modal-footer">
-        <span class="modal-action modal-close waves-effect btn-flat white-text" ng-click="$ctrl.reset();">Cancel</span>
-        <span class="modal-action modal-close waves-effect btn-flat white-text" ng-click="$ctrl.confirm();">Confirm</span>
-    </div>
-</div>
 
-<div ng-show="$ctrl.accounts">
-    <div align="center"><h5>Account Administration</h5></div>
-    <div class="row">
-        <div class="col s8 push-s2">
-            <div class="card-panel center">
-                <table class="bordered highlight status-table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Rank</th>
-                            <th>B3Id</th>
-                            <th>Last Online</th>
-                            <th>That's been</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
-                            <th>Info</th>
-                        </tr>
-                    </thead>
+    <br> <br> <br>
 
-                    <tbody ng:repeat="account in $ctrl.accounts | orderBy:'lastOnline':true" >
-                        <tr>
-                            <td>
-                                <user-name b3id="account.b3Id" name="account.name"></user-name>
-                            </td>
-                            <td ng-switch="account.rank">
-                                    <!-- God = 0, Admin = 1, Mod = 2 -->
-                                <ANY ng-switch-when="0">God</ANY>
-                                <ANY ng-switch-when="1">Admin</ANY>
-                                <ANY ng-switch-default>Mod</ANY>
-                            </td>
-                            <td>{{account.b3Id}}</td>
-                            <td>{{account.lastOnline | date:'medium'}}</td>
-                            <td>{{account.lastOnline/1000 | timestamp}}</td>
-                            <td>
-                                <a href="#accountModal" ng-click="$ctrl.addOrEdit(account)" modal>
-                                    <span class="btn btn-flat">
-                                        <i class="material-icons white-text">mode_edit</i>
-                                    </span>
-                                </a>
-                            </td>
-                            <td>
-                                <span class="btn btn-flat">
-                                    <i class="material-icons white-text" ng-click="$ctrl.delete(account)">delete_forever</i>
-                                </span>
-                            </td>
-                            <td>
-                                <span class="btn btn-flat">
-                                    <i class="material-icons accent" ui-sref="user({b3id:{{account.b3Id}}})">search</i>
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+    <div id="accountModal" class="modal">
+        <div class="modal-content">
+            <h4 ng-show="$ctrl.edit">Edit {{$ctrl.new.user}}'s Account</h4>
+            <h4 ng-show="!$ctrl.edit">Add new Account</h4>
+                <!-- user:String, password: String , rank:Int, b3Id:Int -->
+            <div input-field>
+                <input type="text" ng-model="$ctrl.new.user" ng-readonly="$ctrl.edit">
+                <label >Name</label>
+            </div>
+            <div input-field>
+                <input type="number" ng-model="$ctrl.new.b3Id">
+                <label id="penalties-user-id-search-label">B3 Id</label>
+            </div>
+            <div input-field>
+                <input type="text" ng-model="$ctrl.new.password" ng-readonly="$ctrl.edit">
+                <label id="penalties-user-id-search-label">Password</label>
+            </div>
+            <div input-field>
+                <select ng-model="$ctrl.new.rank" ng-change="$ctrl.cleanUpdate()" material-select>
+                    <option value="2">Mod</option>
+                    <option value="1">Admin</option>
+                    <option value="0">God</option>
+                </select>
+                <label>Rank</label>
             </div>
         </div>
+        <div class="modal-footer">
+            <span class="modal-action modal-close waves-effect btn-flat white-text" ng-click="$ctrl.reset();">Cancel</span>
+            <span class="modal-action modal-close waves-effect btn-flat white-text" ng-click="$ctrl.confirm();">Confirm</span>
+        </div>
     </div>
-    <div class="row">
-        <div class="col s3 push-s5">
-            <a href="#accountModal" ng-click="$ctrl.addOrEdit(account)" modal>
-                <span class="btn waves-effect">Add Account</span>
-            </a>
+
+    <div ng-show="$ctrl.accounts">
+        <div align="center"><h5>Account Administration</h5></div>
+        <div class="row">
+            <div class="col s8 push-s2">
+                <div class="card-panel center">
+                    <table class="bordered highlight status-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Rank</th>
+                                <th>B3Id</th>
+                                <th>Last Online</th>
+                                <th>That's been</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                                <th>Info</th>
+                            </tr>
+                        </thead>
+
+                        <tbody ng:repeat="account in $ctrl.accounts | orderBy:'lastOnline':true" >
+                            <tr>
+                                <td>
+                                    <user-name b3id="account.b3Id" name="account.name"></user-name>
+                                </td>
+                                <td ng-switch="account.rank">
+                                        <!-- God = 0, Admin = 1, Mod = 2 -->
+                                    <ANY ng-switch-when="0">God</ANY>
+                                    <ANY ng-switch-when="1">Admin</ANY>
+                                    <ANY ng-switch-default>Mod</ANY>
+                                </td>
+                                <td>{{account.b3Id}}</td>
+                                <td>{{account.lastOnline | date:'medium'}}</td>
+                                <td>{{account.lastOnline/1000 | timestamp}}</td>
+                                <td>
+                                    <a href="#accountModal" ng-click="$ctrl.addOrEdit(account)" modal>
+                                        <span class="btn btn-flat">
+                                            <i class="material-icons">mode_edit</i>
+                                        </span>
+                                    </a>
+                                </td>
+                                <td>
+                                    <span class="btn btn-flat">
+                                        <i class="material-icons" ng-click="$ctrl.delete(account)">delete_forever</i>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="btn btn-flat">
+                                        <i class="material-icons accent" ui-sref="user({b3id:{{account.b3Id}}})">search</i>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s3 push-s5">
+                <a href="#accountModal" ng-click="$ctrl.addOrEdit(account)" modal>
+                    <span class="btn waves-effect">Add Account</span>
+                </a>
+            </div>
         </div>
     </div>
 </div>

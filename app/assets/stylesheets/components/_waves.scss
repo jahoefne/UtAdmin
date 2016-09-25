@@ -59,7 +59,7 @@
 
     // Waves Colors
     &.waves-light .waves-ripple {
-      background-color: rgba(255, 255, 255, 0.45);
+      background-color: $secondary-color;//rgba(255, 255, 255, 0.45);
     }
 
     &.waves-red .waves-ripple {

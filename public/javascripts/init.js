@@ -1,9 +1,14 @@
 var UtAdmin = angular.module('UtAdmin',
-    ['yaru22.angular-timeago', 'ngAnimate', 'angularSpinner', 'Mac','ui.router','ui.materialize', 'nvd3']);
+    ['yaru22.angular-timeago', 'ngAnimate',
+        'Mac','ui.router','ui.materialize', 'nvd3',
+        'infinite-scroll']);
 
+
+angular.module('infinite-scroll').value('THROTTLE_MILLISECONDS', 1000);
 
 $(document).ready(function(){
     $('select').material_select();
+    $(".button-collapse").sideNav();
 });
 
 UtAdmin.config(["$locationProvider", function($locationProvider) {

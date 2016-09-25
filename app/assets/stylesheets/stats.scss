@@ -1,0 +1,34 @@
+@import "materialize";
+
+svg text {
+  fill: white !important ;
+  font-size:24px !important ;
+}
+.nvd3.nv-pie path {
+  stroke-width: 0px !important ;
+}
+
+.graph-widget{
+  //background:$primary-color;
+  margin:auto!important;
+}
+
+.top-time-info {
+  //background:#ff0000 !important;
+  svg {
+    overflow: visible !important ;
+    width:70% !important ;
+    display: block !important ;
+    margin:auto !important ;
+    text{
+      font-size:14px !important;
+    }
+    rect{
+      height:16px !important;
+    }
+  }
+
+  .tick line {
+    display:none !important ;
+  }
+}

@@ -16,18 +16,43 @@
     transform: translate(0, -50%);
   }
 }
-.cursor{
+
+.brand-logo {
+  font-family: 'Open Sans', sans-serif !important;
+}
+
+
+.server-actions{
+  padding:10px !important;
+}
+
+th {
+  color: $secondary-color !important;
+}
+
+i {
+  color: $font-color;
+}
+
+.cursor {
   cursor: pointer;
 }
 
+.search-row {
+  margin: 20px;
+}
 
 body {
   background-color: $primary-color-light;
-  color: white;
+  color: $font-color;
 }
 
-.accent{
-  color:$secondary-color;
+.accent {
+  color: $secondary-color;
+}
+
+.bottm-spinner {
+  margin: 10px;
 }
 
 html {
@@ -41,7 +66,7 @@ html {
 .card-image {
   opacity: 1;
   vertical-align: middle;
-  margin:auto !important;
+  margin: auto !important;
 }
 
 .card-action {
@@ -53,15 +78,11 @@ td, th, tr {
   padding: 2px !important;
 }
 
-a {
-  color: white !important;
-}
-
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
 }
 
-.glow-blue{
+.glow-blue {
   animation-duration: 1s;
   animation-name: glowblue;
   animation-iteration-count: infinite;
@@ -78,14 +99,12 @@ a {
   }
 }
 
-.penalty-form{
-  select, input{
-    width:60%;
-    margin:auto;
+.penalty-form {
+  select, input {
+    width: 60%;
+    margin: auto;
   }
 }
-
-
 
 .status-component {
 
@@ -96,10 +115,10 @@ a {
     animation-direction: alternate;
   }
 
-
-  tr:hover{
-    background-color: $primary-color-light !important;
-  }
+  /*
+    tr:hover{
+      background-color: $primary-color-light !important;
+    }*/
 
   @keyframes changeglow {
     from {
@@ -119,16 +138,6 @@ a {
   }
 
   .status-flag {
-    bottom: +8px;
-  }
-
-  .rowlink::before {
-    content: "";
-    display: block;
-    position: absolute;
-    left: 0;
-    width: 100%;
-    height: 1.5em; /* don't forget to set the height! */
   }
 }
 
@@ -188,52 +197,27 @@ a {
 
 
 
-
-
-
-
-/* Have to set height explicity on ui-view
-to prevent collapsing during animation*/
+/** Ui View Animations */
 /*.ui-view-container {
   position: relative;
   height: 65px;
-}
-
-[ui-view].ng-enter, [ui-view].ng-leave {
-  position: absolute;
-  left: 0;
-  right: 0;
-  -webkit-transition:all .5s ease-in-out;
-  -moz-transition:all .5s ease-in-out;
-  -o-transition:all .5s ease-in-out;
-  transition:all .5s ease-in-out;
-}
+}*/
 
 [ui-view].ng-enter {
-  opacity: 0;
-  -webkit-transform:scale3d(0.5, 0.5, 0.5);
-  -moz-transform:scale3d(0.5, 0.5, 0.5);
-  transform:scale3d(0.5, 0.5, 0.5);
-}
-
-[ui-view].ng-enter-active {
-  opacity: 1;
-  -webkit-transform:scale3d(1, 1, 1);
-  -moz-transform:scale3d(1, 1, 1);
-  transform:scale3d(1, 1, 1);
+  animation: fadeIn 1s;
 }
 
 [ui-view].ng-leave {
-  opacity: 1;
-  -webkit-transform:translate3d(0, 0, 0);
-  -moz-transform:translate3d(0, 0, 0);
-  transform:translate3d(0, 0, 0);
+ // animation: slideOutRight 1s;
+  opacity:0;
 }
 
-[ui-view].ng-leave-active {
-  opacity: 0;
-  -webkit-transform:translate3d(100px, 0, 0);
-  -moz-transform:translate3d(100px, 0, 0);
-  transform:translate3d(100px, 0, 0);
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
 }
-*/
+
+main {
+  flex: 1 0 auto;
+}

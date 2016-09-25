@@ -1,5 +1,11 @@
 UtAdmin.component('chat', {
     templateUrl: '/chat-template.html',
+
+    bindings: {
+      autoUpdate: "<",
+      small: "<"
+    },
+
     controller: function ($http, $interval, $timeout, $httpParamSerializer, StatusService, $location) {
         ctrl = this;
         ctrl.updating = true;
@@ -8,13 +14,11 @@ UtAdmin.component('chat', {
         ctrl.copyMode = false;
 
         ctrl.isPlayerOnline = function (id) {
-           // console.log("OnlineCheck");
             return StatusService.isPlayerOnline(id);
         };
 
         ctrl.OnChatLoaded = function (response) {
             if (!ctrl.state.autoUpdate) {
-               // console.log("Not AUto Updating", response.data);
                 ctrl.msgs = response.data;
             } else {
                 for (var i = response.data.length; i > 0; i--) {
@@ -24,6 +28,7 @@ UtAdmin.component('chat', {
                     }
                     ctrl.msgs.unshift(m);
                 }
+                ctrl.msgs.splice(-1,response.data.length);
             }
             ctrl.updating = false;
         };
@@ -67,10 +72,28 @@ UtAdmin.component('chat', {
             ctrl.update();
         };
 
+        // Next Chat Log Page
+        ctrl.nextPage = function () {
+            if (ctrl.busy || ctrl.autoUpdate) return;
+            ctrl.busy = true;
+            ctrl.state.page += 1;
+            ctrl.state.latestId = 0;
+
+            $http.get("/chat.json?" + $httpParamSerializer(ctrl.state)).then(function(response){
+                for (var i = 0; i< response.data.length; i++) {
+                    ctrl.msgs.push(response.data[i]);
+                }
+
+                ctrl.busy = false;
+            }, ctrl.OnError);
+        };
+
+
         // Clean the state and do a fresh upate
         ctrl.cleanUpdate = function () {
             ctrl.state.latestId = 0;
             ctrl.msgs = [];
+            ctrl.busy = false;
             ctrl.state.fromMessageId = undefined;
             ctrl.state.page = 0;
             ctrl.update();
@@ -95,14 +118,13 @@ UtAdmin.component('chat', {
             /** Build up initial state from url */
 
             var user = undefined;
-            var autoUpdate = true;
             if (isFinite($location.search().b3id)) {
                 user = +$location.search().b3id;
                 $("#chatlog-user-id-search").addClass("active"); // 'touch' input field
-                autoUpdate = false;
+                ctrl.autoUpdate = false;
             }
 
-            ctrl.state = {autoUpdate: autoUpdate, count: 30, page: 0, latestId: 0, radio: false, userId: user};
+            ctrl.state = {autoUpdate: ctrl.autoUpdate, count: 12, page: 0, latestId: 0, radio: false, userId: user};
             ctrl.talkbackTxt = "";
             ctrl.msgs = [];
 
@@ -117,4 +139,5 @@ UtAdmin.component('chat', {
         }
 
     }
-});
+})
+;

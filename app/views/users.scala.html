@@ -1,13 +1,13 @@
 <div class="container module users-component" ng-cloak>
 
-    <span id="search-form">
+    <div class="search-row">
         <div class="row search-row">
             <div class="input-field col s5 push-s2">
                 <input id="user-search-field" type="text" ng-model="$ctrl.state.q" mac-pause-typing="$ctrl.cleanUpdate()" >
                 <label for="user-search-field">Find by {{$ctrl.searchBy}}</label>
             </div>
 
-            <div class="input-field col s2 push-s2">
+            <div class="input-field col s3 push-s2">
                 <select ng-model="$ctrl.groupBits" ng-change="$ctrl.cleanUpdate();" material-select>
                     <option selected>Any</option>
                     @for(group <- B3GroupController.getGroups()) {
@@ -17,58 +17,47 @@
                 <label>Filter Group</label>
             </div>
         </div>
-    </span>
 
-    <div class="row">
-        <div class="col s4 push-s4">
-            <div class="switch">
-                <label>
+        <div class="row">
+            <div class="center-align">
+                <div class="switch">
+                    <label>
                     Search by - Ip
-                    <input type="checkbox" ng-model="$ctrl.byName" ng-change="$ctrl.cleanUpdate()">
-                    <span class="lever"></span>
-                    Name & Alias
-                </label>
+                        <input type="checkbox" ng-model="$ctrl.byName" ng-change="$ctrl.cleanUpdate()">
+                        <span class="lever"></span>
+                        Name & Alias
+                    </label>
+                </div>
             </div>
         </div>
     </div>
 
+    <div infinite-scroll='$ctrl.nextPage()' infinite-scroll-disabled='$ctrl.busy' infinite-scroll-distance='1' ng-cloak>
+        <div id="usersPanel">
+            <div class="card-panel center hoverable">
+                <table class="bordered highlight status-table">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Last Seen</th>
+                            <th><!--<mac-spinner ng-show="$ctrl.updating" mac-spinner-color="white"/>-->Info
+                            </th>
+                        </tr>
+                    </thead>
 
-        <!-- Pagnination -->
-    <div class="center-align" ng-show="!$ctrl.updating">
-        <ul class="pagination">
-            <li class="waves-effect btn-flat waves" ng-show="$ctrl.state.page > 0">
-                <a href="" ng-click="$ctrl.prev()"><i class="material-icons white-text">chevron_left</i></a>
-            </li>
-            <span ng-show="$ctrl.state.page != 0">Page {{$ctrl.state.page}}</span>
-            <li class="waves-effect btn-flat waves" ng-show="$ctrl.users.length < $ctrl.state.count">
-                <a href="" ng-click="$ctrl.next()"><i class="material-icons white-text">chevron_right</i></a>
-            </li>
-        </ul>
-    </div>
-
-
-    <div id="usersPanel">
-        <div class="card-panel center">
-            <table class="bordered highlight status-table">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Last Seen</th>
-                        <th><!--<mac-spinner ng-show="$ctrl.updating" mac-spinner-color="white"/>-->Info
-                        </th>
-                    </tr>
-                </thead>
-
-                <tbody ng:repeat="user in $ctrl.users" >
-                    <tr>
-                        <td>@@{{user.id}}</td>
-                        <td><user-name name="user.name" b3id="user.id"></user-name></td>
-                        <td><span mac-tooltip="{{user.lastSeen | date:'long'}}" mac-tooltip-direction="top">{{user.lastSeen | timestamp}}</span></td>
-                        <td><a ui-sref="user({b3id:{{user.id}}})"><i class="material-icons accent">search</i></a></td>
-                </tbody>
-            </table>
+                    <tbody ng:repeat="user in $ctrl.users" >
+                        <tr>
+                            <td>@@{{user.id}}</td>
+                            <td><user-name name="user.name" b3id="user.id"></user-name></td>
+                            <td><span mac-tooltip="{{user.lastSeen |  date:'d.MM.yy hh:mm:ss'}}" mac-tooltip-direction="top">{{user.lastSeen | timestamp}}</span></td>
+                            <td><a ui-sref="user({b3id:{{user.id}}})" class="waves-effect waves-light"><i class="material-icons accent">search</i></a></td>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div align="center">
+            <spinner ng-show="$ctrl.busy"></spinner>
         </div>
     </div>
-
 </div>

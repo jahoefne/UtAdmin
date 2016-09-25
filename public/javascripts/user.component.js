@@ -60,14 +60,15 @@ UtAdmin.component('user', {
                     var marker = L.marker([json.location.latitude, json.location.longitude]).addTo(map);
 
                     var cityOpt = "";
-                    if (typeof json.city !== 'undefined') {
-                        cityOpt = "<br>City: " + ctrl.city;
+                    console.log(json);
+                    if (json.city != undefined) {
+                        cityOpt = "<br>City: " + json.city.names.en;
                     }
 
                     marker.bindPopup(
-                        "<b style='color:black;'>" +
+                        "<b>" +
                         "Country: "
-                        + '<span class="flag-icon flag-icon-' + json.country.iso_code.toLowerCase() + '"></span> ' + json.country.names.en
+                        + '<span class="flag-icon flag-icon-' + json.country.iso_code.toLowerCase() + '"></span> (' + json.country.names.en + ')'
                         + cityOpt +
                         "</b>").openPopup();
                 });

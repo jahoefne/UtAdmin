@@ -4,38 +4,47 @@ UtAdmin.component('users', {
         var ctrl = this;
 
         ctrl.updating = true;
-
         ctrl.byName = true;
         ctrl.searchBy = "name";
+        ctrl.users = [];
+        ctrl.infScroll = true;
 
         ctrl.state = {
-            page: 0,
+            page: -1,
             count: 30,
             q: undefined,
             groupBits: undefined
         };
 
-        // Previous Log Page
-        ctrl.prev = function () {
-            ctrl.state.page -= 1;
-            ctrl.state.latestId = 0;
-            ctrl.users = [];
-            ctrl.update();
-        };
-
         // Next Log Page
-        ctrl.next = function () {
+        ctrl.nextPage = function () {
+            if (ctrl.busy || !ctrl.infScroll) {
+                return;
+            }
+
             ctrl.state.page += 1;
             ctrl.state.latestId = 0;
-            ctrl.users = [];
-            ctrl.update();
+            ctrl.busy = true;
+            $http.get("users.json/" + ctrl.searchBy + "?" + $httpParamSerializer(ctrl.state)).success(function (result) {
+                if (result.length == 0) {
+                    ctrl.infScroll = false;
+                    ctrl.busy = false;
+                    Materialize.toast('No more users matching query!', 1500);
+                    return;
+                }
+                for (var i = 0; i < result.length; i++) {
+                    ctrl.users.push(result[i]);
+                }
+                ctrl.busy = false;
+            });
         };
 
         // Clean the state and do a fresh upate
         ctrl.cleanUpdate = function () {
             ctrl.users = [];
             ctrl.state.page = 0;
-            console.log(ctrl.groupBits);
+            ctrl.busy=false;
+            ctrl.infScroll = true;
             ctrl.update();
         };
 
@@ -44,16 +53,10 @@ UtAdmin.component('users', {
             ctrl.searchBy = (ctrl.byName) ? "name" : "ip";
             ctrl.state.groupBits = (ctrl.groupBits != "Any") ? ctrl.groupBits : undefined;
 
-            console.log("Queying", "users.json/" + ctrl.searchBy + "?" + $httpParamSerializer(ctrl.state));
             $http.get("users.json/" + ctrl.searchBy + "?" + $httpParamSerializer(ctrl.state)).success(function (result) {
-                console.log("Got", result);
                 ctrl.users = result;
                 ctrl.updating = false;
             });
-        };
-
-        ctrl.$onInit = function () {
-            ctrl.update();
         };
     }
 });

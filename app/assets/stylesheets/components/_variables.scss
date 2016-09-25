@@ -33,15 +33,22 @@
 /* 1. Colors
    ========================================================================== */
 
+// #04090b Row
+// #081216 primary
+
+
+
 $primary-color: #021a2e !default;
 $primary-color-light: lighten($primary-color, 10%) !default;
 $primary-color-dark: darken($primary-color, 15%) !default;
+
+$font-color: #fff;
 
 $secondary-color: #cb0900 !default;
 $success-color: color("green", "base") !default;
 $error-color: color("red", "base") !default;
 
-$link-color: #26a69a !default;
+$link-color: $font-color !default;
 
 
 /* 2. Badges
@@ -75,7 +82,7 @@ $button-large-icon-font-size: 1.6rem !default;
 $button-large-height: $button-height * 1.5 !default;
 
 // Flat buttons
-$button-flat-color: #343434 !default;
+$button-flat-color: $font-color !default;
 $button-flat-disabled-color: lighten(#999, 10%) !default;
 
 // Floating buttons
@@ -221,15 +228,15 @@ $element-bottom-margin: ($gutter-width*2)/3 !default;
 $navbar-height: 64px !default;
 $navbar-height-mobile: 56px !default;
 $navbar-font-size: 1rem !default;
-$navbar-font-color: #fff !default;
+$navbar-font-color: $font-color !default;
 $navbar-brand-font-size: 1.9rem !default;
 
 /* 14. Side Navigation
    ========================================================================== */
 
 $sidenav-font-size: 14px !default;
-$sidenav-font-color: rgba(0,0,0,.87) !default;
-$sidenav-bg-color: #fff !default;
+$sidenav-font-color: $primary-color-dark !default;
+$sidenav-bg-color: $secondary-color !default;
 $sidenav-padding: 16px !default;
 $sidenav-item-height: 48px !default;
 
@@ -259,7 +266,7 @@ $tabs-bg-color: #fff !default;
 /* 18. Tables
    ========================================================================== */
 
-$table-border-color: $primary-color-dark !default;
+$table-border-color: lighten($primary-color,5%) !default;
 $table-striped-color: $primary-color !default;
 
 
@@ -267,8 +274,8 @@ $table-striped-color: $primary-color !default;
    ========================================================================== */
 
 $toast-height: 48px !default;
-$toast-color: #323232 !default;
-$toast-text-color: #fff !default;
+$toast-color: $primary-color-dark !default;
+$toast-text-color: $font-color !default;
 
 
 /* 20. Typography

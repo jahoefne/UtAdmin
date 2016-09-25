@@ -30,7 +30,7 @@ class UserController(override implicit val env: RuntimeEnvironment[UtAdminUser])
 
   def userAliasesById(id: Int) = SecuredAction { request =>
     DB readOnly { implicit session =>
-      Ok(Json.toJson(sql"""SELECT alias from aliases WHERE client_id = $id""".map(rs => rs.string(1)).list().apply()))
+      Ok(Json.toJson(sql"""SELECT alias from aliases WHERE client_id = $id ORDER BY time_edit LIMIT 10""".map(rs => rs.string(1)).list().apply()))
     }
   }
 

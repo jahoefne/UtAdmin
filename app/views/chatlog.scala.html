@@ -2,124 +2,182 @@
 
 <link rel="stylesheet" href="@routes.Assets.at("stylesheets/chat.css")">
 
-<div class="container chat-component" ng-cloak>
+<span class="loader"></span>
+<div class="chat-component" ng-cloak>
+    <div ng-class="{'small':$ctrl.small}">
+        <div class="search-form">
 
-    <span id="search-form">
+                <!-- Talkback -->
+            <div class="row search-row" ng-show="$ctrl.state.autoUpdate">
+                <div class="input-field col s8 push-s2" id="chat-search-field">
+                    <input id="talkback-field" type="text" ng-model="$ctrl.talkbackTxt" ng-enter="$ctrl.talkback()">
+                    <label for="talkback-field">Say</label>
+                </div>
+            </div>
 
-            <!-- Talkback -->
-        <div class="row search-row" ng-show="$ctrl.state.autoUpdate">
-            <div class="col s1 push-s2">
+                <!-- User-Id/Querystring -->
+            <div class="row search-row" ng-show="!$ctrl.state.autoUpdate">
+                <div class="col s1 push-s1">
+                    <mac-spinner ng-show="$ctrl.updating" mac-spinner-color="white" class="update-spinner"/>
+                </div>
+                <div class="input-field col s5 push-s1" id="chat-search-field">
+                    <input id="chatlog-search" type="text" required="required" ng-model="$ctrl.state.queryString" mac-pause-typing="$ctrl.cleanUpdate()" ng-change="$ctrl.msgs=[]" >
+                    <label for="chatlog-search">Search Text</label>
+                </div>
+                <div class="input-field col s3 push-s1" id="chat-search-field">
+                    <input id="chatlog-user-id-search" type="number" ng-model="$ctrl.state.userId" ng-change="$ctrl.cleanUpdate()">
+                    <label for="chatlog-user-id-search" id="chatlog-user-id-search-label">User Id</label>
+                </div>
             </div>
-            <div class="input-field col s5 push-s2" id="chat-search-field">
-                <input id="talkback-field" type="text" ng-model="$ctrl.talkbackTxt" ng-enter="$ctrl.talkback()">
-                <label for="talkback-field">Say</label>
-            </div>
-        </div>
 
-            <!-- User-Id/Querystring -->
-        <div class="row search-row" ng-show="!$ctrl.state.autoUpdate">
-            <div class="col s1 push-s1">
-                <mac-spinner ng-show="$ctrl.updating" mac-spinner-color="white" class="update-spinner" disable-animation/>
+            <div class="fixed-action-btn" style="bottom: 35px;
+                right: 24px;">
+                <a class="btn-floating btn-large">
+                    <i class="large material-icons">settings</i>
+                </a>
+                <ul>
+                    <li>
+                        <a class="btn-floating"
+                        ng-class="{green: $ctrl.state.radio, red: !$ctrl.state.radio}"
+                        ng-click="$ctrl.state.radio = !$ctrl.state.radio; $ctrl.cleanUpdate()"
+                        mac-tooltip="Toggle Include Radio" mac-tooltip-direction="left">
+                            <i class="material-icons">radio</i>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="btn-floating"
+                        ng-class="{green: $ctrl.copyMode, red: !$ctrl.copyMode}"
+                        ng-click="$ctrl.copyMode = !$ctrl.copyMode"
+                        mac-tooltip="Toggle Copy Mode" mac-tooltip-direction="left">
+                            <i class="material-icons">content_copy</i>
+                        </a>
+                    </li>
+                </ul>
             </div>
-            <div class="input-field col s5 push-s1" id="chat-search-field">
-                <input id="chatlog-search" type="text" required="required" ng-model="$ctrl.state.queryString" mac-pause-typing="$ctrl.cleanUpdate()" >
-                <label for="chatlog-search">Search Text</label>
-            </div>
-            <div class="input-field col s3 push-s1" id="chat-search-field">
-                <input id="chatlog-user-id-search" type="number" ng-model="$ctrl.state.userId" ng-change="$ctrl.cleanUpdate()">
-                <label for="chatlog-user-id-search" id="chatlog-user-id-search-label">User Id</label>
-            </div>
-        </div>
 
-            <!-- Include Radio / Auto Update-->
-        <div class="row search-row">
-            <div class=" col s4">
-                <input type="checkbox" id="radioCheckBox" class="filled-in red" ng-model="$ctrl.state.radio" ng-change="$ctrl.cleanUpdate()">
-                <label for="radioCheckBox" >Radio</label>
+                <!-- Pagnination -->
+            <div class="center-align" ng-if="$ctrl.state.fromMessageId!=undefined">
+                <a class="waves-effect waves-light btn btn-flat"  ng-click="$ctrl.cleanUpdate();">Back to Start!</a><br>
+                <a class="waves-effect waves-light btn btn-flat"  ng-click="$ctrl.prev();"><i class="material-icons">arrow_back</i></a>
             </div>
-            <div class="col s4">
-                <input type="checkbox" id="autoUpdateCheckBox" class="filled-in" ng-model="$ctrl.state.autoUpdate" ng-change="$ctrl.cleanUpdate()" ng-checked="$ctrl.state.autoUpdate">
-                <label for="autoUpdateCheckBox">Talkback Mode</label>
-            </div>
-            <div class="col s4">
-                <input type="checkbox" id="copyModeCheckBox" class="filled-in" ng-model="$ctrl.copyMode" ng-checked="$ctrl.autoUpdate">
-                <label for="copyModeCheckBox">Copy Mode</label>
-            </div>
-        </div>
 
-    </span>
-        <!-- Pagnination -->
-    <div class="center-align" ng-if="$ctrl.state.fromMessageId!=undefined" ng-click="$ctrl.cleanUpdate();">
-        <a class="waves-effect waves-light btn btn-flat">Back to Start!</a>
-    </div>
-
-        <!-- Pagnination -->
-    <div class="center-align" ng-show="!$ctrl.updating">
-        <ul class="pagination">
-            <li class="waves-effect btn-flat waves" ng-show="!$ctrl.state.autoUpdate && $ctrl.state.page > 0  || $ctrl.state.fromMessageId">
-                <a href="" ng-click="$ctrl.prev()"><i class="material-icons white-text">chevron_left</i></a>
-            </li>
-            <span ng-show="$ctrl.state.page != 0 && !$ctrl.state.fromMessageId">Page {{$ctrl.state.page}}</span>
-            <li class="waves-effect btn-flat waves" ng-show="!$ctrl.state.autoUpdate || $ctrl.msgs.length < $ctrl.state.count">
-                <a href="" ng-click="$ctrl.next()"><i class="material-icons white-text">chevron_right</i></a>
-            </li>
-        </ul>
-    </div>
-
-    <div class="center-align" ng-show="!$ctrl.updating && $ctrl.msgs.length == 0">
-        <div class="row">
-            <div class="col s12 m5">
-                <div class="card-panel">
+            <div class="center-align" ng-show="!$ctrl.updating && $ctrl.msgs.length == 0" ng-cloak>
+                <div class="row">
+                    <div class="col s12 m5">
+                        <div class="card-panel">
                     There ware no messages matching your query!
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-        <!-- Messages -->
-    <div ng:repeat="msg in $ctrl.msgs" class="repeated-message" ng-if="!$ctrl.copyMode">
-        <div class="row">
-            <div class="card">
+            <p></p>
+            <p></p>
 
-                <div class="card-content">
-                    <span class="team-icon">
-                        <i class="material-icons {{msg.userTeam}}-text">label</i>
-                    </span>
-                    <span class="name">
-                        <user-name name="msg.userName" b3id="msg.userId"></user-name>
-                    </span>
-                    <span class="txt">{{msg.txt | urtstring}}</span>
-                </div>
+                <!-- Messages -->
 
-                <div class="card-action">
+            <div infinite-scroll='$ctrl.nextPage()' infinite-scroll-disabled='$ctrl.busy' infinite-scroll-distance='1'>
+
+                <table ng-if="!$ctrl.copyMode" class="table chatlog-table">
+                    <tbody>
+                        <tr ng-repeat-start="msg in $ctrl.msgs" class="message-part message-start  z-depth-3">
+                            <td class="message-team">
+                                <i class="tiny material-icons {{msg.userTeam}}-text">fiber_manual_record</i>
+                            </td>
+                            <td class="message-author">
+                                <span class="{{msg.userTeam}}-text"><user-name name="msg.userName" b3id="msg.userId"></user-name></span>
+                            </td>
+                            <td colspan="4" rowspan="2" class="message-text z-depth-3">
+                            {{msg.txt}}
+                            </td>
+                        </tr>
+                        <tr class="message-part">
+                            <td colspan="2" class="message-scope  z-depth-3">
+                            to {{msg.scope}}
+                            </td>
+                        </tr>
+                        <tr ng-repeat-end class="message-part message-end">
+                            <td colspan="6" class="center">
+                                <span ng-show="$ctrl.state.autoUpdate" mac-tooltip="{{msg.timeStamp | date:'medium'}}" mac-tooltip-direction="top">{{msg.timeStamp/1000 | timestamp}}</span>
+                                <span ng-show="!$ctrl.state.autoUpdate" mac-tooltip="{{msg.timeStamp/1000 | timestamp}}" mac-tooltip-direction="top">{{msg.timeStamp | date:'dd. MM. yyyy HH:mm:ss'}}</span>
+                                <span ng-show="!$ctrl.state.updating && ($ctrl.state.userId || $ctrl.state.queryString)" class="time-stamp" mac-tooltip="Jump to Conversation" mac-tooltip-direction="top">
+                                    <a ng-if="$ctrl.state.userId || $ctrl.state.queryString" class="show-conv-link" ng-click="$ctrl.showConv(msg.id)"><i class="tiny material-icons">redo</i></a>
+                                </span>
+                                <br> <br>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                    <!--<div ng:repeat="msg in $ctrl.msgs" class="repeated-message" ng-if="!$ctrl.copyMode">
+                <div class="row">
+                    <div class="col">
+                        <span class="{{msg.userTeam}}-text">{{msg.userName | urtstring}}</span>
+                    </div>
+                    <div class="col">
                     sent to {{msg.scope}}
-                    <span ng-if="msg.targetId!=undefined">
-                        <user-name name="msg.targetName" b3id="msg.targetId"></user-name>
-                    </span>
-
-                    <span>
-                        <span ng-show="!$ctrl.state.updating && ($ctrl.state.userId || $ctrl.state.queryString)" class="time-stamp" mac-tooltip="Jump to Conversation" mac-tooltip-direction="top">
-                            <a ng-if="$ctrl.state.userId || $ctrl.state.queryString" class="show-conv-link" ng-click="$ctrl.showConv(msg.id)"><i class="tiny material-icons">redo</i></a>
+                        <span ng-if="msg.targetId!=undefined">
+                            <user-name name="msg.targetName" b3id="msg.targetId"></user-name>
                         </span>
-                            &nbsp;&nbsp; <online-actions b3id="msg.userId" name="{{msg.userName}}" size="tiny"></online-actions>
-                        <span ng-if="$ctrl.state.updating && !($ctrl.state.userId || $ctrl.state.queryString)" class="time-stamp" mac-tooltip="Jump to Conversation" mac-tooltip-direction="top">
+
+                        <span>
+                            <span ng-show="!$ctrl.state.updating && ($ctrl.state.userId || $ctrl.state.queryString)" class="time-stamp" mac-tooltip="Jump to Conversation" mac-tooltip-direction="top">
+                                <a ng-if="$ctrl.state.userId || $ctrl.state.queryString" class="show-conv-link" ng-click="$ctrl.showConv(msg.id)"><i class="tiny material-icons">redo</i></a>
+                            </span>
+                                &nbsp;&nbsp;<!-- <online-actions b3id="msg.userId" name="{{msg.userName}}" size="tiny"></online-actions>-->
+                    <!--      <span ng-if="$ctrl.state.updating && !($ctrl.state.userId || $ctrl.state.queryString)" class="time-stamp" mac-tooltip="Jump to Conversation" mac-tooltip-direction="top">
                                 #{{msg.id}}
-                        </span>
-                    </span>
-                    <span class="right">
-                        <span ng-show="$ctrl.state.autoUpdate" mac-tooltip="{{msg.timeStamp | date:'medium'}}" mac-tooltip-direction="top">{{msg.timeStamp/1000 | timestamp}}</span>
-                        <span ng-show="!$ctrl.state.autoUpdate" mac-tooltip="{{msg.timeStamp/1000 | timestamp}}" mac-tooltip-direction="top">{{msg.timeStamp | date:'dd. MM. yyyy HH:mm:ss'}}</span>
-                    </span>
-                </div>
+                            </span>
+                        </span> </div>
+                    <div class="col s5 push-s2 message">
+                    {{msg.txt | urtstring}}
+                    </div>-->
+                    <!--   <div class="card">
 
+                    <div class="card-content">
+                        <span class="team-icon">
+                            <i class="material-icons {{msg.userTeam}}-text">label</i>
+                        </span>
+                        <span class="name">
+                            <user-name name="msg.userName" b3id="msg.userId"></user-name>
+                        </span>
+                        <span class="txt">{{msg.txt | urtstring}}</span>
+                    </div>
+
+                    <div class="card-action">
+                    sent to {{msg.scope}}
+                        <span ng-if="msg.targetId!=undefined">
+                            <user-name name="msg.targetName" b3id="msg.targetId"></user-name>
+                        </span>
+
+                        <span>
+                            <span ng-show="!$ctrl.state.updating && ($ctrl.state.userId || $ctrl.state.queryString)" class="time-stamp" mac-tooltip="Jump to Conversation" mac-tooltip-direction="top">
+                                <a ng-if="$ctrl.state.userId || $ctrl.state.queryString" class="show-conv-link" ng-click="$ctrl.showConv(msg.id)"><i class="tiny material-icons">redo</i></a>
+                            </span>
+                                &nbsp;&nbsp; <online-actions b3id="msg.userId" name="{{msg.userName}}" size="tiny"></online-actions>
+                            <span ng-if="$ctrl.state.updating && !($ctrl.state.userId || $ctrl.state.queryString)" class="time-stamp" mac-tooltip="Jump to Conversation" mac-tooltip-direction="top">
+                                #{{msg.id}}
+                            </span>
+                        </span>
+                        <span class="right">
+                            <span ng-show="$ctrl.state.autoUpdate" mac-tooltip="{{msg.timeStamp | date:'medium'}}" mac-tooltip-direction="top">{{msg.timeStamp/1000 | timestamp}}</span>
+                            <span ng-show="!$ctrl.state.autoUpdate" mac-tooltip="{{msg.timeStamp/1000 | timestamp}}" mac-tooltip-direction="top">{{msg.timeStamp | date:'dd. MM. yyyy HH:mm:ss'}}</span>
+                        </span>
+                    </div>
+
+                </div>-->
             </div>
         </div>
-    </div>
 
 
-    <div class="row">
-            <ul ng:repeat="msg in $ctrl.msgs | orderBy:'-'" ng-if="$ctrl.copyMode" class="copy-mode-ul">
+        <div class="row">
+            <ul ng:repeat="msg in $ctrl.msgs" ng-if="$ctrl.copyMode" class="copy-mode-ul">
                 <li>{{msg.timeStamp | date:'dd.MM.yy HH:mm:ss'}}&nbsp;&nbsp;{{msg.userName | urtstring}}:&nbsp;&nbsp;{{msg.txt | urtstring}}</li>
             </ul>
+        </div>
+        <div align="center" class="bottom-spinner">
+            <spinner ng-show="$ctrl.busy" disable-animation></spinner>
+        </div>
     </div>
+</div>
+</div>
 </div>

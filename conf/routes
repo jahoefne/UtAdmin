@@ -32,8 +32,8 @@ GET            /penalties-template.html  @controllers.PenaltyController.penaltie
 
 
 GET            /server-stats.html       @controllers.ServerStats.serverStats()
-GET            /totalTime.json          @controllers.ServerStats.totalOnlineTime()
-GET            /topTotalTime.json       @controllers.ServerStats.topTotalTimePlayers(count:Int ?= 10)
+GET            /timeInfoTemplate.html   @controllers.ServerStats.timeInfoTemplate()
+GET            /timeInfo.json           @controllers.ServerStats.timeInfoJson(count:Int ?= 50)
 GET            /totalDeaths.json        @controllers.ServerStats.totalDeaths()
 
 

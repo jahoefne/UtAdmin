@@ -1,8 +1,16 @@
 /**
  * Main Router for the app
  */
-UtAdmin.config(function ($stateProvider, $urlRouterProvider) {
+$.fn.extend({
+    animateCss: function (animationName) {
+        var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+        this.addClass('animated ' + animationName).one(animationEnd, function () {
+            $(this).removeClass('animated ' + animationName);
+        });
+    }
+});
 
+UtAdmin.config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider.state('status', {
         url: '/',
         component: 'status',
@@ -16,17 +24,33 @@ UtAdmin.config(function ($stateProvider, $urlRouterProvider) {
 
     $stateProvider.state('chat', {
         url: '/chat',
-        component: 'chat'
+        component: 'chat',
+        resolve:{
+            autoUpdate: function(){
+                return false;
+            },
+            small: function(){
+                return true;
+            }
+        }
     });
 
     $stateProvider.state('chat.user', {
         url: '?user=:b3id',
-        component: 'chat'
+        component: 'chat',
+        resolve:{
+            autoUpdate: function(){
+                return false;
+            },
+            small: function(){
+                return true;
+            }
+        }
     });
 
     $stateProvider.state('penalties', {
         url: '/penalties',
-        component: 'penalties'
+        component: 'penalties',
     });
 
     $stateProvider.state('penalties.user', {
@@ -37,7 +61,7 @@ UtAdmin.config(function ($stateProvider, $urlRouterProvider) {
 
     $stateProvider.state('users', {
         url: '/users',
-        component: 'users'
+        component: 'users',
     });
 
     $stateProvider.state('accounts', {
@@ -50,20 +74,18 @@ UtAdmin.config(function ($stateProvider, $urlRouterProvider) {
         component: 'serverStats'
     });
 
-
     $stateProvider.state('user', {
         url: '/user/:b3id',
         component: 'user',
         resolve: {
-            user:  function($http, $stateParams){
-                return $http({method: 'GET', url: '/user.json?id='+ $stateParams.b3id}).then(function successCallback(response) {
+            user: function ($http, $stateParams) {
+                return $http({method: 'GET', url: '/user.json?id=' + $stateParams.b3id}).then(function successCallback(response) {
                     return response.data;
                 });
             }
 
         }
     });
-
 
     $urlRouterProvider.otherwise('/')
 });

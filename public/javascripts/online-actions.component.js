@@ -1,11 +1,5 @@
 UtAdmin.component('onlineActions', {
-        template:
-        '<span class="cursor" ng-show="$ctrl.isPlayerOnline">' +
-        '<span mac-tooltip="Online Now!" mac-tooltip-direction="top">' +
-        '<span class="blue-text glow-blue" class="blue-text"><i class="{{$ctrl.size}} material-icons">remove_red_eye</i></span></span>&nbsp;' +
-        '<span class="cursor" ng-click="$ctrl.pm()"><i class="{{$ctrl.size}} material-icons">message</i></span>&nbsp;' +
-        '<span class="cursor" ng-click="$ctrl.punishModal()"><i class="{{$ctrl.size}} material-icons">pan_tool</i></span></span>',
-
+        templateUrl: "/assets/html/online-actions.html",
         bindings: {
             b3id: '<',
             name: '@',

@@ -1,0 +1,15 @@
+
+<div class="row">
+    <div class="col s4 push-s1 graph-widget">
+        <nvd3 options="$ctrl.topOnlineTimeOption" class="top-time-info" data="$ctrl.topOnlineTimeData"></nvd3>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col s12">
+        <ul class="collection">
+            <li class="collection-item">All players combined played for a total of <span class="badge new red">{{$ctrl.totalText}}</span></li>
+            <li class="collection-item">That's worth of minimum wage work in the US <span class="badge new red">{{$ctrl.totalWage}}$</span></li>
+        </ul>
+    </div>
+</div>

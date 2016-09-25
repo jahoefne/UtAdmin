@@ -1,104 +1,119 @@
 @(loggedInUser: UtAdminUser)
 
 <!-- Angular Template to be used with status.component.js -->
-<div class="container status-component" ng-cloak>
-    <div class="row">
-        <div class="col s6 push-s3">
-            <div class="card horizontal">
-                <div class="card-image">
-                    <img src=http://cache.www.gametracker.com/images/graphs/server_players.php?GSID=5036943&start=-1d">
-                </div>
-                <div class="card-stacked">
-                    <div class="card-content">
-                        <h6>@UtServer.name</h6>
+<div class="status-component module" ng-cloak>
 
-                        <span>
-                            {{$ctrl.count}}
-                            Right now there<ng-pluralize count="$ctrl.players.length" when="{'0': '\'s nobody online.', 'one': '\'s 1 player online.', 'other': '\'re {} players online.'}"></ng-pluralize>
-                            <br>
-                            As well as @MongoLogger.getLoggedInUsers.mkString(", ") in UtAdmin.
-                        </span>
-                    </div>
-                    <div class="card-action">
-                        <a id="restartServerButton" class="btn btn-flat waves-effect" ng-click="$ctrl.status.restartServer()">Restart Server</a>
-                        <a id="restartB3Button" class="btn btn-flat waves-effect" ng-click="$ctrl.status.restartB3()">Restart B3</a>
-                    </div>
+        <!-- <div class="fixed-action-btn" style="bottom: 35px;
+        left: 24px;">
+        <a class="btn-floating btn-large">
+            <i class="large material-icons">settings</i>
+        </a>
+        <ul>
+            <li>
+                <a class="btn-floating red"
+                ng-click="$ctrl.status.restartB3()"
+                mac-tooltip="Restart B3" mac-tooltip-direction="left">
+                    <i class="material-icons">android</i>
+                </a>
+            </li>
+            <li>
+                <a class="btn-floating red"
+                ng-click="$ctrl.status.restartServer()"
+                mac-tooltip="Restart Server" mac-tooltip-direction="left">
+                    <i class="material-icons">videogame_asset</i>
+                </a>
+            </li>
+        </ul>
+    </div>
+-->
+    <div class="row">
+
+        <div class="col m12 l8">
+            <div class="card-panel center hoverable">
+                <div class="card-content">
+                    <table class="bordered highlight">
+                        <thead>
+                            <tr>
+                                <th><!--<mac-spinner ng-show="$ctrl.updating" mac-spinner-color="white"/>-->&#8721; {{$ctrl.players.length}}</th>
+                                <th>Name</th>
+                                <th>Rank</th>
+                                <th>Score</th>
+                                <th class="hide-on-small-only">Ip</th>
+                                <th>Online</th>
+                                <th>PM</th>
+                                <th class="hide-on-med-and-down hide">Chatlog</th>
+                                <th>Punish</th>
+                                <th class="hide-on-med-and-down hide">Penalties</th>
+                            </tr>
+                        </thead>
+
+                        <tbody ng:repeat="player in $ctrl.players" >
+                            <tr>
+                                <td>
+                                    <i class="tiny material-icons {{player.t}}-text">fiber_manual_record</i>
+                                    <span class="flag-icon flag-icon-{{player.cCd | lowercase}} status-flag" mac-tooltip="{{player.c}}" mac-tooltip-direction="top"></span>
+                                </td>
+                                <td><user-name b3id="player.id" name="player.n"></user-name></td>
+                                <td mac-tooltip="{{player.gr.name}}" mac-tooltip-direction="left">
+                                    <i class="material-icons grey-text" ng-show="{{player.gr.level}}==0">face</i>
+                                    <i class="material-icons grey-text text-lighten-2" ng-show="{{player.gr.level}}==1">face</i>
+                                    <i class="material-icons grey-text text-lighten-3" ng-show="{{player.gr.level}}==20">face</i>
+                                    <i class="material-icons grey-text" ng-show="{{player.gr.level}}==30">face</i>
+                                    <i class="material-icons green-text" ng-show="{{player.gr.level}}==40">face</i>
+                                    <i class="material-icons green-text" ng-show="{{player.gr.level}}==50">star</i>
+                                    <i class="material-icons amber-text" ng-show="{{player.gr.level}}==55">star</i>
+                                    <i class="material-icons red-text" ng-show="{{player.gr.level}}==70">star</i>
+                                    <i class="material-icons amber-text text-lighten-4" ng-show="{{player.gr.level}}==60">star</i>
+                                    <i class="material-icons god-icon" ng-show="{{player.gr.level}}>=80">stars</i>
+                                </td>
+                                <td>{{player.sc}}</td>
+                                <td class="hide-on-small-only"><a href="https://www.whoismyisp.org/ip/{{player.ip}}" class="waves-effect waves-light" target="_blank">
+                                    {{player.ip}}</a></td>
+                                <td>
+                                    <span class="time-stamp" mac-tooltip="{{ player.jo | date:'medium'}}" mac-tooltip-direction="top">{{player.jo/1000 | timestamp}}</span>
+                                </td>
+                                <td>
+                                    <span class="waves-effect waves-light btn-flat" ng-click="$ctrl.status.pm(player.sId ,player.n,player.id)">
+                                        <i class="material-icons">message</i>
+                                    </span>
+                                </td>
+                                <td class="hide-on-med-and-down hide" mac-tooltip="Show chatlog of {{player.n}}" mac-tooltip-direction="top">
+                                    <a class="waves-effect waves-light btn-flat" ui-sref="chat.user({b3id:{{player.id}}})">
+                                        <i class="material-icons">redo</i>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a class="waves-effect waves-light btn-flat" ng-click="$ctrl.status.punishModal(player.sId, player.n)">
+                                        <i class="material-icons">pan_tool</i>
+                                    </a>
+                                </td>
+                                <td class="hide-on-med-and-down hide" mac-tooltip="Show penalties of {{player.n}}" mac-tooltip-direction="top">
+                                    <a class="waves-effect waves-light btn-flat" ui-sref="penalties.user({b3id:{{player.id}}})">
+                                        <i class="material-icons">redo</i>
+                                    </a>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-action server-actions">
+                    <a class="btn btn-flar red"
+                    ng-click="$ctrl.status.restartB3()"
+                    mac-tooltip="Restart B3" mac-tooltip-direction="left">
+                        <i class="material-icons">android</i>
+                    </a>
+                        &nbsp;&nbsp;
+                    <a class="btn btn-flat red"
+                    ng-click="$ctrl.status.restartServer()"
+                    mac-tooltip="Restart Server" mac-tooltip-direction="right">
+                        <i class="material-icons">videogame_asset</i>
+                    </a>
                 </div>
             </div>
         </div>
-    </div>
-
-
-    <div id="statusPanel">
-        <div class="card-panel center">
-            <table class="bordered highlight status-table">
-                <thead>
-                    <tr>
-                        <th><mac-spinner ng-show="$ctrl.updating" mac-spinner-color="white"/></th>
-                        <th>Name</th>
-                        <th>Rank</th>
-                        <th>Score</th>
-                        <th>Ip</th>
-                        <th>Online</th>
-                        <th>PM</th>
-                        <th>Chatlog</th>
-                        <th>Punish</th>
-                        <th>Penalties</th>
-                        <th>Info</th>
-                    </tr>
-                </thead>
-
-                <tbody ng:repeat="player in $ctrl.players" >
-                    <tr>
-                        <td>
-                            <i class="material-icons {{player.t}}-text">label</i>
-                            <span class="flag-icon flag-icon-{{player.cCd | lowercase}} status-flag" mac-tooltip="{{player.c}}" mac-tooltip-direction="top"></span>
-                        </td>
-                        <td><user-name b3id="player.id" name="player.n"></user-name></td>
-                        <td mac-tooltip="{{player.gr.name}}" mac-tooltip-direction="left">
-                            <i class="material-icons grey-text" ng-show="{{player.gr.level}}==0">face</i>
-                            <i class="material-icons grey-text text-lighten-2" ng-show="{{player.gr.level}}==1">face</i>
-                            <i class="material-icons grey-text text-lighten-3" ng-show="{{player.gr.level}}==20">face</i>
-                            <i class="material-icons grey-text" ng-show="{{player.gr.level}}==30">face</i>
-                            <i class="material-icons green-text" ng-show="{{player.gr.level}}==40">face</i>
-                            <i class="material-icons green-text" ng-show="{{player.gr.level}}==50">star</i>
-                            <i class="material-icons amber-text" ng-show="{{player.gr.level}}==55">star</i>
-                            <i class="material-icons red-text" ng-show="{{player.gr.level}}==70">star</i>
-                            <i class="material-icons amber-text text-lighten-4" ng-show="{{player.gr.level}}==60">star</i>
-                            <i class="material-icons god-icon" ng-show="{{player.gr.level}}>=80">stars</i>
-                        </td>
-                        <td>{{player.sc}}</td>
-                        <td><a href="https://www.whoismyisp.org/ip/{{player.ip}}" target="_blank">{{player.ip}}</a></td>
-                        <td>
-                            <span class="time-stamp" mac-tooltip="{{ player.jo | date:'medium'}}" mac-tooltip-direction="top">{{player.jo/1000 | timestamp}}</span>
-                        </td>
-                        <td>
-                            <span class="waves-effect btn-flat white-text" ng-click="$ctrl.status.pm(player.sId ,player.n,player.id)">
-                                <i class="material-icons">message</i>
-                            </span>
-                        </td>
-                        <td mac-tooltip="Show chatlog of {{player.n}}" mac-tooltip-direction="top">
-                            <a class="waves-effect btn-flat" ui-sref="chat.user({b3id:{{player.id}}})">
-                                <i class="material-icons">redo</i>
-                            </a>
-                        </td>
-                        <td>
-                            <a class="waves-effect btn-flat" ng-click="$ctrl.status.punishModal(player.sId, player.n)">
-                                <i class="material-icons">pan_tool</i>
-                            </a>
-                        </td>
-                        <td mac-tooltip="Show penalties of {{player.n}}" mac-tooltip-direction="top">
-                            <a class="waves-effect btn-flat" ui-sref="penalties.user({b3id:{{player.id}}})">
-                                <i class="material-icons">redo</i>
-                            </a>
-                        </td>
-                        <td>
-                            <a ui-sref="user({b3id:{{player.id}}})"><i class="material-icons accent">search</i></a>
-                        </td>
-                    </tr>
-
-                </tbody>
-            </table>
+        <div class="col m12 l4">
+            <chat auto-update="true"></chat>
         </div>
     </div>
 </div>

@@ -14,6 +14,10 @@ fieldset{
   display:none;
 }
 
+.btn-primary:active{
+  background: lighten($secondary-color,40%);
+  font-weight:bolder;
+}
 .alert, .clearfix{
   text-align: center;
 }
