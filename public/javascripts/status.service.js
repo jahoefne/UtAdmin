@@ -7,10 +7,11 @@ angular.module('UtAdmin').factory('StatusService', function ($http, $interval) {
     var updateInterval = 4500;
 
     this.update = function () {
-       // console.log("Updating Status Service");
+        // console.log("Updating Status Service");
         $http.get("online-players.json").success(function (result) {
             this.players.length = 0;
             [].push.apply(this.players, result);
+            console.log(this.players.length);
         }.bind(this));
 
     }.bind(this);
@@ -24,7 +25,7 @@ angular.module('UtAdmin').factory('StatusService', function ($http, $interval) {
         }
         for (var i = 0; i < this.players.length; i++) {
             if (this.players[i].id == id) {
-                return {online: true, slot: this.players[i].sId}
+                return {online: true, slot: this.players[i].serverId}
             }
         }
         return {online: false};
@@ -111,11 +112,11 @@ angular.module('UtAdmin').factory('StatusService', function ($http, $interval) {
 
     this.restartServer = function () {
         vex.dialog.confirm({
-            message: 'Resart server? This will kick all online players!',
+            message: 'Restart server? This will kick all online players!',
             callback: function (value) {
                 if (value) {
                     $.get("/restart-server").done(function () {
-                        Materialize.toast('Resarted Server!', 1500);
+                        Materialize.toast('Restarted Server!', 1500);
                     });
                 }
             }
@@ -124,11 +125,11 @@ angular.module('UtAdmin').factory('StatusService', function ($http, $interval) {
 
     this.restartB3 = function () {
         vex.dialog.confirm({
-            message: 'Resart b3? It can take up to 2 minutes before UtAdmin is completely functional afterwards.',
+            message: 'Restart b3? It can take up to 2 minutes before UtAdmin is completely functional afterwards.',
             callback: function (value) {
                 if (value) {
                     $.get("/restart-b3").done(function () {
-                        Materialize.toast('Resarted B3!', 1500);
+                        Materialize.toast('Restarted B3!', 1500);
                     });
                 }
             }

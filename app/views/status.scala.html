@@ -50,44 +50,44 @@
                         <tbody ng:repeat="player in $ctrl.players" >
                             <tr>
                                 <td>
-                                    <i class="tiny material-icons {{player.t}}-text">fiber_manual_record</i>
-                                    <span class="flag-icon flag-icon-{{player.cCd | lowercase}} status-flag" mac-tooltip="{{player.c}}" mac-tooltip-direction="top"></span>
+                                    <i class="tiny material-icons {{player.team}}-text">fiber_manual_record</i>
+                                    <span class="flag-icon flag-icon-{{player.countyCode | lowercase}} status-flag" mac-tooltip="{{player.country}}" mac-tooltip-direction="top"></span>
                                 </td>
-                                <td><user-name b3id="player.id" name="player.n"></user-name></td>
+                                <td><user-name b3id="player.id" name="player.name"></user-name></td>
                                 <td mac-tooltip="{{player.gr.name}}" mac-tooltip-direction="left">
-                                    <i class="material-icons grey-text" ng-show="{{player.gr.level}}==0">face</i>
-                                    <i class="material-icons grey-text text-lighten-2" ng-show="{{player.gr.level}}==1">face</i>
-                                    <i class="material-icons grey-text text-lighten-3" ng-show="{{player.gr.level}}==20">face</i>
-                                    <i class="material-icons grey-text" ng-show="{{player.gr.level}}==30">face</i>
-                                    <i class="material-icons green-text" ng-show="{{player.gr.level}}==40">face</i>
-                                    <i class="material-icons green-text" ng-show="{{player.gr.level}}==50">star</i>
-                                    <i class="material-icons amber-text" ng-show="{{player.gr.level}}==55">star</i>
-                                    <i class="material-icons red-text" ng-show="{{player.gr.level}}==70">star</i>
-                                    <i class="material-icons amber-text text-lighten-4" ng-show="{{player.gr.level}}==60">star</i>
-                                    <i class="material-icons god-icon" ng-show="{{player.gr.level}}>=80">stars</i>
+                                    <i class="material-icons grey-text" ng-show="{{player.group.level}}==0">face</i>
+                                    <i class="material-icons grey-text text-lighten-2" ng-show="{{player.group.level}}==1">face</i>
+                                    <i class="material-icons grey-text text-lighten-3" ng-show="{{player.group.level}}==20">face</i>
+                                    <i class="material-icons grey-text" ng-show="{{player.group.level}}==30">face</i>
+                                    <i class="material-icons green-text" ng-show="{{player.group.level}}==40">face</i>
+                                    <i class="material-icons green-text" ng-show="{{player.group.level}}==50">star</i>
+                                    <i class="material-icons amber-text" ng-show="{{player.group.level}}==55">star</i>
+                                    <i class="material-icons red-text" ng-show="{{player.group.level}}==70">star</i>
+                                    <i class="material-icons amber-text text-lighten-4" ng-show="{{player.group.level}}==60">star</i>
+                                    <i class="material-icons god-icon" ng-show="{{player.group.level}}>=80">stars</i>
                                 </td>
                                 <td>{{player.sc}}</td>
                                 <td class="hide-on-small-only"><a href="https://www.whoismyisp.org/ip/{{player.ip}}" class="waves-effect waves-light" target="_blank">
                                     {{player.ip}}</a></td>
                                 <td>
-                                    <span class="time-stamp" mac-tooltip="{{ player.jo | date:'medium'}}" mac-tooltip-direction="top">{{player.jo/1000 | timestamp}}</span>
+                                    <span class="time-stamp" mac-tooltip="{{ player.joined | date:'medium'}}" mac-tooltip-direction="top">{{player.jo/1000 | timestamp}}</span>
                                 </td>
                                 <td>
-                                    <span class="waves-effect waves-light btn-flat" ng-click="$ctrl.status.pm(player.sId ,player.n,player.id)">
+                                    <span class="waves-effect waves-light btn-flat" ng-click="$ctrl.status.pm(player.serverId ,player.name,player.id)">
                                         <i class="material-icons">message</i>
                                     </span>
                                 </td>
-                                <td class="hide-on-med-and-down hide" mac-tooltip="Show chatlog of {{player.n}}" mac-tooltip-direction="top">
+                                <td class="hide-on-med-and-down hide" mac-tooltip="Show chatlog of {{player.name}}" mac-tooltip-direction="top">
                                     <a class="waves-effect waves-light btn-flat" ui-sref="chat.user({b3id:{{player.id}}})">
                                         <i class="material-icons">redo</i>
                                     </a>
                                 </td>
                                 <td>
-                                    <a class="waves-effect waves-light btn-flat" ng-click="$ctrl.status.punishModal(player.sId, player.n)">
+                                    <a class="waves-effect waves-light btn-flat" ng-click="$ctrl.status.punishModal(player.serverId, player.name)">
                                         <i class="material-icons">pan_tool</i>
                                     </a>
                                 </td>
-                                <td class="hide-on-med-and-down hide" mac-tooltip="Show penalties of {{player.n}}" mac-tooltip-direction="top">
+                                <td class="hide-on-med-and-down hide" mac-tooltip="Show penalties of {{player.name}}" mac-tooltip-direction="top">
                                     <a class="waves-effect waves-light btn-flat" ui-sref="penalties.user({b3id:{{player.id}}})">
                                         <i class="material-icons">redo</i>
                                     </a>

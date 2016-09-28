@@ -1,8 +1,10 @@
 var UtAdmin = angular.module('UtAdmin',
     ['yaru22.angular-timeago', 'ngAnimate',
-        'Mac','ui.router','ui.materialize', 'nvd3',
+        'Mac','ui.router','ui.materialize', 'nvd3','ngSanitize',
         'infinite-scroll']);
 
+UtAdmin.controller('MainCtrl', ['$scope', function($scope) {
+}]);
 
 angular.module('infinite-scroll').value('THROTTLE_MILLISECONDS', 1000);
 

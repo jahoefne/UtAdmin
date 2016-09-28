@@ -1,10 +1,9 @@
 package controllers
 
-import controllers.UserController.QueryUser
+import controllers.UserController. QueryUser
 import org.joda.time.DateTime
 import play.twirl.api.Html
 import scalikejdbc._
-
 import models.OnlineUser.Formatters._
 import models.User.Formatters._
 import models._
@@ -19,7 +18,7 @@ class UserController(override implicit val env: RuntimeEnvironment[UtAdminUser])
   def getJsonOnlinePlayers() = SecuredAction {
     implicit request =>
       val onlinePlayers = Json.toJson(UserController.listOnlineUsers.sortWith((a, b) => {
-        a.t > b.t || a.t == b.t && a.sc > b.sc
+        a.team > b.team || a.team == b.team && a.score > b.score
       }))
       Ok(onlinePlayers)
   }
@@ -28,9 +27,14 @@ class UserController(override implicit val env: RuntimeEnvironment[UtAdminUser])
     Ok(Json.toJson(User.UserInfo.getUserByB3Id(id)))
   }
 
+  case class Alias(name: String, used: Int, last: Long)
   def userAliasesById(id: Int) = SecuredAction { request =>
+    implicit val aliasFormat = Json.format[Alias]
+
     DB readOnly { implicit session =>
-      Ok(Json.toJson(sql"""SELECT alias from aliases WHERE client_id = $id ORDER BY time_edit LIMIT 10""".map(rs => rs.string(1)).list().apply()))
+      Ok(Json.toJson(
+        sql"""SELECT alias, num_used, time_edit
+               FROM aliases WHERE client_id = $id ORDER BY time_edit DESC LIMIT 15""".map(rs => new Alias(rs.string(1), rs.int(2), rs.long(3))).list().apply()))
     }
   }
 
@@ -152,7 +156,7 @@ object UserController {
              countries (id, checked_ip, country_code, country_name)
              VALUES (${user.id}, ${user.ip}, ${c.get.code}, ${c.get.name})
              ON DUPLICATE KEY UPDATE checked_ip= ${user.ip} , country_code = ${c.get.code}, country_name = ${c.get.name}""".execute.apply()
-    user.copy(c = c.get.name, cCd = c.get.code, ccIp = Some(user.ip))
+    user.copy(country = c.get.name, countryCode = c.get.code, checkedIp = Some(user.ip))
 
   }
 
@@ -168,25 +172,25 @@ object UserController {
             AND current_clients.level = groups.level
       """.map(rs =>
         OnlineUser(
-          n = rs.string("ColorName").dropRight(2),
+          name = rs.string("ColorName").dropRight(2),
           ip = rs.string("ip"),
           id = rs.int("DBID"),
-          gr = Group(
+          group = Group(
             bits = rs.int("group_bits"),
             level = rs.int("group_level"),
             name = rs.string("group_name")),
-          sc = rs.int("Score"),
-          t = {
+          score = rs.int("Score"),
+          team = {
             val t = rs.underlying.getInt("Team")
             Teams.apply(t).toString
           },
-          jo = new DateTime(rs.long("time_edit") * 1000L),
-          sId = rs.int("CID"),
+          joined = new DateTime(rs.long("time_edit") * 1000L),
+          serverId = rs.int("CID"),
           xlrId = rs.int("xlr_id"),
-          c = rs.stringOpt("country_name"),
-          cCd = rs.stringOpt("country_code"),
-          ccIp = rs.stringOpt("checked_ip")
+          country = rs.stringOpt("country_name"),
+          countryCode = rs.stringOpt("country_code"),
+          checkedIp = rs.stringOpt("checked_ip")
         )).list().apply().toSeq
-        .map(x => if (x.c.isEmpty || x.ip != x.ccIp.getOrElse("")) updateCountry(x) else x)
+        .map(x => if (x.country.isEmpty || x.ip != x.checkedIp.getOrElse("")) updateCountry(x) else x)
   }
 }

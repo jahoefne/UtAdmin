@@ -28,7 +28,7 @@ class Public(override implicit val env: RuntimeEnvironment[UtAdminUser])
   def publicStatus() = Cached.status(_ => "onlinePlayersPublic", status = 200, duration = 5) {
     Action {
       Ok(views.html.publicStatus(UserController.listOnlineUsers.
-        sortWith(_.sc > _.sc))).withHeaders(
+        sortWith(_.score > _.score))).withHeaders(
         "Access-Control-Allow-Origin" -> "*",
         "Access-Control-Allow-Methods" -> "POST, GET, OPTIONS, PUT, DELETE",
         "Access-Control-Allow-Headers" -> "x-requested-with,content-type,Cache-Control,Pragma,Date"

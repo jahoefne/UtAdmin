@@ -11,18 +11,18 @@ import play.api.libs.json.Json
 import scalikejdbc._
 
 
-case class OnlineUser(n: String,
+case class OnlineUser(name: String,
                       ip: String,
                       id: Int,
-                      gr: Group,
-                      t: String,
-                      sc: Int,
-                      jo: DateTime,
-                      sId: Int,
+                      group: Group,
+                      team: String,
+                      score: Int,
+                      joined: DateTime,
+                      serverId: Int,
                       xlrId: Int,
-                      c: Option[String], // country
-                      cCd: Option[String], // code
-                      ccIp: Option[String] // checked ip
+                      country: Option[String], // country
+                      countryCode: Option[String], // code
+                      checkedIp: Option[String] // checked ip
                      )
 
 object OnlineUser {
