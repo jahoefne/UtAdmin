@@ -2,7 +2,7 @@ UtAdmin.component('userName', {
 
     template: '<a ui-sref="user({b3id:{{$ctrl.b3id}}})"  class="waves-effect waves-light truncate">' +
     '{{$ctrl.name | limitTo: 20 }}{{$ctrl.name.length > 20 ? "..." : ""}}</a>' +
-    '<span class="btn btn-flat tiny" ng-click="$ctrl.showAliases()"><i class="material-icons">people</i></span>',
+    '<span class="btn btn-flat" style="padding-left:2px!important;padding-right:2px!important;" ng-click="$ctrl.showAliases()"><i class="material-icons">people</i></span>',
 
     bindings: {
         b3id: '<',

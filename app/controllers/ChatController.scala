@@ -74,6 +74,9 @@ object ChatActions {
   /** Main chat query method, allows to query all combinations of the defined parameters */
   def queryChat(count: Int, page: Int, radio: Boolean, userId: Option[Int], fromMessageId: Option[Int], queryString: Option[String]): Seq[Message] = DB readOnly {
     implicit session =>
+
+      val countryJoin =  sqls"LEFT OUTER JOIN countries ON chatlog.client_id = countries.id"
+
       val offset = if (fromMessageId.isDefined) {
         fromMessageId.get - count * page
       } else {
@@ -97,22 +100,22 @@ object ChatActions {
           queryString match {
             case Some(q) =>
               val likeQuery = sqls.like(sqls"msg", "%" + q + "%")
-              sql"""SELECT * FROM chatlog WHERE ${likeQuery} AND ${radioLike} AND ${userLike} ORDER BY id DESC LIMIT $count OFFSET $offset""".map(rs => Message.fromRS(rs))
+              sql"""SELECT * FROM chatlog $countryJoin WHERE ${likeQuery} AND ${radioLike} AND ${userLike} ORDER BY chatlog.id DESC LIMIT $count OFFSET $offset""".map(rs => Message.fromRS(rs))
                 .list().apply().toSeq
             case _ =>
-              sql"""SELECT * FROM chatlog WHERE ${radioLike} AND ${userLike} ORDER BY id DESC  LIMIT $count OFFSET $offset""".map(rs => Message.fromRS(rs)).list().apply().toSeq
+              sql"""SELECT * FROM chatlog $countryJoin WHERE ${radioLike} AND ${userLike} ORDER BY chatlog.id DESC  LIMIT $count OFFSET $offset""".map(rs => Message.fromRS(rs)).list().apply().toSeq
           }
 
         case Some(id) =>
-          val offset2 = count * page + sql"""SELECT COUNT(*)  FROM chatlog WHERE id > ${id} AND ${radioLike} AND ${userLike}""".map(rs => rs.int(1)).single().apply().getOrElse(0)
+          val offset2 = count * page + sql"""SELECT COUNT(*)  FROM chatlog WHERE chatlog.id > ${id} AND ${radioLike} AND ${userLike}""".map(rs => rs.int(1)).single().apply().getOrElse(0)
           queryString match {
             case Some(q) =>
               val likeQuery = sqls.like(sqls"`msg`", "%" + q + "%")
-              sql"""SELECT * FROM chatlog WHERE ${likeQuery} AND ${radioLike}  AND ${userLike} ORDER BY id DESC LIMIT $count OFFSET $offset2""".map(rs => Message.fromRS(rs))
+              sql"""SELECT * FROM chatlog $countryJoin WHERE ${likeQuery} AND ${radioLike}  AND ${userLike} ORDER BY chatlog.id DESC LIMIT $count OFFSET $offset2""".map(rs => Message.fromRS(rs))
                 .list().apply().toSeq
             case _ =>
               println("Fo bar baz")
-              sql"""SELECT * FROM chatlog WHERE ${radioLike} AND ${userLike} ORDER BY id DESC LIMIT $count OFFSET $offset2""".map(rs => Message.fromRS(rs)).list().apply().toSeq
+              sql"""SELECT * FROM chatlog $countryJoin WHERE ${radioLike} AND ${userLike} ORDER BY chatlog.id DESC LIMIT $count OFFSET $offset2""".map(rs => Message.fromRS(rs)).list().apply().toSeq
 
           }
       }

@@ -37,6 +37,13 @@ UtAdmin.component('chat', {
             console.log("Error Loading Chat");
         };
 
+        ctrl.isRadioMessage = function (input) {
+            console.log(input);
+            if (input) {
+                return input.indexOf("RADIO") == 0;
+            }
+        };
+
         // Show conversation based on starting message id
         ctrl.showConv = function (id) {
             ctrl.state.fromMessageId = id;

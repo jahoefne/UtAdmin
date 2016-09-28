@@ -1,6 +1,6 @@
 var UtAdmin = angular.module('UtAdmin',
     ['yaru22.angular-timeago', 'ngAnimate',
-        'Mac','ui.router','ui.materialize', 'nvd3','ngSanitize',
+        'Mac','ui.router','ui.materialize', 'nvd3','ngSanitize', 'ngMdIcons',
         'infinite-scroll']);
 
 UtAdmin.controller('MainCtrl', ['$scope', function($scope) {
@@ -41,6 +41,19 @@ UtAdmin.directive('disableAnimation', function ($animate) {
     };
 });
 
+
+UtAdmin.filter('radioFilter', function () {
+    return function (input) {
+        if (input) {
+            if(input.indexOf("RADIO")==0){
+                console.log("Filtering Radio");
+               return input.substring(9);
+            }
+            return input;
+        }
+    }
+});
+
 UtAdmin.filter('urtstring', function () {
     return function (input) {
         if (input) {
@@ -48,6 +61,7 @@ UtAdmin.filter('urtstring', function () {
         }
     }
 });
+
 
 UtAdmin.filter('secondsToDuration', [function() {
     return function(seconds) {
