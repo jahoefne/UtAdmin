@@ -51,7 +51,7 @@
                             <tr>
                                 <td>
                                     <i class="tiny material-icons {{player.team}}-text">fiber_manual_record</i>
-                                    <span class="flag-icon flag-icon-{{player.countyCode | lowercase}} status-flag" mac-tooltip="{{player.country}}" mac-tooltip-direction="top"></span>
+                                    <span class="flag-icon flag-icon-{{player.countryCode | lowercase}} status-flag" mac-tooltip="{{player.country}}" mac-tooltip-direction="top"></span>
                                 </td>
                                 <td><user-name b3id="player.id" name="player.name"></user-name></td>
                                 <td mac-tooltip="{{player.gr.name}}" mac-tooltip-direction="left">
@@ -70,7 +70,7 @@
                                 <td class="hide-on-small-only"><a href="https://www.whoismyisp.org/ip/{{player.ip}}" class="waves-effect waves-light" target="_blank">
                                     {{player.ip}}</a></td>
                                 <td>
-                                    <span class="time-stamp" mac-tooltip="{{ player.joined | date:'medium'}}" mac-tooltip-direction="top">{{player.jo/1000 | timestamp}}</span>
+                                    <span class="time-stamp" mac-tooltip="{{ player.joined | date:'medium'}}" mac-tooltip-direction="top">{{player.joined/1000 | timestamp}}</span>
                                 </td>
                                 <td>
                                     <span class="waves-effect waves-light btn-flat" ng-click="$ctrl.status.pm(player.serverId ,player.name,player.id)">
