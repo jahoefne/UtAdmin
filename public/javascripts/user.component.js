@@ -39,15 +39,15 @@ UtAdmin.component('user', {
         };
 
         this.$onInit = function () {
-            $.getJSON("http://geoip.nekudo.com/api/" + ctrl.user.currentIp + "/en/full/",
+            $.getJSON("http://ip-api.com/json/" + ctrl.user.currentIp,
                 function (json) {
-                    ctrl.countryCode = json.country.iso_code.toLowerCase();
-                    ctrl.countryName = json.country.names.en;
+                    ctrl.countryCode = json.countryCode.toLowerCase();
+                    ctrl.countryName = json.country;
 
                     var map = L.map('user-location-map', {
                         zoomControl: true,
                         scrollWheelZoom: false
-                    }).setView([json.location.latitude, json.location.longitude], 4);
+                    }).setView([json.lat, json.lon], 4);
 
                     L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.{ext}', {
                         attribution: 'Tiles:<a href="http://stamen.com">Stamen</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Data &copy; <a href="http://www.openstreetmap.org/copyright">OSM</a>',
@@ -57,20 +57,26 @@ UtAdmin.component('user', {
                         ext: 'png'
                     }).addTo(map);
 
-                    var marker = L.marker([json.location.latitude, json.location.longitude]).addTo(map);
+                    var marker = L.marker([json.lat, json.lon]).addTo(map);
 
-                    var cityOpt = "";
-                    console.log(json);
-                    if (json.city != undefined) {
-                        cityOpt = "<br>City: " + json.city.names.en;
+                    var popup = "<b>";
+                    if (json.country != undefined) {
+                        popup += 'Country: <span class="flag-icon flag-icon-' + json.countryCode.toLowerCase() + '"></span> (' + json.country + ')'
                     }
-
-                    marker.bindPopup(
-                        "<b>" +
-                        "Country: "
-                        + '<span class="flag-icon flag-icon-' + json.country.iso_code.toLowerCase() + '"></span> (' + json.country.names.en + ')'
-                        + cityOpt +
-                        "</b>").openPopup();
+                    if (json.regionName != undefined) {
+                        popup += "<br>Region: " + json.regionName;
+                    }
+                    if (json.city != undefined) {
+                        popup += "<br>City: " + json.city;
+                    }
+                    if (json.isp != undefined) {
+                        popup += "<br>ISP: " + json.org;
+                    }
+                    if (json.timezone != undefined) {
+                      //  console.log(json.timezone);
+                      //  popup += "<br>LocalTime: " + moment().tz(json.timezone).format("HH:mm:ss (DD.MM.YY)");
+                    }
+                    marker.bindPopup(popup).openPopup();
                 });
         };
 
