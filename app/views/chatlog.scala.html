@@ -74,7 +74,7 @@
                                 <form>
                                     <div class="input-field">
                                         <input id="search" type="search" placeholder="Say something" ng-model="$ctrl.talkbackTxt" ng-enter="$ctrl.talkback()">
-                                        <label for="search"> <i class="material-icons">message</i></label>
+                                        <label for="search"><i class="material-icons">message</i></label>
                                         <i class="material-icons">close</i>
                                     </div>
                                 </form>
@@ -89,7 +89,9 @@
                                     mac-tooltip="{{msg.country}}" mac-tooltip-direction="top"
                                     style="box-shadow: 0px 0px 0px 1px #000;" class="flag-icon flag-icon-{{msg.countryCode | lowercase}}"></i>
                                 </i>
-                                <span class="title"><user-name name="msg.userName" b3id="msg.userId"></user-name></span>
+                                <span class="title" style="opacity:0.7;">
+                                    <user-name name="msg.userName" b3id="msg.userId"></user-name>
+                                </span>
                                 <p>
                                     <any class="accent" style="font-size:larger;">
 
@@ -99,14 +101,14 @@
                                         {{msg.txt | urtstring | radioFilter}}
                                     </any>
                                     <br>
-                                    <any style="font-weight: 200;opacity:0.7;">
+                                    <any style="font-weight: 200;opacity:0.7;font-size:small">
                                    sent to {{msg.scope}}
                                         <span ng-if="msg.targetId!=undefined">
                                             <user-name name="msg.targetName" b3id="msg.targetId"></user-name>
                                         </span>
                                     </any>
                                 </p>
-                                <any class="secondary-content">
+                                <any class="secondary-content" style="font-size:small">
                                     <span ng-show="$ctrl.state.autoUpdate" mac-tooltip="{{msg.timeStamp | date:'medium'}}" mac-tooltip-direction="top">{{msg.timeStamp/1000 | timestamp}}</span>
                                     <span ng-show="!$ctrl.state.autoUpdate" mac-tooltip="{{msg.timeStamp/1000 | timestamp}}" mac-tooltip-direction="top">{{msg.timeStamp | date:'dd. MM. yyyy HH:mm:ss'}}</span>
                                     <span ng-show="!$ctrl.state.updating && ($ctrl.state.userId || $ctrl.state.queryString)" class="time-stamp" mac-tooltip="Jump to Conversation" mac-tooltip-direction="top">

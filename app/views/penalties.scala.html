@@ -46,8 +46,8 @@
                                 <th><mac-spinner ng-show="$ctrl.updating" mac-spinner-color="white"/>Type</th>
                                 <th>User</th>
                                 <th>Reason</th>
-                                <th>Expires</th>
-                                <th>Duration</th>
+                                <th ng-show="$ctrl.state.filterType != 'Kick' && $ctrl.state.filterType != 'Ban'">Expires</th>
+                                <th ng-show="$ctrl.state.filterType != 'Kick' && $ctrl.state.filterType != 'Ban'">Duration</th>
                                 <th>Admin</th>
                                 <th>Added</th>
                                 <th></th>
@@ -70,16 +70,15 @@
                                     <user-name b3id="penalty.playerId" name="penalty.playerName"></user-name>
                                 </td>
                                 <td>{{penalty.reason | urtstring}}</td>
-                                <td>
+                                <td ng-show="$ctrl.state.filterType != 'Kick' && $ctrl.state.filterType != 'Ban'">
                                     <span ng-show="penalty.expires!=0">{{penalty.expires | date:'d.MM.yy hh:mm:ss'}}</span>
                                 </td>
 
-                                <td>
+                                <td ng-show="$ctrl.state.filterType != 'Kick' && $ctrl.state.filterType != 'Ban'">
                                     <span ng-if="penalty.duration">{{ penalty.duration | secondsToDuration}}</span>
                                 </td>
                                 <td>
-
-                                    <a ng-show="penalty.adminId!=0" ui-sref="user({b3id:{{penalty.adminId}}})">{{penalty.adminName | urtstring}}</a>
+                                    <user-name ng-show="penalty.adminId!=0" name="penalty.adminName" b3id="penalty.adminId"></user-name>
                                     <span ng-show="penalty.adminId==0" class="text-blue">B3</span>
                                 </td>
 

@@ -10,24 +10,13 @@ UtAdmin.component('userName', {
         name: '<'
     },
 
-    controller: function ($http, $interval, $timeout, $httpParamSerializer, $filter, $sanitize) {
+    controller: function ($http, $interval, $timeout, $httpParamSerializer, $filter, $sanitize, $rootScope) {
         var ctrl = this;
 
         ctrl.name = $filter('urtstring')(ctrl.name);
 
         ctrl.showAliases = function () {
-
-            $http.get("user-aliases.json?" + $httpParamSerializer({id: ctrl.b3id})).success(function (result) {
-                var message = $sanitize(ctrl.name);
-                message += (result.length != 0) ? "\'s most recent aliases: " : " doesn't have any aliases.";
-                message = "<b>" + message + "</b><ul>"
-
-                for (var i = 0; i < result.length; i++) {
-                    message = message + "<li><b>" + $sanitize(result[i].name)+ "</b> used "+result[i].used +"x times"+"</li>";
-                }
-                message += "</ul>";
-                vex.dialog.alert({ unsafeMessage: message });
-            }.bind(this));
+            $rootScope.$broadcast("modalForUser", { name: ctrl.name, b3id: ctrl.b3id });
         };
 
         ctrl.showIt = function () {

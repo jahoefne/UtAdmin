@@ -34,7 +34,8 @@ class UserController(override implicit val env: RuntimeEnvironment[UtAdminUser])
     DB readOnly { implicit session =>
       Ok(Json.toJson(
         sql"""SELECT alias, num_used, time_edit
-               FROM aliases WHERE client_id = $id ORDER BY time_edit DESC LIMIT 15""".map(rs => new Alias(rs.string(1), rs.int(2), rs.long(3))).list().apply()))
+               FROM aliases WHERE client_id = $id ORDER BY time_edit DESC"""
+          .map(rs => new Alias(rs.string(1), rs.int(2), rs.long(3))).list().apply()))
     }
   }
 

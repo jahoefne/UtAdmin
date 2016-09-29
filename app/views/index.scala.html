@@ -72,6 +72,7 @@
         <script type="text/javascript" src="@routes.Assets.at("javascripts/online-actions.component.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/user-name.component.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/spinner.component.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/alias-modal.controller.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/serverStats.component.js")"></script>
 
         <script type="text/javascript" src="@routes.Assets.at("javascripts/stats/timeInfo.component.js")"></script>
@@ -99,7 +100,7 @@
                         <li ui-sref-active="active"><a ui-sref="users" class="waves-effect waves-light">Users</a></li>
                         <li ui-sref-active="active"><a ui-sref="penalties" class="waves-effect waves-light">Penalties</a></li>
                         <li ui-sref-active="active"><a ui-sref="serverStats" class="waves-effect waves-light">Server Stats</a></li>
-                        <li ui-sref-active="active"><a ui-sref="accounts" class="waves-effect waves-light">Account @if(loggedInUser.rank == Ranks.God){ & Administration}</a></li>
+                        <li ui-sref-active="active"><a ui-sref="accounts" class="waves-effect waves-light">Account @if(loggedInUser.rank == Ranks.God) { & Administration}</a></li>
                         <li><a href="/auth/logout" class="waves-effect waves-light">Logout</a></li>
                     </ul>
                 </div>
@@ -111,6 +112,35 @@
                 <div class="well" ui-view></div>
             </div>
         </main>
+
+
+        <span ng-controller="AliasModalCtrl">
+                <!-- Modal Structure -->
+            <div id="aliasModal" class="modal bottom-sheet">
+
+                <div class="modal-content">
+
+                    <ul class="collection with-header">
+                        <li class="collection-header"><h4>{{name}}'s aliases</h4></li>
+
+                        <li class="collection-item" ng-show="aliases.length==0" >
+                            <h6>doesn't have any aliases…</h6>
+                        </li>
+
+                        <li class="collection-item" ng-repeat="alias in aliases | orderBy:aliasOrder" ng-show="aliases.length!=0">
+                            <div>
+                                <i class="material-icons accent" ng-if="isClanTagName(alias.name)">grade</i>
+                                {{alias.name}} <span style="font-weight:200">used {{alias.used}} time</span>
+                                <any class="secondary-content">
+                                    last {{alias.last | timestamp}}
+                                </any>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </span>
+
     </body>
 
 
@@ -118,7 +148,7 @@
         <div class="container">
             <div class="row">
                 <div class="center">
-                   <!--<img src=http://cache.www.gametracker.com/images/graphs/server_players.php?GSID=5036943&start=-1d">-->
+                        <!--<img src=http://cache.www.gametracker.com/images/graphs/server_players.php?GSID=5036943&start=-1d">-->
                         Online - @MongoLogger.getLoggedInUsers.mkString(", ")
                 </div>
             </div>
