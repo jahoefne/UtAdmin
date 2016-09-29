@@ -38,7 +38,7 @@ UtAdmin.component('chat', {
         };
 
         ctrl.isRadioMessage = function (input) {
-            console.log(input);
+            //console.log(input);
             if (input) {
                 return input.indexOf("RADIO") == 0;
             }
