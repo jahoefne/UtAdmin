@@ -43,7 +43,7 @@
                     <table class="bordered highlight">
                         <thead>
                             <tr>
-                                <th><mac-spinner ng-show="$ctrl.updating" mac-spinner-color="white"/>Type</th>
+                                <th ><mac-spinner ng-show="$ctrl.updating" mac-spinner-color="white"/>Type</th>
                                 <th>User</th>
                                 <th>Reason</th>
                                 <th ng-show="$ctrl.state.filterType != 'Kick' && $ctrl.state.filterType != 'Ban'">Expires</th>
@@ -75,7 +75,7 @@
                                 </td>
 
                                 <td ng-show="$ctrl.state.filterType != 'Kick' && $ctrl.state.filterType != 'Ban'">
-                                    <span ng-if="penalty.duration">{{ penalty.duration | secondsToDuration}}</span>
+                                    <span ng-if="penalty.duration">{{ penalty.duration*60 | secondsToDuration}}</span>
                                 </td>
                                 <td>
                                     <user-name ng-show="penalty.adminId!=0" name="penalty.adminName" b3id="penalty.adminId"></user-name>
