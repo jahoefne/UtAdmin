@@ -1,5 +1,6 @@
 @(loggedInUser: UtAdminUser)
 
+
 <div class="user-component">
 
         <!-- User Location Map -->
@@ -16,191 +17,193 @@
     </div>
     <div class="row">
         <div class="col s6">
-            <ul class="collapsible z-depth-3 animated fadeInLeftBig" data-collapsible="expandable">
-                    <!-- Name and Aliases -->
-                <li>
-                    <div class="collapsible-header">
-                        <i class="material-icons accent">face</i>
-                        <span class="left">
-                            <span class="highlight">{{$ctrl.user.currentName}}</span> from {{$ctrl.countryName}}
-                        </span>
-                        <span class="center-align">
-                                &nbsp;is a {{$ctrl.user.group.name}}
-
-                            <span ng-show="{{$ctrl.user.maskedAs}}">
-                                and <span class="highlight">masked as {{$ctrl.user.maskedAs.name}}</span>
-                            </span>
-                        </span>
-                        <span class="right">
-                            and has
-                            <span class="highlight">
-                                <ng-pluralize count="$ctrl.user.aliases.length" when="{'0': '\'s no alias.', 'one': '\'s 1 alias.', 'other': '\'s {} aliases.'}"></ng-pluralize>
-                            </span>
-                        </span>
-                    </div>
-
-                    <div class="collapsible-body">
-                        @if(loggedInUser.rank == Ranks.God || loggedInUser.rank == Ranks.Admin) {
-                            <br> <br>
-                            <div>
-                                <div class="input-field" style="width:50% ; margin:auto ;" >
-                                    <select ng-model="$ctrl.groupBits" ng-change="$ctrl.changeGroup()" material-select>
-                                    @for(group <- B3GroupController.getGroups()) {
-                                        <option value="@group.bits">@group.name</option>
-                                    }
-                                    </select>
-                                    <label>Change Rank</label>
-                                </div>
-                            </div>
-                            <br> <br>
-                        }
-                        <ul class="collection" ng-repeat="alias in $ctrl.user.aliases  | orderBy:'lastUsed' : true">
-                            <li class="collection-item">
-                            {{alias.name}}
-                                <span class="right">
-                                used {{alias.usedCount}}
-                                    x last
-                                    <span class="time-stamp" mac-tooltip="{{alias.lastUsed | date:'medium'}}" mac-tooltip-direction="top">{{alias.lastUsed | timestamp}}</span>
-                                </span>
-                            </li>
-                        </ul>
-                    </div>
-
+            <ul class="collection z-depth-3 animated fadeInLeftBig">
+                @* Name and Aliases *@
+                <li class="collection-item">
+                    <user-name b3id="$ctrl.user.b3Id" name="$ctrl.user.currentName" alias-count="$ctrl.user.aliases.length"></user-name>
                 </li>
 
-                    <!-- IP and Aliases -->
-                <li>
-                    <div class="collapsible-header">
-                        <i class="material-icons accent">settings_ethernet</i>
-                        last connection via <span class="highlight">
-                        <a href="https://www.whoismyisp.org/ip/{{$ctrl.user.currentIp}}" target="_blank" class="waves-effect waves-light" >{{$ctrl.user.currentIp}}</a></span>
-                        <span class="right"> and <span class="highlight">{{$ctrl.user.ipAliases.length}}</span> other IPs in the past</span>
-                    </div>
-
-
-                    <div class="collapsible-body" ng-show="$ctrl.user.ipAliases.length!=0">
-                        <ul class="collection" ng-repeat="ip in $ctrl.user.ipAliases | orderBy:'lastUsed' : true">
-
-                            <li class="collection-item">
-                                <a href="https://www.whoismyisp.org/ip/{{ip.ip}}" target="_blank" class="waves-effect waves-light btn-flat">{{ip.ip}}</a>
-                                <span class="right">{{ip.usedCount}}   x last
-                                    <span class="time-stamp" mac-tooltip="{{ip.lastUsed | date:'medium'}}" mac-tooltip-direction="top">{{ip.lastUsed | timestamp}}</span>
-                                </span>
-                            </li>
-
-                        </ul>
-                    </div>
-                </li>
-
-
-                    <!-- Xlrstats-->
-                <li>
-                    <div class="collapsible-header">
-                        <span class="left">
-                            <i class="material-icons accent">stars</i>XlrStats-Id <span class="highlight">{{$ctrl.user.xlrId}}</span>
-                        </span>
-                        <span class="right">
-                            <a href="http://xlrstats.drunknoobs.com/index.php?func=player&playerdbid={{$ctrl.user.b3Id}}&config=1" class="waves-effect waves-light" target="_blank">
-                                <i class="material-icons accent">redo</i></a>
-                        </span>
-                    </div>
-
+                @* Rank *@
+                <li class="collection-item">
+                    <span class="highlight">is a {{$ctrl.user.group.name}}</span>
                     @if(loggedInUser.rank == Ranks.God || loggedInUser.rank == Ranks.Admin) {
+                        <div class="secondary-content">
+                            <a class='btn btn-flat waves-effect waves-red collection-button' href='#rankModal' modal><i class="material-icons">mode_edit</i></a>
+                        </div>
+                    }
+                    </li>
 
-                        <div class="collapsible-body">
-                            <div class="center-align">
-                                <div class="row">
-                                    <div class="switch">
-                                        <label>
-                                            Visible
-                                            <input id="xlrstats-visibility-switch" type="checkbox" ng-model="$ctrl.user.xlrVisible" ng-change="$ctrl.updateXlrVisibility()">
-                                            <span class="lever"></span>
-                                            Hidden
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
+                @* Masked As *@
+                <li class="collection-item" ng-show="{{$ctrl.user.maskedAs}}">
+                    and <span class="highlight">masked as {{$ctrl.user.maskedAs.name}}</span>
+                    @if(false && (loggedInUser.rank == Ranks.God || loggedInUser.rank == Ranks.Admin)) {
+                        <div class="secondary-content">
+                            <a class="btn btn-flat waves-effect waves-red collection-button" href='#maskAsModal' modal><i class="material-icons">mode_edit</i></a>
                         </div>
                     }
                 </li>
 
-
-                <li>
-                    <div class="collapsible-header">
-                        <span class="left">
-                            <i class="material-icons accent">pan_tool</i> collected
-                            <span class="highlight">{{$ctrl.user.penaltyCount}}</span> penalties
-                        </span>
-                        <span class="right">
-                            <a ui-sref="penalties.user({b3id:$ctrl.user.b3Id})" class="waves-effect waves-light">
-                                <i class="material-icons accent">redo</i>
-                            </a>
-                        </span>
-                    </div>
-                    <div class="collapsible-body">
-                        <div class="penalty-form">
-                            <br>
-                            Add a punishment <i class="fa fa-arrow-right"></i>
-                            <label for="penaltyTypeSelect">Type:</label>
-                            <select class="form-control" id="penaltyTypeSelect" ng-model="$ctrl.ban.type" ng-change="$ctrl.banTypeChanged()" material-select>
-                                <option value="@PenaltyHandler.Warning">Warning</option>
-                                <option value="@PenaltyHandler.Notice">Notice</option>
-                                @if(loggedInUser.rank != Ranks.Mod) {
-                                    <option value="@PenaltyHandler.TempBan">TempBan</option>
-                                }
-                            </select>
-                            <span ng-show="$ctrl.ban.type != '@PenaltyHandler.Notice'">
-                                <label for="durationSelect">Duration:</label>
-                                <select class="form-control" id="durationSelect" ng-model="$ctrl.ban.duration" material-select>
-                                    <option value="@PenaltyDuration.One_day">@PenaltyDuration.One_day.toString</option>
-                                    <option value="@PenaltyDuration.Two_days">@PenaltyDuration.Two_days.toString</option>
-                                    <option value="@PenaltyDuration.One_week">@PenaltyDuration.One_week.toString</option>
-                                    <option value="@PenaltyDuration.Two_weeks">@PenaltyDuration.Two_weeks.toString</option>
-                                    <option value="@PenaltyDuration.One_month">@PenaltyDuration.One_month.toString</option>
-                                </select>
-                            </span>
-                            <label for="reasonTf">Reason:</label>
-                            <input type="text" id="reasonTf" class="form-control" ng-model="$ctrl.ban.reason" placeholder="Tk, Sk, etc.">
-                            <span class="btn" ng-click="$ctrl.punishPlayer()"><i class="material-icons left accent">pan_tool</i>Confirm</span>
-                            <br>
-                        </div>
+                @* IPs*@
+                <li class="collection-item">
+                    last connected via
+                    <span class="highlight redacted">
+                        <a href="https://www.whoismyisp.org/ip/{{$ctrl.user.currentIp}}" target="_blank" class="waves-effect waves-light" >{{$ctrl.user.currentIp}}</a>
+                    </span>
+                    and <span class="highlight">{{$ctrl.user.ipAliases.length}} other IPs</span> in the past
+                    <div class="secondary-content" ng-if="$ctrl.user.ipAliases.length!=0">
+                        <a href="#ipModal" class="btn btn-flat waves-effect waves-red collection-button" modal><i class="material-icons">settings_ethernet</i></a>
                     </div>
                 </li>
-            </ul>
+
+                    <!-- Xlrstats-->
+                <li class="collection-item">
+                    XlrStats-Id is <span class="highlight redacted">{{$ctrl.user.xlrId}}</span>
+                    <a href="http://xlrstats.drunknoobs.com/index.php?func=player&playerdbid={{$ctrl.user.b3Id}}&config=1"
+                    class="btn btn-flat waves-effect waves-light collection-button"
+                    target="_blank">
+                        <i class="material-icons">redo</i>
+                    </a>
+                    and stats are <span class="highlight"><span ng-if="!$ctrl.user.xlrVisible">Visible</span><span ng-if="$ctrl.user.xlrVisible">Hidden</span></span>
+
+                    @if(loggedInUser.rank == Ranks.God || loggedInUser.rank == Ranks.Admin) {
+                        <div class="secondary-content">
+                            <span ng-switch on="!$ctrl.user.xlrVisible" mac-tooltip="Toggle Xlrstats Visibility" mac-tooltipdirection="top">
+                                <span ng-switch-when="true" class="btn btn-flat waves-effect waves-red collection-button" ng-click="$ctrl.updateXlrVisibility(true)">
+                                    <i class="material-icons text-blue">radio_button_checked</i>
+                                </span>
+                                <span ng-switch-when="false" class="btn btn-flat waves-effect waves-red collection-button" ng-click="$ctrl.updateXlrVisibility(false)">
+                                    <i class="material-icons">radio_button_unchecked</i>
+                                </span>
+                            </span>
+                        </div>
+                    }
+                </li>
+
+                <li class="collection-item">
+                    collected  <span class="highlight">{{$ctrl.user.penaltyCount}}</span> penalties
+                    <a ui-sref="penalties.user({b3id:$ctrl.user.b3Id})" class="btn btn-flat collection-button waves-effect waves-light">
+                        <i class="material-icons">redo</i>
+                    </a>
+
+
+                    <div class="secondary-content">
+                        <a href="#addPenaltyModal"
+                        class="btn btn-flat waves-effect waves-red collection-button"
+                        mac-tooltip="Add Penalty"
+                        mac-tooltip-direction="top" modal>
+                            <i class="material-icons">pan_tool</i>
+                        </a>
+                    </div>
+                </li>
+    </ul>
+</div>
+
+
+<div class="col s6">
+    <ul class="collection z-depth-3 animated fadeInRightBig">
+        <li class="collection-item">
+            connected a total of <span class="highlight">{{$ctrl.user.numberOfConnections}}</span> times
+            <span class="secondary-content"><i class="material-icons accent">reorder</i></span>
+        </li>
+
+        <li class="collection-item">
+            GUID <span class="highlight redacted">{{$ctrl.user.guid}}</span>
+            <span class="secondary-content"><i class="material-icons accent">fingerprint</i></span>
+        </li>
+
+        <li class="collection-item">
+            played <span class="highlight">{{ $ctrl.user.totalTimeOnServer | secondsToDuration}}</span>
+            <span class="secondary-content"><i class="material-icons accent">timer</i></span>
+        </li>
+        <li class="collection-item">
+            first seen on <span class="highlight">{{$ctrl.user.firstSeen*1000 | date:'dd.MM.yy hh:mm'}}</span>
+            and last seen
+            <span class="highlight"><span class="time-stamp" mac-tooltip="{{$ctrl.user.lastSeen*1000 | date:'dd.MM.yy hh:mm'}}"
+            mac-tooltip-direction="top">{{$ctrl.user.lastSeen | timestamp}}</span>
+            </span>
+            <span class="secondary-content"><i class="material-icons accent">remove_red_eye</i></span>
+        </li>
+        <li class="collection-item">
+            <a ui-sref="chat.user({b3id: $ctrl.user.b3Id})" class="waves-effect waves-light">Check {{$ctrl.user.currentName}}'s chatlog…</a>
+            <span class="secondary-content">
+                <a ui-sref="chat.user({b3id: $ctrl.user.b3Id})" class="waves-effect waves-light"><i class="material-icons accent">redo</i></a>
+            </span>
+        </li>
+    </ul>
+</div>
+</div>
+</div>
+@* Rank Modal*@
+<div id="rankModal" class="modal bottom-sheet">
+    <div class="modal-content">
+        <div class="input-field">
+            <select ng-model="$ctrl.groupBitsChange" material-select style="z-index:-90000000;">
+            @for(group <- B3GroupController.getGroups()) {
+                <option value="@group.bits">@group.name</option>
+            }
+            </select>
+            <label>Change Rank</label>
         </div>
 
-
-        <div class="col s6">
-            <ul class="collection z-depth-3 animated fadeInRightBig">
-                <li class="collection-item">
-                    connected a total of <span class="highlight">{{$ctrl.user.numberOfConnections}}</span> times
-                    <span class="secondary-content"><i class="material-icons accent">reorder</i></span>
-                </li>
-
-                <li class="collection-item">
-                    <span class="highlight">{{$ctrl.user.guid}}</span>
-                    <span class="secondary-content"><i class="material-icons accent">fingerprint</i></span>
-                </li>
-
-                <li class="collection-item">
-                    played <span class="highlight">{{ $ctrl.user.totalTimeOnServer | secondsToDuration}}</span>
-                    <span class="secondary-content"><i class="material-icons accent">timer</i></span>
-                </li>
-                <li class="collection-item">
-                    first seen on <span class="highlight">{{$ctrl.user.firstSeen*1000 | date:'d.MM.yy hh:mm'}}</span>
-                    and last seen
-                    <span class="highlight"><span class="time-stamp" mac-tooltip="{{$ctrl.user.lastSeen | date:'medium'}}"
-                    mac-tooltip-direction="top">{{$ctrl.user.lastSeen | timestamp}}</span>
-                    </span>
-                    <span class="secondary-content"><i class="material-icons accent">remove_red_eye</i></span>
-                </li>
-                <li class="collection-item">
-                    <a ui-sref="chat.user({b3id: $ctrl.user.b3Id})" class="waves-effect waves-light">Check {{$ctrl.user.currentName}}'s chatlog…</a>
-                    <span class="secondary-content">
-                        <a ui-sref="chat.user({b3id: $ctrl.user.b3Id})" class="waves-effect waves-light"><i class="material-icons accent">redo</i></a>
-                    </span>
-                </li>
-            </ul>
+    </div>
+    <div class="modal-footer">
+        <div class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</div>
+        <div class="btn waves-effect waves-red  modal-action modal-close" ng-click="$ctrl.changeGroup()">Apply</div>
+    </div>
+</div>
+@* Mask-As Modal *@
+<div id="maskAsModal" class="modal bottom-sheet">
+    <div class="modal-content">
+        Content
+    </div>
+    <div class="modal-footer">
+        <div class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</div>
+        <div class="btn waves-effect waves-red  modal-action modal-close" ng-click="$ctrl.maskAs()">Apply</div>
+    </div>
+</div>
+@* Ip Modal *@
+<div id="ipModal" class="modal bottom-sheet">
+    <div class="modal-content">
+        <ul class="collection with-header">
+            <li class="collection-header"><h4>{{$ctrl.user.currentName}}'s ip aliases</h4></li>
+            <li class="collection-item" ng-repeat="ip in $ctrl.user.ipAliases | orderBy:'lastUsed' : true">
+                <a href="https://www.whoismyisp.org/ip/{{ip.ip}}" target="_blank" class="waves-effect waves-light btn-flat redacted">{{ip.ip}}</a>
+                <span style="font-weight: 200">used {{ip.usedCount}} x</span>
+                <div class="secondary-content">
+                    last <span class="time-stamp" mac-tooltip="{{ip.lastUsed | date:'medium'}}" mac-tooltip-direction="top">{{ip.lastUsed | timestamp}}</span>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+@* Penalty Modal *@
+<div id="addPenaltyModal" class="modal bottom-sheet">
+    <div class="modal-content">
+        <div class="penalty-form">
+            <br>
+            Add a punishment <i class="fa fa-arrow-right"></i>
+            <label for="penaltyTypeSelect">Type:</label>
+            <select class="form-control" id="penaltyTypeSelect" ng-model="$ctrl.ban.type" ng-change="$ctrl.banTypeChanged()" material-select>
+                <option value="@PenaltyHandler.Warning">Warning</option>
+                <option value="@PenaltyHandler.Notice">Notice</option>
+                @if(loggedInUser.rank != Ranks.Mod) {
+                    <option value="@PenaltyHandler.TempBan">TempBan</option>
+                }
+            </select>
+            <span ng-show="$ctrl.ban.type != '@PenaltyHandler.Notice'">
+                <label for="durationSelect">Duration:</label>
+                <select class="form-control" id="durationSelect" ng-model="$ctrl.ban.duration" material-select>
+                    <option value="@PenaltyDuration.One_day">@PenaltyDuration.One_day.toString</option>
+                    <option value="@PenaltyDuration.Two_days">@PenaltyDuration.Two_days.toString</option>
+                    <option value="@PenaltyDuration.One_week">@PenaltyDuration.One_week.toString</option>
+                    <option value="@PenaltyDuration.Two_weeks">@PenaltyDuration.Two_weeks.toString</option>
+                    <option value="@PenaltyDuration.One_month">@PenaltyDuration.One_month.toString</option>
+                </select>
+            </span>
+            <label for="reasonTf">Reason:</label>
+            <input type="text" id="reasonTf" class="form-control" ng-model="$ctrl.ban.reason" placeholder="Tk, Sk, etc.">
+            <span class="btn modal-close" ng-click="$ctrl.punishPlayer()">Confirm</span>
+            <br>
         </div>
     </div>
 </div>

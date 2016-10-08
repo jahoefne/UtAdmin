@@ -2,6 +2,23 @@
 @import "vex/vex";
 @import "vex/vex-theme-os";
 
+
+.redacted {
+  filter: blur(6px);
+  /* As pointed out by Alexander Erlandsson (@alexerlandsson), for situations that require better cross-browser support, the blur effect is easily reproduced with transpartent text + text-shadow
+  color: transparent;
+  text-shadow: 0 0 12px rgba(0,0,0,0.8); */
+}
+
+
+.alias-btn{
+  padding-left:2px!important;
+  padding-right:2px!important;
+}
+
+
+
+
 @mixin center($horizontal: true, $vertical: true) {
   position: absolute;
   @if ($horizontal and $vertical) {

@@ -10,11 +10,10 @@ UtAdmin.component('user', {
         // user object is resolved by the router and passed
         ctrl = this;
 
-        this.updateXlrVisibility = function () {
-            console.log(ctrl.user.xlrVisible);
-            $.ajax(jsRoutes.controllers.Administrator.setXlrVisibility(ctrl.user.b3Id, !ctrl.user.xlrVisible));
+        this.updateXlrVisibility = function (val) {
+            ctrl.user.xlrVisible = val;
+            $.ajax(jsRoutes.controllers.UserController.setXlrVisibility(ctrl.user.b3Id, !val));
         };
-
 
         this.punishPlayer = function(){
             console.log("Punish");
@@ -29,10 +28,12 @@ UtAdmin.component('user', {
         };
 
         this.changeGroup = function(){
-            console.log("Setting Bits:", ctrl.groupBits);
-            if(ctrl.groupBits!="none"){
-                $.ajax(jsRoutes.controllers.Administrator.changeGroupOfUser(ctrl.user.b3Id, ctrl.groupBits));
+            console.log("Setting Bits:", ctrl.groupBitsChange);
+            if(ctrl.groupBitsChange!="none"){
+                $.ajax(jsRoutes.controllers.UserController.changeGroupOfUser(ctrl.user.b3Id, ctrl.groupBitsChange));
                 Materialize.toast('Changed Group', 1500);
+                ctrl.groupBits = ctrl.groupBitsChange;
+
             }else{
                 console.log("Got none, wtf!")
             }
@@ -64,13 +65,13 @@ UtAdmin.component('user', {
                         popup += 'Country: <span class="flag-icon flag-icon-' + json.countryCode.toLowerCase() + '"></span> (' + json.country + ')'
                     }
                     if (json.regionName != undefined) {
-                        popup += "<br>Region: " + json.regionName;
+                        popup += "<br>Region: <span class='redacted'>" + json.regionName + "</span>";
                     }
                     if (json.city != undefined) {
-                        popup += "<br>City: " + json.city;
+                        popup += "<br>City: <span class='redacted'>" + json.city + "</span>";
                     }
                     if (json.isp != undefined) {
-                        popup += "<br>ISP: " + json.org;
+                        popup += "<br>ISP: <span class='redacted'>" + json.org + "</span>";
                     }
                     if (json.timezone != undefined) {
                       //  console.log(json.timezone);

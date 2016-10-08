@@ -3,29 +3,6 @@
 <!-- Angular Template to be used with status.component.js -->
 <div class="status-component module" ng-cloak>
 
-        <!-- <div class="fixed-action-btn" style="bottom: 35px;
-        left: 24px;">
-        <a class="btn-floating btn-large">
-            <i class="large material-icons">settings</i>
-        </a>
-        <ul>
-            <li>
-                <a class="btn-floating red"
-                ng-click="$ctrl.status.restartB3()"
-                mac-tooltip="Restart B3" mac-tooltip-direction="left">
-                    <i class="material-icons">android</i>
-                </a>
-            </li>
-            <li>
-                <a class="btn-floating red"
-                ng-click="$ctrl.status.restartServer()"
-                mac-tooltip="Restart Server" mac-tooltip-direction="left">
-                    <i class="material-icons">videogame_asset</i>
-                </a>
-            </li>
-        </ul>
-    </div>
--->
     <div class="row">
 
         <div class="col m12 l8">
@@ -39,7 +16,7 @@
                                 <th>Rank</th>
                                 <th>Score</th>
                                 <th class="hide-on-small-only">Ip</th>
-                                <th>Online</th>
+                                <th>Online since</th>
                                 <th>PM</th>
                                 <th class="hide-on-med-and-down hide">Chatlog</th>
                                 <th>Punish</th>
@@ -54,21 +31,27 @@
                                     <span class="flag-icon flag-icon-{{player.countryCode | lowercase}} status-flag" mac-tooltip="{{player.country}}" mac-tooltip-direction="top"></span>
                                 </td>
                                 <td><user-name b3id="player.id" name="player.name"></user-name></td>
-                                <td mac-tooltip="{{player.gr.name}}" mac-tooltip-direction="left">
-                                    <i class="material-icons grey-text" ng-show="{{player.group.level}}==0">face</i>
-                                    <i class="material-icons grey-text text-lighten-2" ng-show="{{player.group.level}}==1">face</i>
-                                    <i class="material-icons grey-text text-lighten-3" ng-show="{{player.group.level}}==20">face</i>
-                                    <i class="material-icons grey-text" ng-show="{{player.group.level}}==30">face</i>
-                                    <i class="material-icons green-text" ng-show="{{player.group.level}}==40">face</i>
-                                    <i class="material-icons green-text" ng-show="{{player.group.level}}==50">star</i>
-                                    <i class="material-icons amber-text" ng-show="{{player.group.level}}==55">star</i>
-                                    <i class="material-icons red-text" ng-show="{{player.group.level}}==70">star</i>
-                                    <i class="material-icons amber-text text-lighten-4" ng-show="{{player.group.level}}==60">star</i>
-                                    <i class="material-icons god-icon" ng-show="{{player.group.level}}>=80">stars</i>
+                                <td mac-tooltip="{{player.group.name}}" mac-tooltip-direction="left">
+                                    <span class="hide-on-small-only">
+                                        {{player.group.name}}
+                                    </span>
+                                    <span class="hide-on-med-and-up">
+                                        <i class="material-icons grey-text" ng-show="{{player.group.level}}==0">face</i>
+                                        <i class="material-icons grey-text text-lighten-2" ng-show="{{player.group.level}}==1">face</i>
+                                        <i class="material-icons grey-text text-lighten-3" ng-show="{{player.group.level}}==20">face</i>
+                                        <i class="material-icons grey-text" ng-show="{{player.group.level}}==30">face</i>
+                                        <i class="material-icons green-text" ng-show="{{player.group.level}}==40">face</i>
+                                        <i class="material-icons green-text" ng-show="{{player.group.level}}==50">star</i>
+                                        <i class="material-icons amber-text" ng-show="{{player.group.level}}==55">star</i>
+                                        <i class="material-icons red-text" ng-show="{{player.group.level}}==70">star</i>
+                                        <i class="material-icons amber-text text-lighten-4" ng-show="{{player.group.level}}==60">star</i>
+                                        <i class="material-icons god-icon" ng-show="{{player.group.level}}>=80">stars</i>
+                                    </span>
                                 </td>
                                 <td>{{player.score}}</td>
-                                <td class="hide-on-small-only"><a href="https://www.whoismyisp.org/ip/{{player.ip}}" class="waves-effect waves-light" target="_blank">
-                                    {{player.ip}}</a></td>
+                                <td class="hide-on-small-only">
+                                    <a href="https://www.whoismyisp.org/ip/{{player.ip}}" class="waves-effect waves-light redacted" target="_blank">
+                                        {{player.ip}}</a></td>
                                 <td>
                                     <span class="time-stamp" mac-tooltip="{{ player.joined | date:'medium'}}" mac-tooltip-direction="top">{{player.joined/1000 | timestamp}}</span>
                                 </td>

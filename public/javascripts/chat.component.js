@@ -11,6 +11,7 @@ UtAdmin.component('chat', {
         ctrl.updating = true;
         ctrl.autoUpdateInterval = 3000;
 
+        ctrl.emptyResult = false;
         ctrl.copyMode = false;
 
         ctrl.isPlayerOnline = function (id) {
@@ -20,7 +21,9 @@ UtAdmin.component('chat', {
         ctrl.OnChatLoaded = function (response) {
             if (!ctrl.state.autoUpdate) {
                 ctrl.msgs = response.data;
+                ctrl.emptyResult = response.data.length == 0;
             } else {
+                ctrl.emptyResult = false;
                 for (var i = response.data.length; i > 0; i--) {
                     var m = response.data[i - 1];
                     if (m.id > ctrl.state.latestId) {

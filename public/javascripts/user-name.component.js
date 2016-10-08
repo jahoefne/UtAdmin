@@ -1,18 +1,17 @@
 UtAdmin.component('userName', {
 
-    template: '<a ui-sref="user({b3id:{{$ctrl.b3id}}})" class="waves-effect waves-light truncate">' +
-    '{{$ctrl.name | limitTo: 20 }}{{$ctrl.name.length > 20 ? "..." : ""}}</a>' +
-    '<span class="btn btn-flat" style="padding-left:2px!important;padding-right:2px!important;" ng-click="$ctrl.showAliases()">' +
-    '<i class="material-icons">people</i></span>',
+    templateUrl:"/assets/html/user-name.html",
 
     bindings: {
         b3id: '<',
-        name: '<'
+        name: '<',
+        aliasCount: '<'
     },
 
     controller: function ($http, $interval, $timeout, $httpParamSerializer, $filter, $sanitize, $rootScope) {
         var ctrl = this;
 
+        console.log("aliasCount",ctrl.aliasCount);
         ctrl.name = $filter('urtstring')(ctrl.name);
 
         ctrl.showAliases = function () {

@@ -1,0 +1,21 @@
+<a ng-if="$ctrl.aliasCount==undefined" ui-sref="user({b3id:{{$ctrl.b3id}}})" class="waves-effect waves-light truncate">
+    {{$ctrl.name | limitTo: 20 }}{{$ctrl.name.length > 20 ? "..." : ""}}
+</a>
+<span class="btn btn-flat waves-effect waves-light alias-btn" ng-if="$ctrl.aliasCount==undefined" ng-click="$ctrl.showAliases()">
+    <i class="material-icons">people</i>
+</span>
+
+<span ng-if="$ctrl.aliasCount!=undefined">
+    {{$ctrl.name | limitTo: 20 }}{{$ctrl.name.length > 20 ? "..." : ""}}
+    <span class="highlight">
+        <ng-pluralize count="$ctrl.aliasCount"
+                      when="{'0': 'has no aliases', 'one': 'has 1 alias', 'other': 'has {} aliases'}">
+        </ng-pluralize>
+     </span>
+</span>
+
+<div ng-if="$ctrl.aliasCount!=undefined" class="secondary-content">
+    <a class="btn btn-flat waves-effect waves-light collection-button" ng-if="$ctrl.aliasCount>0" ng-click="$ctrl.showAliases()">
+        <i class="material-icons">details</i>
+    </a>
+</div>

@@ -35,7 +35,6 @@ UtAdmin.controller('AliasModalCtrl', ['$scope','$http', '$httpParamSerializer', 
     $scope.aliasOrder = function(alias) {
 
         if($scope.isClanTagName(alias.name)){
-            console.log("COntains DN");
             return Number.MIN_SAFE_INTEGER;
         }
         return -alias.last;
